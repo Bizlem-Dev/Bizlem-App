@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<%
+	var currentNodeProvided = ((typeof currentNode != "undefined"));
+%>
+
+
+<%
+	var action=request.getParameter("actionType");
+  var node;
+  var node1;
+  var node2;
+  if(action=="product"){
+  node=currentNode.session.getRootNode().getNode("content").getNode("product").getNode("products");
+  var pid=request.getParameter("pid");
+  
+  		if(node.hasNode(pid) && node.getNode(pid).hasNode("news")){
+	  				node1=node.getNode(pid).getNode("news").getNodes();
+	  				
+	 							 }
+  						else
+  					{
+	 		 node=currentNode.session.getRootNode().getNode("content").getNode("news"); 
+	 		 node1=node.getNodes();
+	  }
+  
+  
+  }else if(action=="catagory"){
+	
+	 		 node1=request.getAttribute("news");
+  
+  }else if(action=="supplier"){
+	  node=currentNode.session.getRootNode().getNode("content").getNode("supplier");
+	  var pid=request.getParameter("supid");
+	  if(node.getNode(pid).hasNode("news")){
+		  node1=node.getNode(pid).getNode("news").getNodes();
+	  }else{
+		  node=currentNode.session.getRootNode().getNode("content").getNode("news"); 
+		  node1=node.getNodes();
+	  }
+  }else if(action=="company"){
+	  node=currentNode.session.getRootNode().getNode("content").getNode("product").getNode("products");
+	  var pid=request.getParameter("pid");
+	  if(node.getNode(pid).hasNode("news")){
+		  node1=node.getNode(pid).getNode("news").getNodes();
+		  }else{
+	  node=currentNode.session.getRootNode().getNode("content").getNode("news"); 
+	  node1=node.getNodes();
+		  }
+  
+  }else{
+   node=currentNode.session.getRootNode().getNode("content").getNode("news"); 
+	 		 node1=node.getNodes();
+  }
+%>
+
+		<div class="colsm-12 col-xs-12">
+                        <div class="row">
+                            <div class="col-md-4 col-xs-12">
+                                <div class="news-slide">
+                                   	
+							<%
+							for(i=0;i<5;i++) {
+						
+						                 node2=node1.get(i);
+						                %>
+                                    <div class="media">
+                                      <div class="media-left">
+                                        <a href="<%=node2.getProperty('link')%>">
+                                       	<%
+								if(node2.hasNode("images")){
+							                    	if(node2.getNode("images").hasNodes()){
+							                    		var imgNode=node2.getNode("images").getNodes();
+							                    			if(imgNode[0].hasProperty("imgpath")){
+							%> <img
+							src="<%=request.getContextPath()+"/"+imgNode[0].imgpath%>" style="height:50px;width:60px" /> <%
+ 									}
+                     			}
+                     	}
+ %>
+                                        </a>
+                                      </div>
+                                      <div class="media-body">
+                                       <p><small><a href="#"><%=node2.Title%></a></p></small>
+                                      </div>
+                                    </div>
+							<%}%>
+
+
+                                    
+
+                              
+							
+	</div>
+
+	<script type="text/javascript">
+		$(window).load(function() {
+			$('#top-conferences').flexslider({
+				animation : "slide",
+				direction : "vertical",
+				minItems : 5,
+				maxItems : 20,
+				slideshowSpeed : 4000,
+				animationLoop : true
+			});
+		});
+	</script>
+</div>

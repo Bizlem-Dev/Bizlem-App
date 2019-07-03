@@ -1,0 +1,160 @@
+
+<html>
+    <head>
+        <title>Home</title> 
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="description" content="Demo project with jQuery">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+<%load("../common/links.esp");%>
+    </head>
+<body>
+
+<div class="pace pace-active" style="display:none;">
+<div class="pace-progress">
+<div class="pace-progress-inner"></div>
+</div>
+<div class="pace-activity"></div>
+</div>
+<%load("../common/header.esp");%>
+<script src="<%=request.getContextPath()%>/apps/js/jscolor.js"></script>
+<script>
+function previewWidget(){
+var frame="width:"+document.getElementById("framew").value+";height:"+document.getElementById("frameh").value;
+
+var title="color:"+document.getElementById("tcolor").value+";font-size:"+document.getElementById("tsize").value;
+
+var header="color:"+document.getElementById("hcolor").value+";background-color:"+document.getElementById("hbcolor").value;
+ var desc="color:"+document.getElementById("dcolor").value+";font-size:"+document.getElementById("dsize").value;
+ var date="color:"+document.getElementById("dacolor").value+";font-size:"+document.getElementById("dasize").value;
+ var htitle=document.getElementById("caption").value;
+ var rates = document.getElementsByName('fields');
+var rate_value;
+for(var i = 0; i < rates.length; i++){
+    if(rates[i].checked){
+        rate_value = rates[i].value;
+    }
+}
+var url="http://35.221.160.146:8082/RssFeed/getfeed?feedurl=http://rss.cnn.com/rss/edition.rss&titlestyle="+title+"&descriptionstyle="+desc+"&headerstyle="+header+"&datestyle="+date+"&headerTitle="+htitle+"&type="+rate_value;
+var frame=document.getElementById("feedwidget");
+frame.src=url;
+frame.style.height=document.getElementById("frameh").value+"px";
+frame.style.width=document.getElementById("framew").value+"px";
+
+
+document.getElementById("generatedcode").value="<iframe src='"+url+"' frameborder='0' style='height:"+document.getElementById("frameh").value+"px;width:"+document.getElementById("framew").value+"px' ></iframe>";
+}
+
+
+</script>
+<section class="new_description_page">
+		
+			<div class="container">
+				<div class="row">
+					<div class="col-sm-9 col-xs-12">
+						<div class="row">
+				<form action="<%=request.getContextPath()%>/servlet/service/news.addstylemaster" method="POST">
+						
+						
+							
+					Frame	Height:<input type="text" name="frameh"  id="frameh" value="500" >
+					Frame	Width:<input type="text" name="framew"  id="framew" value="300">	
+						<hr>
+					Header Caption:<input type="text" placeholder="Caption Name" name="caption" id="caption">	
+					color :<input class="jscolor" value="AB112D" name="hcolor" id="hcolor">
+					Background color :<input class="jscolor" value="45AB0E" name="hbcolor" id="hbcolor">	
+					<hr>
+						RssFeed Title :
+						Title color:<input class="jscolor" value="ABA95E" name="tcolor" id="tcolor">
+						Size:<select name="tsize" id="tsize">
+						<option value="01">01</option>
+						<option value="02">02</option>
+						<option value="03">03</option>
+						<option value="04">04</option>
+						<option value="05">05</option>
+						<option value="06">06</option>
+						<option value="07">07</option>
+						<option value="08">08</option>
+						<option value="09">09</option>
+						<option value="10">10</option>
+						<option value="11">11</option>
+						<option value="12">12</option>
+						<option value="13">13</option>
+						<option value="14">14</option>
+						<option value="15">15</option>
+						<option value="16">16</option>
+						<option value="17">17</option>
+						<option value="18">18</option>
+						<option value="19">19</option>
+						<option value="20">20</option>
+						</select>
+						<hr>
+						Description color:<input class="jscolor" value="4194AB" name="dcolor" id="dcolor">
+						Size:<select name="dsize" id="dsize">
+						<option value="01">01</option>
+						<option value="02">02</option>
+						<option value="03">03</option>
+						<option value="04">04</option>
+						<option value="05">05</option>
+						<option value="06">06</option>
+						<option value="07">07</option>
+						<option value="08">08</option>
+						<option value="09">09</option>
+						<option value="10">10</option>
+						<option value="11">11</option>
+						<option value="12">12</option>
+						<option value="13">13</option>
+						<option value="14">14</option>
+						<option value="15">15</option>
+						<option value="16">16</option>
+						<option value="17">17</option>
+						<option value="18">18</option>
+						<option value="19">19</option>
+						<option value="20">20</option>
+						</select>
+						<hr>
+						  <input type="radio" name="fields" value="text" checked> Description Only<br>
+  						  <input type="radio" name="fields" value="textandimage"> Description and Thumnail
+						<hr>
+						Date color:<input class="jscolor" value="AB8EA2" name="dacolor" id="dacolor">
+						Size:<select name="dasize" id="dasize">
+						<option value="01">01</option>
+						<option value="02">02</option>
+						<option value="03">03</option>
+						<option value="04">04</option>
+						<option value="05">05</option>
+						<option value="06">06</option>
+						<option value="07">07</option>
+						<option value="08">08</option>
+						<option value="09">09</option>
+						<option value="10">10</option>
+						<option value="11">11</option>
+						<option value="12">12</option>
+						<option value="13">13</option>
+						<option value="14">14</option>
+						<option value="15">15</option>
+						<option value="16">16</option>
+						<option value="17">17</option>
+						<option value="18">18</option>
+						<option value="19">19</option>
+						<option value="20">20</option>
+						</select>
+						<input type="hidden" name="styleid" value="<%=request.getParameter("id")%>"> 
+						<input type="button" value="Preview Widget" onclick="previewWidget()">
+						<input type="submit" value="Submit">
+					</form>				
+						</div>
+					<textarea id="generatedcode"></textarea>
+					</div>
+					
+					
+					<iframe id="feedwidget" src="http://35.221.160.146:8082/RssFeed/getfeed?feedurl=http://rss.cnn.com/rss/edition.rss&titlestyle=color:ABA95E;font-size:15px;&descriptionstyle=color:4194AB;font-size:12px;&headerstyle=color:AB112D;background-color:45AB0E&datestyle=color:AB8EA2;font-size:08px;&headerTitle=Sport&type=text" frameborder="0" style="border-color:null;width:300px;height:500px">
+					</iframe>
+					
+				</div>
+		</div>
+</section>
+
+<%load("../common/footer.esp");%>
+    </body>
+</html>

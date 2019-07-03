@@ -1,0 +1,212 @@
+
+<html>
+    <head>
+        <title>Home</title> 
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="description" content="Demo project with jQuery">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+<%load("../common/links.esp");%>
+<!-- Chang URLs to wherever Video.js files will be hosted -->
+  <link href="<%=request.getContextPath()%>/apps/js/video-js/video-js.css" rel="stylesheet" type="text/css">
+  <!-- video.js must be in the <head> for older IEs to work. -->
+  <script src="<%=request.getContextPath()%>/apps/js/video-js/video.js"></script>
+
+  <!-- Unless using the CDN hosted version, update the URL to the Flash SWF -->
+  <script>
+    videojs.options.flash.swf = "<%=request.getContextPath()%>/apps/js/video-js/video-js.swf";
+  </script>
+
+   
+<% var newsNode = currentNode.getNode(request.getParameter("newsId"));%>
+
+
+<% if(newsNode.hasNode("images") && 
+            newsNode.getNode("images").hasNodes()){
+var imgNode = newsNode.getNode("images").getNode(request.getParameter("newsId"));
+}%>
+
+
+<!-- Chang URLs to wherever Video.js files will be hosted -->
+  <link href="<%=request.getContextPath()%>/apps/js/video-js/video-js.css" rel="stylesheet" type="text/css">
+  <!-- video.js must be in the <head> for older IEs to work. -->
+  <script src="<%=request.getContextPath()%>/apps/js/video-js/video.js"></script>
+
+  <!-- Unless using the CDN hosted version, update the URL to the Flash SWF -->
+  <script>
+    videojs.options.flash.swf = "<%=request.getContextPath()%>/apps/js/video-js/video-js.swf";
+  </script>
+
+<%load("../common/header.esp");%>
+<div class="pace pace-active" style="display:none;">
+<div class="pace-progress">
+<div class="pace-progress-inner"></div>
+</div>
+<div class="pace-activity"></div>
+</div>
+<section class="new_description_page">
+		
+			<div class="container">
+				<div class="row">
+					<div class="col-sm-9 col-xs-12">
+						<div class="row">
+							<div class="col-xs-12 ">
+								<h3><%=newsNode.Title%></h3>
+								<p><%=newsNode.Auther%>, Hindustan Times, New Delhi  <span class="text-gray">| Updated: <%=newsNode.Date%> ISt</span></p>
+								<figure class="banner">
+									<img src="<%=request.getContextPath()%><%=imgNode.imgpath%>" alt="New Description">
+								</figure>
+								<p><b><%=newsNode.Description%></b></p>
+								
+								<p><a href="#" class="btn btn-primary">More News</a></p>
+							</div>
+
+							<div class="col-xs-12" id="idRss">
+							<ul class="new-description-list">
+                                    <%
+
+                                        var a2 =  request.getAttribute("feed");
+                                        out.print(a2);
+                                    %>
+
+                                </ul>
+                                
+                              <script src="<%=request.getContextPath()%>/apps/js/ellipsis/jquery.ellipsis.min.js"></script>
+<script type="text/javascript">
+    $('.foo1').ellipsis({
+      lines: 2,             // force ellipsis after a certain number of lines. Default is 'auto'
+      ellipClass: 'ellip',  // class used for ellipsis wrapper and to namespace ellip line
+      responsive: true      // set to true if you want ellipsis to update on window resize. Default is false
+    });
+</script>
+                                
+                            </div>
+							
+							<div class="col-xs-12">
+								<div class="panel panel-default">
+				                    <div class="panel-heading">
+				                      <h3 class="panel-title">Advertise</h3>
+				                    </div>
+				                    <div class="panel-body">
+				                      <div>
+				                        <div>
+				                          <img alt="login-advertise" src="<%=request.getContextPath()%>/apps/images/login-advertise.jpg">
+				                        </div>
+				                      </div>
+				                    </div>
+				                  </div>
+							</div>
+							<div class="col-xs-12 new-descrip-slider">
+								
+								<div id="slider" class="flexslider photo-story">
+                  <ul class="slides">
+  <%
+                  var solarNew = request.getAttribute("solarnews");
+                  for(var i = 0 ; i<4;i++){
+                  if(newsNode.hasNode("videos") && 
+            newsNode.getNode("videos").hasNodes())
+            {
+			var videoNode = newsNode.getNode("videos").getNode(solarNew[i].newsid);
+            %>
+                    <li>
+                    <video class="video-js vjs-default-skin" controls preload="none" width="426" height="340" poster="images/oceans-clip.png" data-setup="{}">
+                          <source src="<%=request.getContextPath()%><%=videoNode.videopath%>" type="video/mp4">
+                              <source src="<%=request.getContextPath()%><%=videoNode.videopath%>" type="video/ogg">
+                          
+                          Your browser does not support HTML5 video.
+                      </video>
+                      <div class="slide-text">
+                      	<h3>big_buck_bunny_720p_1mb</h3>
+                      	<span class="text-red">100</span>
+                      </div>
+                    </li>
+    <%
+      }
+          }        %>
+                    <!-- items mirrored twice, total of 12 -->
+                  </ul>
+                </div>
+   <div id="carousel" class="flexslider photo-story-thumb">
+                  <ul class="slides">
+                  <%
+                  var solarNew = request.getAttribute("solarnews");
+                  for(var i = 0 ; i<4;i++){
+                  if(newsNode.hasNode("videos") && 
+            newsNode.getNode("videos").hasNodes())
+            {
+			var videoNode = newsNode.getNode("videos").getNode(solarNew[i].newsid);
+            %>
+                    <li>
+                      <figure>
+                          <video class="video-js vjs-default-skin" controls preload="none" width="153" height="110" poster="images/oceans-clip.png" data-setup="{}">
+                          <source src="<%=request.getContextPath()%><%=videoNode.videopath%>" type="video/mp4">
+                              <source src="<%=request.getContextPath()%><%=videoNode.videopath%>" type="video/ogg">
+                          
+                              Your browser does not support HTML5 video.
+                          </video>
+                          <figcaption>
+                              <p>
+                              	<small>Caught on Camera: Kathmandu's Historic Durdar Square When the Earthquake Struck</small>
+                              </p>
+                              <span class="text-red">100</span>
+                          </figcaption>
+                      </figure>
+                    </li>
+                    <%
+      }
+          }        %>
+                         </ul>
+                </div>
+        <script type="text/javascript">
+             // The slider being synced must be initialized first
+              $('#carousel').flexslider({
+                animation: "slide",
+                controlNav: false,
+                //direction: "vertical",
+                animationLoop: false,
+                slideshow: false,
+                itemWidth: 153,
+                itemMargin: 15,
+                asNavFor: '#slider'
+              });
+             
+            $(function ($) {
+                var flex = $("#slider").flexslider({
+                    animation: "fade",
+                    animationLoop: false,
+                    keyboard: true,
+                    //direction: "vertical",
+                    slideshow: false,
+                    sync: "#carousel"
+                });
+                //$('#carousel li').on('mouseover',function(){
+                    //$(this).trigger('click');
+               // });
+            });
+        </script>
+
+							</div>
+
+							
+						</div>
+					</div>
+              
+           
+
+					<div class="col-sm-3 col-xs-12">
+						<div class="advertise">
+          <img alt="advertise" src="images/advertise3.jpg">
+      </div>
+      <div class="advertise">
+          <img alt="advertise" src="images/advertise3.jpg">
+      </div>
+      
+					</div>
+				</div>
+			</div>
+
+</section>
+
+<%load("../common/footer.esp");%>
+    </body>
+</html>

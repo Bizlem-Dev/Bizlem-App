@@ -1,0 +1,52 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<% var currentNodeProvided = ((typeof currentNode != "undefined"));  %>
+<% currentNode=currentNode.session.getNode("/content"); %>
+<html>
+    <head>     
+          </script>
+        <title>Home</title> 
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="description" content="Demo project with jQuery">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+         <%load("../common/links.esp");%>
+        
+         
+<script type="text/javascript">
+                      $('#slider-home').flexslider({
+                        animation: "slide",
+                        //controlNav: "thumbnails",
+                        start: function(slider){
+                          $('body').removeClass('loading');
+                        }
+                      });
+                      
+                     
+                  </script>
+
+
+            <script language="javascript">
+ function contactSupplier(){
+                      alert("paretss");
+                     
+                      }
+
+     
+        </script>
+    </head>
+
+   <%load("../common/header.esp");%>
+<section class="email_service">
+
+   <div class="container">
+        <div class="row">
+        <iframe src="http://50.17.231.172/bsearch/BannerCreation.php?username=<%=request.getRemoteUser()%>&zonename=<%=request.getParameter("zonename")%>" width="100%" height="500" scrolling="no" frameborder="0">
+        </iframe>
+        </div>
+   </div>
+</section>
+        <%load("../common/footer.esp");%>
+  
+        
+    </body>
+</html>

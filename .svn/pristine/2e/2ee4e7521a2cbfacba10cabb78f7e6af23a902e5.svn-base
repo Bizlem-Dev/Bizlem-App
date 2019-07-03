@@ -1,0 +1,45 @@
+<% 
+ 
+	var person=request.getAttribute("person");
+ for(var k=0; k<person.size(); k++) {
+ 					var path=person.get(k);
+                          
+            %>
+        <div class="search-list-person">
+                            <div class="thumbnail">
+                              <div class="thumb">
+                <a href="">
+               
+                <% if(path.hasProperty("profileImage")){
+                		out.print("<img  height='64' width='64' alt="+"64x64"+" class="+"media-object"+" src='"+path.profileImage+"'>");
+                		
+                		}else{
+                		
+                			out.print("<img  height='64' width='64' alt="+"64x64"+"  class="+"media-object"+" src='"+request.getScheme()+"://"+request.getServerName()+":"+ request.getServerPort()+request.getContextPath()+"/apps/images/nmg.jpg'>");
+                		
+                	} %>
+                  
+                </a>
+              </div>
+               <div class="caption">
+                              <h3>           
+              <a href="<%=request.getScheme()+"://"+request.getServerName()+":"+ request.getServerPort()+request.getContextPath()%>/content/user/info?id=<%=path.getName()%>"><%=path.name%></a></h3>
+               <div class="desc"> <%=path.headline %></div>
+               <div class="location">
+                 Current Location: <%=path.city %> <%=path.country%>
+                              </div>
+                               <div class="follow">
+                               <%if(path.fburl!="" && path.description!=null && path.description!="undefind"){%>
+                                <a href="path.fburl" target="_blank"><i class="fa fa-facebook-square"></i></a>
+                                <%}%>
+                                  <%if(path.twiturl!="" && path.twiturl!=null && path.twiturl!="undefind"){%>
+                                 <a href="path.twiturl" target="_blank"><i class="fa fa-twitter-square"></i></a>
+                                <%}%>
+                                
+                                         
+                              </div>
+              </div>
+            </div>
+       </div>
+        <% }%>
+       

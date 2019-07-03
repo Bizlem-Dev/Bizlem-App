@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Home</title> 
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="description" content="Demo project with jQuery">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+				<%load("../common/links_new.esp");%>
+		
+<style>
+.readmorelink + [data-readmore-toggle], .readmorelink[data-readmore] {
+    display: block;
+    width: 100%;
+}
+
+.fix:nth-child(3n) {
+    clear: both;
+}
+</style>
+</head>
+
+    
+    <%load("../common/header_new.esp");%>
+    
+ 
+<div class="pace pace-active" style="display:none;">
+<div class="pace-progress">
+<div class="pace-progress-inner"></div>
+</div>
+<div class="pace-activity"></div>
+
+</div>
+
+
+
+
+
+
+<section style="padding-top:25px" class="product-sub">
+<div class="container">
+<div class="row">
+<div class="col-sm-9">
+<%var obj="undefined";
+				 var curCatNode = currentNode.session.getRootNode().getNode("content").getNode("unspsc");
+	var nodes=curCatNode.getNodes();
+	for(i=0;i<nodes.length;i++){ 
+	if(!obj.equals(nodes[i])){
+		if(nodes[i].hasNodes()){
+		%>
+ <div class="col-sm-4 fix">
+<div class="fieldset">
+	
+	<legend> <%=nodes[i].name%></legend>
+		
+		<ul class="list-inline readmorelink">
+			
+			
+			
+			<% var nodes1= nodes[i].getNodes();
+					for(j=0;j<nodes1.length;j++){
+						if(!("undefined".equals(nodes1[j]))){
+							if(nodes1[j].hasNodes()){
+							%>
+			<li><a href="<%=request.getContextPath()%>/servlet/service/productselection.productlist?query=<%=nodes[i].getName()%><%=nodes1[j].getName()%>&search=<%=nodes1[j].name%>" class="foo1"><%=nodes1[j].name%></a></li>
+			
+			<%
+								}else{out.print("<li><a href='#'>"+nodes1[j].name+"</a></li>");}
+								}
+							}
+						%>
+							
+			
+			
+			
+			
+		   
+		</ul>
+		<!--ul class="list-inline">
+			
+		</ul-->
+		
+ </div>
+ 
+</div>
+<% }else{ out.print("<li><a href='#'>"+nodes[i].name+"</a></li>");}
+				}
+				}
+			%>
+
+		
+
+
+</div>
+  <div class="col-sm-3">
+    
+							  
+                            
+			<div class="advertise" id="openxAdd">
+         
+		<iframe id='ab44f287' name='ab44f287' src='http://34.193.219.25/openx/www/delivery/afr.php?zoneid=37&amp;cb=1' frameborder='0' scrolling='no' width='202' height='403'><a href='http://34.193.219.25/openx/www/delivery/ck.php?n=a9cc3a96&amp;cb=1' target='_blank'><img src='http://34.193.219.25/openx/www/delivery/avw.php?zoneid=37&amp;cb=1&amp;n=a9cc3a96' border='0' alt='' /></a></iframe>
+
+     </div>
+	<script src="<%=request.getContextPath()%>/apps/js_new/scrollbar/js/minified/jquery-1.11.0.min.js"></script>
+
+<iframe id="rssFeedIf" scrolling="no" height="407" width="230"  src="<%=request.getScheme()+"://"+request.getServerName()+":"+ request.getServerPort()%>/portal/content/newsfeed/widget/28/28" frameborder="0" ></iframe>
+		
+                      <script type="text/javascript">
+                          $(window).load(function() {
+                            $('#top-conferences').flexslider({
+                              animation: "slide",
+                              direction: "vertical",
+                              minItems: 4,
+                              maxItems: 4,
+                              slideshowSpeed: 2000,
+                              animationLoop: true
+                            });
+                          });
+                      </script>
+  </div>
+
+
+
+</div>
+</div>
+</section>
+
+
+
+<script>
+$('.readmorelink').readmore({
+  speed: 500,
+  moreLink: '<a href="#" class="readbtn">More >>></a>',
+  lessLink: '<a href="#" class="readbtn">Close</a>',
+  collapsedHeight: 210
+  //blockCSS: 'display: inline-block; width: 50%; text-align:right;'
+});
+</script>
+
+
+
+
+
+<div class="container ">
+<div class="row ">
+  <div class="col-sm-12 col-xs-12">
+  <script src="<%=request.getContextPath()%>/apps/js_new/scrollbar/js/minified/jquery-1.11.0.min.js"></script>
+
+      
+      <%load("../products/hotproducts.esp");%>
+  </div>
+  <script src="<%=request.getContextPath()%>/apps/js_new/FlexSlider/jquery.flexslider.js"></script>
+
+      <script type="text/javascript">
+        $(window).load(function() {
+            $('#hot-product').flexslider({
+              animation: "slide",
+              animationLoop: false,
+              itemWidth: 120,
+              itemMargin: 25
+            });
+          });
+    </script>
+  </div>
+</div>
+
+
+  </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<%load("../common/footer_new.esp");%>    
+
+
+  
+        
+    </body>
+</html>

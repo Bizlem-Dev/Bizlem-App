@@ -1,0 +1,417 @@
+  
+   <%if(request.getRemoteUser()!=null && !request.getRemoteUser().equals("anonymous")){
+      var usernode=currentNode.session.getRootNode().getNode("content").getNode("user").getNode(request.getRemoteUser().replace("@","_"));
+         if(usernode.hasNode("ContactList")){%>
+
+   <script>
+  function getKontact(path){
+ 
+ document.getElementById("bizlem").style.display="none";
+   var  param=["paravalue","paraname","path","isparent"];
+ 			 var  isparent="0,0,0";
+ 			 
+ 		path="/content/user/<%=request.getRemoteUser().replace("@","_")%>/ContactList/"+path;
+ 		 var paramValue=["@","importedEmail,importedFirstName,importedlastName",path,isparent];		  
+ 		 
+          UserDWRService.callGetService("http://35.221.160.146:8082/portal/servlet/exhibition/flash.eventNameSuggetion",param,paramValue,function(data) {
+          var parsed=JSON.parse(data);
+          var sugData="";
+          console.log(data);
+          var sugData="";
+          for(var i=0;i<parsed.length;i++){
+       		if((document.getElementById("selectedemail").value).indexOf(parsed[i].importedEmail)!=-1){
+      		sugData=sugData+"<div><input type='checkbox' checked='true' onclick='getSelectedEmailForInvite(this.id)' id='"+parsed[i].importedEmail+"' name='inviteemail' value='"+parsed[i].importedEmail+"'><b>"+parsed[i].importedFirstName+" "+parsed[i].importedlastName+ "</b> ("+parsed[i].importedEmail+")</div>";
+      		
+      		}else{
+      		sugData=sugData+"<div><input type='checkbox' onclick='getSelectedEmailForInvite(this.id)' id='"+parsed[i].importedEmail+"' name='inviteemail' value='"+parsed[i].importedEmail+"'><b>"+parsed[i].importedFirstName+" "+parsed[i].importedlastName+ "</b> ("+parsed[i].importedEmail+")</div>";
+      		
+      		}
+      		$("#mycont").html(sugData);
+        }
+        
+  });
+  }
+  
+  var checkboxesCheckedcom = [];
+
+
+function getSelectedEmailForInvite(id)
+{
+var globalcom=""; 
+
+var checkboxes = document.getElementById(id);
+       if(checkboxes.checked){
+        
+        checkboxesCheckedcom.push(checkboxes.value);
+       
+       }else{
+        var index = checkboxesCheckedcom.indexOf(id);
+     
+      if (index !=-1) {    
+         checkboxesCheckedcom.splice(index, 1);
+          
+       }
+  }
+  
+ for (var i=0; i<checkboxesCheckedcom.length; i++) {
+      globalcom=checkboxesCheckedcom[i]+","+globalcom;
+     
+ 	}
+
+  document.getElementById("selectedemail").value=globalcom;
+   
+  
+  document.getElementById("iniviCount").innerHTML="("+checkboxesCheckedcom.length+")";
+  document.getElementById("iniviCountNext").innerHTML="("+checkboxesCheckedcom.length+")";
+  
+}
+
+ function searchInvitePerson(){
+
+   var  param=["paravalue","paraname","path","isparent"];
+ 			 var  isparent="0,0";
+ 		path="/content/user/";
+ 		 var paramValue=[document.getElementById("searchMeInUser").value,"name,primaryEmail",path,isparent];		  
+ 		 if(document.getElementById("searchMeInUser").value.length>3){
+          UserDWRService.callGetService("http://35.221.160.146:8082/portal/servlet/exhibition/flash.eventNameSuggetion",param,paramValue,function(data) {
+          var parsed=JSON.parse(data);
+          var sugData="";
+          console.log(data);
+          var sugData="";
+         for(var i=0;i<parsed.length;i++){
+       		if((document.getElementById("selectedemail").value).indexOf(parsed[i].importedEmail)!=-1){                                          
+      		sugData=sugData+"<div><input type='checkbox' checked='true' onclick='getSelectedEmailForInvite(this.id)' id='"+parsed[i].primaryEmail+"' name='inviteemail' value='"+parsed[i].primaryEmail+"'><b>"+parsed[i].name+"</b> ("+parsed[i].primaryEmail+")</div>";
+      		
+      		}else{
+      		sugData=sugData+"<div><input type='checkbox' onclick='getSelectedEmailForInvite(this.id)' id='"+parsed[i].primaryEmail+"' name='inviteemail' value='"+parsed[i].primaryEmail+"'><b>"+parsed[i].name+"</b> ("+parsed[i].primaryEmail+")</div>";
+      		
+      		}
+      		$("#mycont").html(sugData);
+        }
+        
+  });
+ }
+ }
+function changeStateSearch(id){
+  document.getElementById('bizlem').style.display='';
+ if(id!="network"){
+  var  param=["paravalue","paraname","path","isparent"];
+ 			 var  isparent="0,0,0";
+ 		path="/content/user/<%=request.getRemoteUser().replace("@","_")%>/connection";
+ 		 var paramValue=["_","importedEmail,importedFirstName,importedlastName",path,isparent];		  
+ 		 
+          UserDWRService.callGetService("http://35.221.160.146:8082/portal/servlet/exhibition/flash.eventNameSuggetion",param,paramValue,function(data) {
+          var parsed=JSON.parse(data);
+          var sugData="";
+          console.log(data);
+          var sugData="";
+         for(var i=0;i<parsed.length;i++){
+       		if((document.getElementById("selectedemail").value).indexOf(parsed[i].importedEmail)!=-1){
+      		sugData=sugData+"<div><input type='checkbox' checked='true' onclick='getSelectedEmailForInvite(this.id)' id='"+parsed[i].importedEmail+"' name='inviteemail' value='"+parsed[i].importedEmail+"'><b>"+parsed[i].importedFirstName+ parsed[i].importedlastName+ "</b> ("+parsed[i].importedEmail+")</div>";
+      		
+      		}else{
+      		sugData=sugData+"<div><input type='checkbox' onclick='getSelectedEmailForInvite(this.id)' id='"+parsed[i].importedEmail+"' name='inviteemail' value='"+parsed[i].importedEmail+"'><b>"+parsed[i].importedFirstName+ parsed[i].importedlastName+ "</b> ("+parsed[i].importedEmail+")</div>";
+      		
+      		}
+      		$("#mycont").html(sugData);
+        }
+        
+  });
+ }else{
+
+ document.getElementById('bizlem').style.display='none';
+ var  param=["path"];
+ 			 
+ 		var path="/content/user/<%=request.getRemoteUser().replace("@","_")%>/connection/friend/";
+ 		 var paramValue=[path];		  
+ 		 
+          UserDWRService.callGetService("http://35.221.160.146:8082/portal/servlet/service/invite.searchNode",param,paramValue,function(data) {
+          var parsed=JSON.parse(data);
+          var sugData="";
+          console.log(data);
+          var sugData="";
+         for(var i=0;i<parsed.length;i++){
+       		if((document.getElementById("selectedemail").value).indexOf(parsed[i].importedEmail)!=-1){
+      		sugData=sugData+"<div><input type='checkbox' checked='true' onclick='getSelectedEmailForInvite(this.id)' id='"+parsed[i].replace("_","@")+"' name='inviteemail' value='"+parsed[i].replace("_","@")+"'>"+parsed[i].replace("_","@")+"</div>";
+      		
+      		}else{
+      		sugData=sugData+"<div><input type='checkbox' onclick='getSelectedEmailForInvite(this.id)' id='"+parsed[i].replace("_","@")+"' name='inviteemail' value='"+parsed[i].replace("_","@")+"'>"+parsed[i].replace("_","@")+"</div>";
+      		
+      		}
+      		$("#mycont").html(sugData);
+        }
+        
+  });
+	 }
+ }
+
+  function getMesageBody(id){
+ if(id!=null &&  id!="undefind" && checkboxesCheckedcom.length>0){
+ 
+ 	
+ 	var  param=["paravalue","paraname","path","isparent"];
+ 			 var  isparent="0,0,0,0";
+ 		path="/content/invite/";
+ 		 var paramValue=[id,"id,eventname,eventTemplate,eventid",path,isparent];		  
+ 		 
+          UserDWRService.callGetService("http://35.221.160.146:8082/portal/servlet/exhibition/flash.eventNameSuggetion",param,paramValue,function(data) {
+          var parsed=JSON.parse(data);
+          var sugData="";
+          console.log(data);
+          
+         for(var i=0;i<parsed.length;i++){
+       		
+      	document.getElementById("registerModalLabelDraft").innerHTML=parsed[i].eventname;
+      	document.getElementById("registerModalLabelDraftTextInside").value=parsed[i].eventname;
+      	sugData=parsed[i].eventTemplate;
+      	document.getElementById("mailplatformid").value=parsed[i].eventid;
+      
+      		
+      		
+        }
+      sugData=sugData.replace("{username}","<%=usernode.name%>");
+   
+      
+    document.getElementById("invitemeclose").click();
+ 	document.getElementById("clickmeevent").click();
+        $("#messageBody").html(sugData);
+         CKEDITOR.instances.editor1.setData(sugData);
+  });
+ 	 	}else{
+ 	 	alert("No email id selected");
+ 	 	}
+ }
+
+
+
+      function editMessage(){
+      
+      document.getElementById("messageBody").style.display='none';
+      document.getElementById("customeMessage").style.display='';
+      document.getElementById("finishinvite").style.display='';
+      document.getElementById("editinvite").style.display='none';
+      document.getElementById("inviteall").style.display='none';
+       document.getElementById("customeinviList").style.display='none';
+      
+      document.getElementById("registerModalLabelDraftText").style.display='';
+      document.getElementById("registerModalLabelDraft").style.display='none';
+      document.getElementById("registerModalLabelDraftText").value=document.getElementById("registerModalLabelDraft").innerHTML;
+      } 
+      
+       function finishEditMessage(){
+       var a=document.getElementById("registerModalLabelDraftText").value;
+       if(a!=null && a.length>1){
+       
+      $("#messageBody").html(CKEDITOR.instances.editor1.getData());     
+      document.getElementById("messageBody").style.display='';
+      document.getElementById("customeMessage").style.display='none';
+      document.getElementById("finishinvite").style.display='none';
+      document.getElementById("editinvite").style.display='';
+      document.getElementById("inviteall").style.display='';
+      document.getElementById("customeinviList").style.display='none';
+      document.getElementById("registerModalLabelDraftText").style.display='none';
+        
+    
+      document.getElementById("registerModalLabelDraft").innerHTML=document.getElementById("registerModalLabelDraftTextInside").value;
+      document.getElementById("registerModalLabelDraft").style.display='';
+      iscustom="true";
+      }
+      } 
+      
+      function invitaionList(act){
+      var list="";
+      
+      for(var i=0;i<checkboxesCheckedcom.length;i++){
+      list=list+checkboxesCheckedcom[i]+"<br>";
+      
+      }
+	list=list+"<input type='button' value='close' id='false' onclick='invitaionList(this.id)'>";
+if(act=='true'){
+      document.getElementById("customeinviList").innerHTML=list;
+      document.getElementById("customeMessage").style.display="none";
+      document.getElementById("messageBody").style.display="none";
+      document.getElementById("customeinviList").style.display="";
+         document.getElementById("registerModalLabelDraftText").style.display='none';
+     }else{
+       
+      document.getElementById("customeMessage").style.display="none";
+      document.getElementById("messageBody").style.display="";
+      document.getElementById("customeinviList").style.display="none";
+         document.getElementById("registerModalLabelDraftText").style.display='none';
+     
+     } 
+     
+      
+      }
+      function firstpop(){
+           document.getElementById("closememessage").click();
+           document.getElementById("invitemelist").click();
+           
+      
+      }
+     
+      function inviteForThis(){
+      var a=document.getElementById("selectedemail").value;
+      var b=document.getElementById("mailplatformid").value;
+      var c=document.getElementById("invitenodeid").value;
+      
+      others=document.getElementById("registerModalLabelDraftTextInside").value;
+     	var msg="";
+     		if(iscustom=="true"){
+     		msg=  CKEDITOR.instances.editor1.getData();
+     		
+     		
+ 		 }
+ 		
+        var  param=["others","emails","mailplatformid","customtemp","messagecustom","invitenodeid","eventId"];
+        var paramValue=[others,a,b,iscustom,msg,eventId];		
+            
+ 		$.ajax({
+                            url: 'http://35.221.160.146:8082/portal/servlet/service/invite.invite',
+                            data: {
+                            others:others,
+                            emails:a,
+                            mailplatformid:b,
+                            customtemp:iscustom,
+                            messagecustom:msg,
+                            invitenodeid:c,
+                            eventId:eventId
+                            },
+                            async:false,
+                            success: function(data) {
+                                
+                                   console.log(data);
+                              document.getElementById("closememessage").click();
+                              alert("Your invitaio has been sent  !");
+            				}
+                                
+                            
+                        }); 
+        
+      }     
+      
+      </script>
+  
+  <div class="modal fade inviteme" tabindex="-1" id="inviteme" role="dialog" aria-labelledby="registerModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content" style="font-size: 12px;font-family: Roboto, Helvetica, Tahoma, Arial, sans-serif, SimSun;">
+    <form class="form-horizontal">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="invitemeclose"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="registerModalLabel">Invitation </h4>
+        <p style="font-size:10px;"> (Select From your contact list)</p>
+       <img style="float:left;width:35px;height:15px" src="<%=request.getContextPath()%>/apps/images/people-icon.png" alt="Invities Count" >
+        <p style="float:left" id="iniviCount"> 0 </p>
+      </div>
+      <div class="modal-body">
+     <%
+        var conList=usernode.getNode("ContactList");
+        if(conList.hasNode("google")){
+        var google=conList.getNode("google").getNodes().length;
+     %><a href="javascript:void(0)" onclick="getKontact('google')"><img src="<%=request.getContextPath()%>/apps/images/gmail-icon.jpg" height="12" alt="Google" title="Google" border="0"></img>(<%=google%>)</a>
+      <%  }else{
+      %>
+      <a href="javascript:void(0)"><img src="<%=request.getContextPath()%>/apps/images/gmail-icon.jpg" height="12" alt="Google" title="Google" border="0"></img>(0)</a>
+      <%}  if(conList.hasNode("yahoo")){
+      var yahoo=conList.getNode("yahoo").getNodes().length;
+        %>
+        <a href="javascript:void(0)" onclick="getKontact('yahoo')" ><img src="<%=request.getContextPath()%>/apps/images/yahoomail_icon.jpg" height="16" alt="YahooMail" title="YahooMail" border="0"></img>(<%=yahoo%>)</a>
+        <%}else{
+      %>
+    <a  href="javascript:void(0)"><img src="<%=request.getContextPath()%>/apps/images/yahoomail_icon.jpg" height="16" alt="YahooMail" title="YahooMail" border="0"></img>(0)</a>
+      <%}   if(conList.hasNode("likedin")){
+       var linkedin=conList.getNode("linkedin").getNodes().length;
+        %>
+       <a rel="facebox" href="javascript:void(0)"  onclick="getKontact('linkedin')" ><img src="<%=request.getContextPath()%>/apps/images/linkedin.gif" height="16" alt="Linked In" title="Linked In" border="0"></img>(<%=linkedin%>)</a>
+      <%  }else{
+      %>
+      <a href="javascript:void(0)"><img src="<%=request.getContextPath()%>/apps/images/linkedin.gif" height="16" alt="Linked In" title="Linked In" border="0"></img>(0)</a>
+      <%}  if(conList.hasNode("Others")){
+       var Others=conList.getNode("Others").getNodes().length;
+       %> 
+      <a  rel="facebox" href="javascript:void(0)"  onclick="getKontact('Others')">  Others(<%=Others%>)</a>
+        <%}else{
+      %>
+      <a href="javascript:void(0)"></img>(0)</a>
+      <%}
+      
+         %>
+             <a href="javascript:void(0)" onclick="changeStateSearch('network')">Your Connection</a>
+            <a href="javascript:void(0)" onclick="changeStateSearch('bizlem')">Search in Bizlem</a>
+      </div>
+      
+       <div id="bizlem" style="display:none">
+      <input type="text" onkeyup="searchInvitePerson()" id="searchMeInUser" class="form-control" Placeholder="please enter name">
+      </div>
+       <div class="content-tab mCustomScrollbar">
+                    <div class="tab-three-12">
+
+                      <div class="people-visited" id="mycont">
+           
+                      </div>
+                  </div>
+           </div>
+     
+      
+      <div class="modal-footer">
+      <button type="button" class="btn btn-primary" onclick="getMesageBody('<%=invitenodeid%>')">Next </button>
+      <a  href="<%=request.getContextPath()%>/servlet/service/invite.startprocess" style="float:left" >Expand your contact list  (came back to invite) </a>
+        <a data-target="#draftmessage" style="display:none" id="clickmeevent" data-toggle="modal" href="javascript:void(0)" class="btn btn-primary"></a>
+      </div>
+    </form>
+    </div>
+  </div>
+</div>
+<input type="hidden" value="" id="selectedemail">
+<input type="hidden" value="<%=invitenodeid%>" id="invitenodeid" name="invitenodeid">
+<input type="hidden" value="" id="mailplatformid" name="mailplatformid">
+<%}}%>
+
+
+
+<div class="modal fade draftmessage" tabindex="-1" id="draftmessage" role="dialog" aria-labelledby="registerModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+     <div class="modal-content" style="font-size: 12px;font-family: Roboto, Helvetica, Tahoma, Arial, sans-serif, SimSun;">
+    <form class="form-horizontal">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="closememessage"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="registerModalLabelDraft"></h4>
+      <div id="registerModalLabelDraftText" style="display:none"> <strong>Subject:</strong> <input type="text" placeholder="Invitation Subject" id="registerModalLabelDraftTextInside" ></div>
+          <a href="javascript:void(0)" onclick="editMessage()"  id="editinvite" style="float:right;" >  <i class="fa fa-pencil edit"></i></a>
+          
+          <a href="javascript:void(0)" style="align:center" id="iniviCount"  onclick="invitaionList('true')">   
+          
+           <img  style="float:left;width:35px;height:15px"  src="<%=request.getContextPath()%>/apps/images/people-icon.png" alt="Invities Count" > </a>
+           <a href="javascript:void(0)" onclick="invitaionList('true')"  style="float:left" id="iniviCountNext">0 </a>
+      </div>
+      <div class="modal-body">
+      <div id="inviteto"></div>
+      <div id="messageBody">
+      Show message Body
+      </div>
+      <div id="customeMessage" style="display:none">
+      <textarea id="editor1" name="contentText" rows="10" cols="80"> </textarea>
+      
+      </div>
+      <div id="customeinviList"  style="display:none">
+     
+      
+      </div>
+		
+		 <div class="modal-footer"> 
+		 <a  href="javascript:void(0)" class="btn btn-primary" onclick="firstpop()"  >Back</a>
+		  <a  href="javascript:void(0)" class="btn btn-primary" onclick="finishEditMessage()" id="finishinvite" style="display:none">Finish Edit</a>
+		   
+		 
+		 
+		  
+		 
+          <a  href="javascript:void(0)" class="btn btn-primary" onclick="inviteForThis()" id="inviteall">Send Invitation</a>
+          
+      </div>
+    </form>
+    </div>
+  </div>
+</div>
+
+

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<% var currentNodeProvided = ((typeof currentNode != "undefined"));
+%>
+
+<html>
+    <head>
+        <title>Sub Categary</title>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="description" content="Demo project with jQuery">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+         <%load("../common/links.esp");%>
+       <%load("../common/header.esp");%>
+     
+      <%load("../category/subcategoryrender.esp");%>
+ 
+    <section class="section">
+<div class="container">
+<div class="row">
+           <%load("../products/hotseller.esp");%>
+    </div>
+
+   <div class="row">    
+         <iframe src="<%=request.getScheme()+"://"+request.getServerName()+":"+ request.getServerPort()+request.getContextPath()%>/servlet/photo/photoshow.liststory"  frameborder='0' scrolling='no' width='500' height=400'>
+  </iframe>
+
+    <iframe src="<%=request.getScheme()+"://"+request.getServerName()+":"+ request.getServerPort()+request.getContextPath()%>/content/products/.topnews?actionType=catagory" scrolling="no"  style="height:400px" frameborder='0' scrolling='no' width="268">    
+                </iframe>
+        <div class="col-sm-4 co-roe <small class="pull-right"><a href="#"></a></small></h3>
+            <!-- Place somewhere in the <body> of your page -->
+              <div class="col-md-12 col-xs-12">
+ 				<%load("../news/productBysolr.esp");%>
+</div>
+    </div>
+
+ <div class="row">
+         <%load("../products/hotproducts.esp");%>
+    </div>
+    
+
+        
+            </div>
+        </div>
+    </section>
+<%load("../common/footer.esp");%>
+        
+    </body>
+</html>

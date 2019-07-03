@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html><% var currentNodeProvided = ((typeof currentNode != "undefined"));
+%>
+    <head>
+        <title>Product List</title>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="description" content="Demo project with jQuery">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+            <%load("../common/links.esp");%>
+    
+
+       <%load("../common/header.esp");%>
+    <section class="section">
+        <div class="container">
+            <div class="pace pace-active" style="display:none;">
+<div class="pace-progress">
+<div class="pace-progress-inner"></div>
+</div>
+<div class="pace-activity"></div>
+</div>
+    <div class="row">
+     <ol class="breadcrumb">
+     <li><a href="<%=request.getContextPath()%>/servlet/service/index.pageview">Home</a></li>
+  <%  var cat=request.getParameter("query");
+  		if(cat.length()==2){
+    cNode=currentNode.session.getRootNode().getNode("content").getNode("unspsc").getNode(cat).getNodes();
+    out.print("<li class='active'>Product List related to -"+currentNode.session.getRootNode().getNode("content").getNode("unspsc").getNode(cat).name+"</li> Category");
+  		}else if(cat.length()==4){
+  		var s=cat.split("");
+  		 out.print("<li><a href='"+request.getContextPath()+"/servlet/service/index.catlist?catid="+s[1]+""+s[2]+"&search="+currentNode.session.getRootNode().getNode("content").getNode("unspsc").getNode(s[1]+""+s[2]).name+"'>"+currentNode.session.getRootNode().getNode("content").getNode("unspsc").getNode(s[1]+""+s[2]).name+"</a></li>");
+  out.print("<li class='active'>Product List related to"+currentNode.session.getRootNode().getNode("content").getNode("unspsc").getNode(s[1]+""+s[2]).getNode(s[3]+""+s[4]).name+"</li> Category");
+ 			
+ 			}else if(cat.length()==6){
+  		var s=cat.split("");
+  			out.print("<li><a href='"+request.getContextPath()+"/servlet/service/index.catlist?catid="+s[1]+""+s[2]+"&search="+currentNode.session.getRootNode().getNode("content").getNode("unspsc").getNode(s[1]+""+s[2]).name+"'>"+currentNode.session.getRootNode().getNode("content").getNode("unspsc").getNode(s[1]+""+s[2]).name+"</a></li>");
+	out.print("<li><a href='"+request.getContextPath()+"/servlet/service/index.catlist?catid="+s[1]+""+s[2]+s[3]+""+s[4]+"&search="+currentNode.session.getRootNode().getNode("content").getNode("unspsc").getNode(s[1]+""+s[2]).getNode(s[3]+""+s[4]).name+"'>"+currentNode.session.getRootNode().getNode("content").getNode("unspsc").getNode(s[1]+""+s[2]).getNode(s[3]+""+s[4]).name+"</a></li>");
+  out.print("<li class='active'>Product List related to "+currentNode.session.getRootNode().getNode("content").getNode("unspsc").getNode(s[1]+""+s[2]).getNode(s[3]+""+s[4]).getNode(s[5]+s[6]).name+"</li> Category");
+ 
+ }else if(cat.length()==8){
+ var s=cat.split("");
+  			out.print("<li><a href='"+request.getContextPath()+"/servlet/service/index.catlist?catid="+s[1]+""+s[2]+"&search="+currentNode.session.getRootNode().getNode("content").getNode("unspsc").getNode(s[1]+""+s[2]).name+"'>"+currentNode.session.getRootNode().getNode("content").getNode("unspsc").getNode(s[1]+""+s[2]).name+"</a></li>");
+			out.print("<li><a href='"+request.getContextPath()+"/servlet/service/index.catlist?catid="+s[1]+""+s[2]+s[3]+""+s[4]+"&search="+currentNode.session.getRootNode().getNode("content").getNode("unspsc").getNode(s[1]+""+s[2]).getNode(s[3]+""+s[4]).name+"'>"+currentNode.session.getRootNode().getNode("content").getNode("unspsc").getNode(s[1]+""+s[2]).getNode(s[3]+""+s[4]).name+"</a></li>");
+ 			out.print("<li><a href='"+request.getContextPath()+"/servlet/service/index.catlist?catid="+s[1]+""+s[2]+s[3]+""+s[4]+s[5]+""+s[6]+"&search="+currentNode.session.getRootNode().getNode("content").getNode("unspsc").getNode(s[1]+""+s[2]).getNode(s[3]+""+s[4]).getNode(s[5]+""+s[6]).name+"'>"+currentNode.session.getRootNode().getNode("content").getNode("unspsc").getNode(s[1]+""+s[2]).getNode(s[3]+""+s[4]).getNode(s[5]+""+s[6]).name+"</a></li>");
+  			out.print("<li class='active'>Product List related to -"+currentNode.session.getRootNode().getNode("content").getNode("unspsc").getNode(s[1]+""+s[2]).getNode(s[3]+""+s[4]).getNode(s[5]+s[6]).getNode(s[7]+s[8]).name+" unspsc</li>");
+ 
+  			}	%>
+  				</ol>
+        <div class="col-sm-3 col-xs-12">
+            <div class="row">
+                <div class="col-sm-12">
+                    <!--<h4>Categoary</h4>-->
+<div class="panel-group categoary" id="accordion" role="tablist" aria-multiselectable="true">
+ 
+</div>
+                </div>
+                <iframe src="<%=request.getScheme()+"://"+request.getServerName()+":"+ request.getServerPort()+request.getContextPath()%>/servlet/service/page.topnews?actionType=catagory" scrolling="no"  style="height:500px" frameborder='0' scrolling='no' width="268">    
+                </iframe>
+    
+            </div>
+        </div>
+         <div class="col-sm-6" col-xs-12>
+    <div class="row">
+    <%var count=request.getAttribute("total");
+out.print(count+" "+"records found");	%>
+   <table border="0" width="100%" cellpadding="0" id="table1" cellspacing="0" align="left"><tbody><tr><td>
+     
+   <table cellpadding="0" align="left" cellspacing="0" width="100%"><tbody><tr><td align="left" class="ntext" style="background:#FFF7EC;">
+     <p style="font-size: medium;margin: 0 0 5px 0;padding:0px;"><span style="color: #666666;">Ads related to </span><b id="valueId"></b><span title="These ads are based on your current search terms."> <img src="images/tooltip.png" width="12px" /></span></p>
+     </td></tr><tr><td align="left" class="ntext" style="background:#FFF7EC;" id="adbody">
+     
+     </td></tr></tbody></table>
+  </td></tr></tbody></table>
+        
+   <%
+ var result = (count/10);
+var integerPart = Math.floor(result);
+if(count-(integerPart*10)!=0){
+integerPart=integerPart+1;
+}
+if(count==0){
+	out.print("Sorry no product found for this search text !");
+	
+}%>	
+    <div class="demo content4">
+<% 
+ 
+var data=request.getAttribute("product");
+
+for(var k=0; k<data.size(); k++) { 
+          var path=data.get(k);
+                     
+            %>
+      <div class="search-list-mobile">
+                            <div class="thumbnail">
+                              <div class="thumb">
+                <% if(path.hasNode("media")){
+                	if(path.getNode("media").hasNode("images")){
+                		if(path.getNode("media").getNode("images").hasNode()){
+                			var o=path.getNode("media").getNode("images").getNodes();
+                		
+                			out.print("<img alt="+"64x64"+" class="+"media-object"+" src='"+request.getScheme()+"://"+request.getServerName()+":"+ request.getServerPort()+request.getContextPath()+o[0].imgpath+"'>");
+                		
+ 						
+                		}else{
+                			//String img="<img alt="+"64x64"+" class="+"media-object"+" src="+request.getScheme()+"://"+request.getServerName()+":"+ request.getServerPort()+request.getContextPath()+"/apps/images/nmg.jpg>";
+                			out.print("<img alt="+"64x64"+" class="+"media-object"+" src='"+request.getScheme()+"://"+request.getServerName()+":"+ request.getServerPort()+request.getContextPath()+"/apps/images/nmg.jpg'>");
+                		}
+                	}else{
+                		//String img="<img alt="+"64x64"+" class="+"media-object"+" src="+request.getScheme()+"://"+request.getServerName()+":"+ request.getServerPort()+request.getContextPath()+"/apps/images/nmg.jpg>";
+            			out.print("<img alt="+"64x64"+" class="+"media-object"+" src='"+request.getScheme()+"://"+request.getServerName()+":"+ request.getServerPort()+request.getContextPath()+"/apps/images/nmg.jpg'>");  	
+                	}
+                	
+                }else{
+                	//String img="<img alt="+"64x64"+" class="+"media-object"+" src="+request.getScheme()+"://"+request.getServerName()+":"+ request.getServerPort()+request.getContextPath()+"/apps/images/nmg.jpg>";
+    			out.print("<img alt="+"64x64"+" class="+"media-object"+" src='"+request.getScheme()+"://"+request.getServerName()+":"+ request.getServerPort()+request.getContextPath()+"/apps/images/nmg.jpg'>");  	
+        	} %>
+                  
+              
+              </div>
+            
+            <div class="caption">
+            				<%if(path.hasProperty("redirecturl")){%>
+            				<h3><a href="<%=path.redirecturl%>" target="_blank"><%=path.name%></a></h3>
+            				<%}else{%>
+            					<h3><a href="<%=request.getContextPath()%>/servlet/service/productselection.brief?pid=<%=path.getName()%>" target="_blank"><%=path.name%></a></h3>
+                              <%}%>
+                              
+                              <%if(path.description!="" && path.description!=null && path.description!="undefind"){%>
+            			<p class="ellipsis" style="white-space: nowrap;overflow: hidden; text-overflow: ellipsis;"><%=path.description%></p>
+            				<%}%>
+                              
+                     
+                   </div>
+                  
+                   <div class="all-btn">
+                              <div class="list-check"><input type="checkbox" id="<%=path.getName()%>" onclick="handleChClick(this)"></div>
+                              <div class="compare"><a lass="btn btn-danger" onclick="handleCompProduct()" href="#">Compare Now</a></div>
+                              <div class="price">Moq: <%=path.moq?path.moq:"NA"%> &nbsp;&nbsp; Price:  <%=path.price?path.price:"NA"%></div>
+                              <%
+                   if(path.hasNode("sup") &&  path.getNode("sup").hasNodes()){
+                   var supNode=path.getNode("sup").getNodes();%>
+                   
+                   
+                              <div class="enquery">
+                                <a href="#" class="btn btn-default"  onclick="globalSupplierSetter('<%=supNode[0].supid%>')">Send Enquiry</a>
+                                <a href="#" class="btn btn-default"  onclick="globalSupplierSetter('<%=supNode[0].supid%>')">Get Quote</a>
+                              </div>
+                   <%  }%>
+                   
+                            </div>      
+                                      
+                </div>
+               
+            </div>
+        <%} %>
+       
+        </div>
+        
+            <div class="demo demo4_bottom"></div>
+                 <script type="text/javascript">
+                        $('.demo4_bottom,.demo4_top').bootpag({
+                            total:<%=integerPart%> ,
+                            page: 1,
+                            maxVisible: 3,
+                            
+                        }).on("page", function(event, num){
+                            //show
+                            $(".pace-active").show();
+                           
+                              $(".content4").load("<%=request.getContextPath()%>/servlet/service/productselection.productlist?query=<%=request.getParameter('query')%>&from="+ num +"&to=10", function(){
+                            
+                              $(".pace-active").hide();
+                              //hide
+                            });
+                            // or some ajax content loading...
+                        }).find('.pagination');
+                        
+                    </script>
+
+
+            </div>
+        </div>
+        <div class="col-sm-3"><div id="adbody1">
+ </div>
+            <div class="advertise">
+               <!--/* OpenX iFrame Tag v2.8.10 */-->
+
+<iframe id='a9407722' name='a9407722' src='http://34.193.219.25/openx/www/delivery/afr.php?zoneid=16&amp;cb=1' frameborder='0' scrolling='no' width='268' height='410'><a href='http://34.193.219.25/openx/www/delivery/ck.php?n=a0456048&amp;cb=1' target='_blank'><img src='http://34.193.219.25/openx/www/delivery/avw.php?zoneid=16&amp;cb=1&amp;n=a0456048' border='0' alt='' /></a></iframe>
+
+            </div>
+
+           
+        </div>
+    </div>
+
+
+
+ <%load("hotproducts.esp");%>
+
+        
+            </div>
+        </div>
+    </section>
+
+      <%load("../common/footer.esp");%>
+<!-- register Modal End  -->
+
+    
+    </body>
+</html>

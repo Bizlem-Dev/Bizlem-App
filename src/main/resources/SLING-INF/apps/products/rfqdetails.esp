@@ -1,0 +1,293 @@
+<%-- 
+    
+    Author     : Vivek Tripathi
+--%>
+<!DOCTYPE html>
+<% var currentNodeProvided = ((typeof currentNode != "undefined"));  %>
+
+<html>
+    <head>
+        <title>Search Results</title>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="description" content="Demo project with jQuery">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+     <%load("../common/links.esp");%>
+     <style type="text/css">
+
+     * {
+       font-family: 'Roboto', sans-serif !important;
+     }
+
+     /*textarea css*/
+     textarea{  
+       /* box-sizing: padding-box; */
+       overflow:auto;
+      
+         height: 75px;
+          /*overflow: scroll;*/
+         resize: none;
+       padding:2px;
+       width:100%;
+       
+       font-size:14px;
+       /*margin:50px auto;*/
+       display:block;
+       border-radius:5px;
+       border:3px solid #4dbdbd;
+     }
+
+
+     /*table css*/
+     .responstable {
+       margin: 1em 0;
+       width: 100%;
+       overflow: hidden;
+       background: #FFF;
+       color: #024457;
+       border-radius: 10px;
+       border: 1px solid #4dbdbd;
+     }
+     .responstable tr {
+       border: 1px solid #D9E4E6;
+     }
+     .responstable tr:nth-child(odd) {
+       background-color: #EAF3F3;
+     }
+     .responstable th {
+       display: none;
+       border: 1px solid #FFF;
+       background-color: #4dbdbd;
+       color: #FFF;
+       padding: 1em;
+     }
+     .responstable th:first-child {
+       display: table-cell;
+       text-align: center;
+     }
+     .responstable th:nth-child(2) {
+       display: table-cell;
+     }
+     .responstable th:nth-child(2) span {
+       display: none;
+     }
+     .responstable th:nth-child(2):after {
+       content: attr(data-th);
+     }
+     @media (min-width: 480px) {
+       .responstable th:nth-child(2) span {
+         display: block;
+       }
+       .responstable th:nth-child(2):after {
+         display: none;
+       }
+     }
+     .responstable td {
+       display: block;
+       word-wrap: break-word;
+       max-width: 7em;
+     }
+     .responstable td:first-child {
+       display: table-cell;
+       text-align: center;
+       border-right: 1px solid #D9E4E6;
+     }
+     @media (min-width: 480px) {
+       .responstable td {
+         border: 1px solid #D9E4E6;
+       }
+     }
+     .responstable th, .responstable td {
+       text-align: center;
+       margin: .5em 1em;
+     }
+     @media (min-width: 480px) {
+       .responstable th, .responstable td {
+         display: table-cell;
+         padding: 1em;
+       }
+     }
+
+     .btn-info,.label-info {
+       background-color: #4dbdbd;
+     }
+     .badge {
+       background-color: #EAF3F3;
+       color: #555;
+     }
+
+     .label {
+       font-size: 100%;  
+     }
+
+
+
+
+     </style>
+ </head>
+ <body>
+    <%load("../common/header.esp");%>
+<div class="pace pace-active" style="display:none;">
+<div class="pace-progress">
+<div class="pace-progress-inner"></div>
+</div>
+<div class="pace-activity"></div>
+</div>
+      
+    
+    <section class="section">
+    <div class="container">
+   <!-- <div class="row">
+      
+        <center><h2>View details</h2></center><br><br>
+    </div><hr>-->
+    <div class="row">
+    <%if(request.getParameter("limit") != null && request.getParameter("limit").equals("1")){%>
+    <center><h2 style="color: red;">Repond limit is exceeded</h2></center>
+    <%}%>
+      <div style="margin-left: 5%" class="pull-left">
+      <%
+      	var rfqno=request.getParameter("rfqNo");
+      var companyid=request.getParameter("Companyid");
+      var serviceId=request.getParameter("serviceId");
+      var rfqNode= "";
+      if(currentNode.session.getRootNode().getNode("content").getNode("company").getNode(request.getParameter("Companyid")).hasNode("Rfq")){
+	        rfqNode=currentNode.session.getRootNode().getNode("content").getNode("company")
+	    	.getNode(companyid).getNode("Rfq").getNode(rfqno);
+      }
+       %>
+      <br>
+        <h3><strong>RFP/RFQ : <%=rfqno%> </strong></h3>
+      </div>
+      <div style="margin-right: 5%" class="pull-right">
+        
+        <table  style=" border-collapse: separate;
+      border-spacing: 0 1em;" class=" table1">
+          <tr >
+            <td align="right"><strong>Date : </td>
+            <td align="right"><strong> <%=rfqNode.CreationDate?rfqNode.CreationDate:""%></strong></td>
+          </tr>
+          <tr >
+            <td align="right"><strong>Customer : </strong></td>
+            <%if(currentNode.session.getRootNode().getNode("content").getNode("user").hasNode(rfqNode.userid.replace("@","_"))){
+            var userNameNode = currentNode.session.getRootNode().getNode("content").getNode("user").getNode(rfqNode.userid.replace("@","_"));
+            }
+            %>
+            
+            <td align="right"><strong> <%=userNameNode.name?userNameNode.name:""%></span></strong></td>
+          </tr>
+        </table>
+      </div>
+    </div>
+    <div class="row">
+      
+      <form action="/portal/servlet/service/productselection.respondQuote" enctype="multipart/form-data"  method="POST">
+      <input type="hidden" name="rfq_compid" value="<%=companyid%>" />
+      <input type="hidden" name="rfq_noid" value="<%=rfqno%>" />
+      <input type="hidden" name="serviceId" value="<%=serviceId%>" />
+      <table class="responstable">
+      <tr>
+       <th style="width: 1%">Sr.No</th>
+     <th style="width: 15%">Product Name</th>
+     <th style="width: 10%">Image</th>
+     <th>Message</th>
+     <th style="width: 5%">Quantity</th>
+     <th style="width: 11%">Currency</th>
+	 <th style="width: 12%">Rate</th>
+	 <th style="width: 12%">Attachment</th>
+       </tr>
+       <%
+       //out.print(companyid);
+      // out.print(rfqno);
+      // out.print(currentNode.session.getRootNode().getNode("content").getNode("company").getNode(request.getParameter("Companyid")));
+       if(currentNode.session.getRootNode().getNode("content").getNode("company").getNode(request.getParameter("Companyid")).hasNode("Rfq")){
+	       var companyNode=currentNode.session.getRootNode().getNode("content").getNode("company").getNode(request.getParameter("Companyid"));
+	       if(companyNode.getNode("Rfq").hasNodes()){
+	       var rfqNode= companyNode.getNode("Rfq").getNode(rfqno);
+	       //if(rfqNode.hasProperty("status") && rfqNode.getProperty("status").getString().equals("new")){
+	       var pnodes=rfqNode.getNodes();
+	       var iCount = 1;
+	       for(var i=0; i<pnodes.length; i++){
+	       	   var productId=pnodes[i].productid;
+	    	   var productDescription=pnodes[i].productDescription;
+	    	   var 	productImage=pnodes[i].productImage; 
+	    	   var 	productName =pnodes[i].productName ;
+	    	   var 	productpQuantity =pnodes[i].productpQuantity ;
+	    	  
+       %>
+       
+       <tr>
+         <td><%=iCount%><input type="hidden" value="<%=productId%>" name="rfq_prodid" /></td>
+         <td><label><%=productName%></label><input type="hidden" value="<%=productName%>" name="rfq_prodname" /></td>
+         <td><img class="img-responsive" style="max-height: 15%;" src="<%=request.getContextPath()%><%=productImage%>"</td>
+         <td><textarea readonly="true" name="rfq_proddesc"> <%=productDescription%></textarea></td>
+         <td><label><%=productpQuantity%></label><input type="hidden" value="<%=productpQuantity%>" name="rfq_prodquantity" /></td>
+         <td><select class="form-control" name="rfq_currency">
+         <%
+      if(currentNode.session.getRootNode().getNode("content").hasNode("currency") && currentNode.session.getRootNode().getNode("content").getNode("currency").hasNodes()){
+      var currencyNode = currentNode.session.getRootNode().getNode("content").getNode("currency").getNodes();
+      for(var j=0;j<currencyNode.length;j++){%>
+      
+      <%if(pnodes[i].hasProperty("productCurrency")){
+      if(pnodes[i].productCurrency.equals(currencyNode[j].id)){
+      %>
+      <option selected value="<%=currencyNode[j].id?currencyNode[j].id:""%>"><%=currencyNode[j].name?currencyNode[j].name:""%></option>	
+      <%}else{%>
+      <option value="<%=currencyNode[j].id?currencyNode[j].id:""%>"><%=currencyNode[j].name?currencyNode[j].name:""%></option>
+      <%}%>
+      
+      <%}else{%>
+      <option value="<%=currencyNode[j].id?currencyNode[j].id:""%>"><%=currencyNode[j].name?currencyNode[j].name:""%></option>
+      <%}}
+      
+      }else{%>
+      <option value="-1">NA</option>
+      <%}%></select>
+         <td><input class="form-control" type="text" value="<%=pnodes[i].productRate?pnodes[i].productRate:""%>" name="rate"></td>
+         <td><input class="form-control" type="file" name="rfqfile"></td>
+       </tr>
+       <%iCount++;}%>
+	       
+	       </table>
+	       
+	       <center>
+	         <%if(rfqNode.hasProperty("sellerdesc")){%>
+	       <textarea name="rfq_seller_desc"><%=rfqNode.getProperty("sellerdesc").getString()%></textarea><br>
+	       <%}else{%>
+	       <textarea name="rfq_seller_desc">Thank you for choosing us, Will revert to you with the best quote.</textarea><br>
+	       <%}%>
+	         <%if(rfqNode.hasProperty("status") && rfqNode.getProperty("status").getString().equals("responded")){%>
+	       
+			  <%}else{%>
+			  <%if(rfqNode.hasProperty("status") && rfqNode.getProperty("status").getString().equals("new")){%>
+        <a class="btn btn-info" href="http://prod.bizlem.io:8082/portal/servlet/service/globalsearch.addrfqdraft?Companyid=<%=request.getParameter("Companyid")%>&rfqNo=<%=request.getParameter("rfqNo")%>">Save as Draft</a>
+        <%}%>
+			   <input class="btn btn-info" type="submit" name="" value="Respond">
+			   <%}%>
+	       </center>
+ 
+	       
+		   <% } }%>
+      
+        
+     
+      </form>
+              
+             
+    
+    </div>
+  </div>
+
+
+
+    
+    
+    
+    
+            </section>
+
+      <%load("../common/footer.esp");%>
+<!-- register Modal End  -->
+
+    </body>
+    </html>

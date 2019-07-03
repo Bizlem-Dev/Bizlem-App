@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Product List</title>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="description" content="Demo project with jQuery">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+       <link rel="stylesheet" href="<%=request.getScheme()+"://"+request.getServerName()+":"+ request.getServerPort()+request.getContextPath()%>/apps/css/bootstrap.css"> 
+        <link rel="stylesheet" href="<%=request.getScheme()+"://"+request.getServerName()+":"+ request.getServerPort()+request.getContextPath()%>/apps/js/FlexSlider/flexslider.css" type="text/css" media="screen" /> 
+        <link rel="stylesheet" href="<%=request.getScheme()+"://"+request.getServerName()+":"+ request.getServerPort()+request.getContextPath()%>/apps/css/color.css">
+        <link rel="stylesheet" href="<%=request.getScheme()+"://"+request.getServerName()+":"+ request.getServerPort()+request.getContextPath()%>/apps/css/loader.css">
+        <link rel="stylesheet" href="<%=request.getScheme()+"://"+request.getServerName()+":"+ request.getServerPort()+request.getContextPath()%>/apps/css/custom.css">
+
+        <script src="<%=request.getScheme()+"://"+request.getServerName()+":"+ request.getServerPort()+request.getContextPath()%>/apps/js/jquery.min.js"></script>
+        <script src="<%=request.getScheme()+"://"+request.getServerName()+":"+ request.getServerPort()+request.getContextPath()%>/apps/js/bootstrap.min.js"></script>
+        <script src="<%=request.getScheme()+"://"+request.getServerName()+":"+ request.getServerPort()+request.getContextPath()%>/apps/js/jquery.bootpag.min.js"></script>
+        <script src="<%=request.getScheme()+"://"+request.getServerName()+":"+ request.getServerPort()+request.getContextPath()%>/apps/js/FlexSlider/jquery.flexslider.js"></script>
+        <script src="<%=request.getScheme()+"://"+request.getServerName()+":"+ request.getServerPort()+request.getContextPath()%>/apps/js/hover-dropdown/bootstrap-hover-dropdown.min.js"></script>
+
+   
+    </head> 
+ <body>
+          <header id="header">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-3 col-xs-12">
+                    <div id="logo">
+                        <a href="/">
+                           <img src="/portal/apps/images/logo.png" alt="Logo">
+                        </a>
+                    </div>
+                </div>
+                <div class="col-sm-9">
+                    <div class="row">
+                        <div class="col-sm-12 col-xs-12">
+                            <div class="row">
+                                <div class="col-md-9 col-sm-8 col-xs-12">
+                                   <form action="<%=request.getContextPath()%>/servlet/service/globalsearch.process" type="GET" id="searchForm">
+                           
+                                      <div class="input-group" id="search">
+                                      <span class="input-group-btn">
+                                            <select  data-placeholder="Product" class="chosen-select form-control"  name="core">
+                                            <option value="product">Product</option>
+                                            <option value="person">Person</option>
+                                            <option value="company">Company</option>
+                                        </select>
+                                        </span>
+                                        <input type="text" class="form-control" placeholder="I m looking for..."  name="search"  >
+                                        <span class="input-group-btn">
+                                            <button class="btn btn-primary" type="button" onclick="validateSearch()">Search</button>
+                                        </span>
+                                    </div>
+                                    </form>
+                                </div>
+                                <div class="col-md-3 col-sm-4 col-xs-8">
+                                    <ul class="social-icon">
+                                        <li class="animate growIn"><a href="#" class="twiter"></a></li>
+                                        <li class="animate growIn"><a href="#" class="facebook"></a></li>
+                                        <li class="animate growIn"><a href="#" class="video"></a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-12 col-xs-12">
+                            <nav class="navbar navbar-static">
+                                <div class="container-fluid">
+                                    <div class="navbar-header">
+                                        <button data-target=".bs-example-js-navbar-scrollspy" data-toggle="collapse" type="button" class="navbar-toggle collapsed">
+                                            <span class="sr-only">Toggle navigation</span>
+                                            <span class="icon-bar"></span>
+                                            <span class="icon-bar"></span>
+                                            <span class="icon-bar"></span>
+                                        </button>
+                                    </div>
+                                    <div class="collapse navbar-collapse bs-example-js-navbar-scrollspy">
+                                        <ul class="nav navbar-nav navbar-left">
+                                            <li><a href="<%=request.getContextPath()%>/servlet/service/page.buyers">For Buyers</a></li>
+                                            <li ><a href="<%=request.getContextPath()%>/servlet/service/page.manufacturer">For Manufactures</a></li>
+                                            <li><a href="<%=request.getContextPath()%>/servlet/service/page.advertise">Advertise Here</a></li>
+                                            <li><a href="<%=request.getContextPath()%>/servlet/service/page.profile">Import Profile</a></li>
+                                            <li><a href="<%=request.getContextPath()%>/servlet/service/page.aboutus">About Us</a></li>
+                                            <li class="active"><a href="<%=request.getContextPath()%>/servlet/service/page.productlist">Product List</a></li>
+                                            <li><a href="<%=request.getContextPath()%>/servlet/service/page.contactus">Contact Us</a></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+   
+ 
+<script src="<%=request.getScheme()+"://"+request.getServerName()+":"+ request.getServerPort()+request.getContextPath()%>/apps/js/scrollbar/jquery.mCustomScrollbar.concat.min.js"></script>
+<link rel="stylesheet" href="<%=request.getScheme()+"://"+request.getServerName()+":"+ request.getServerPort()+request.getContextPath()%>/apps/js/scrollbar/jquery.mCustomScrollbar.css">
+<link rel="stylesheet" href="<%=request.getScheme()+"://"+request.getServerName()+":"+ request.getServerPort()+request.getContextPath()%>/apps/js/scrollbar/style.css">
+<section class="group_details_page">
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md-10 col-sm-9 col-xs-12">
+            	<div class="row">
+            		
+            		<div class="col-xs-12">
+            			<div class="row">
+            				
+            				<div class="col-sm-12 col-xs-12 custom-width panel-body">
+            					<!-- content -->
+            <div class="content-tab2 mCustomScrollbar">
+                <div class="row">
+                	
+                	<div class="col-xs-11 custom-width">
+                		<h1 align="center">Welcome to Product List page</h1>
+                	</div>
+                </div>
+                            </div>
+			    
+            				</div>
+            			</div>
+            		</div>
+
+            	</div>
+                <div class="row">
+                    <div class="col-xs-12 ">
+						<div class="row">
+							
+						</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+  <%load("../common/footer.esp");%>
+
+<!-- Login Modal Start  -->
+<div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="loginModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+    <form class="form-horizontal">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="loginModalLabel">Login Details</h4>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+            <label class="col-sm-3 control-label">Name</label>
+            <div class="col-sm-9">
+              <input type="text" class="form-control">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-3 control-label">Password</label>
+            <div class="col-sm-9">
+              <input type="password" class="form-control">
+            </div>
+          </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary">Login</button>
+      </div>
+      </form>
+    </div>
+  </div>
+</div>
+<!-- Login Modal End  -->
+
+<!-- register Modal Start  -->
+<div class="modal fade" id="registerModal" tabindex="-1" role="dialog" aria-labelledby="registerModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+    <form class="form-horizontal">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="registerModalLabel">Registration Form</h4>
+      </div>
+      <div class="modal-body">
+          <div class="form-group">
+            <label class="col-sm-3 control-label">Full Name</label>
+            <div class="col-sm-9">
+              <input type="text" class="form-control">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-3 control-label">Full Name</label>
+            <div class="col-sm-9">
+              <input type="text" class="form-control">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-3 control-label">Password</label>
+            <div class="col-sm-9">
+              <input type="password" class="form-control">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-3 control-label">Confirm Password</label>
+            <div class="col-sm-9">
+              <input type="password" class="form-control">
+            </div>
+          </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary">Register</button>
+      </div>
+    </form>
+    </div>
+  </div>
+</div>
+<!-- register Modal End  -->
+
+
+
+
+    
+    <body>
+        
+    </body>
+</html>

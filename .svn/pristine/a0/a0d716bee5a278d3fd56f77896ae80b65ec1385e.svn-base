@@ -1,0 +1,29 @@
+package biz.com.service;
+
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.jcr.Node;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.sling.api.SlingHttpServletRequest;
+
+public interface NetworkExpandService {
+public String addContact(HttpServletRequest request);
+void importContacts(String userName, String providerId, String emailNode,
+        String email, String firstName, String lastName);
+
+String uploadImportedContacts(SlingHttpServletRequest request)
+        throws ServletException, IOException;
+
+String addImportedContacts(String userName, String providerId,
+        String emailNode, ArrayList<String> importedValues);
+String callService(String urlStr, String[] paramName,
+		String[] paramValue);
+
+public String processInvite(HttpServletRequest request,HttpServletResponse responce);
+}

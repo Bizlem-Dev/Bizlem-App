@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>About Us</title>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="description" content="Demo project with jQuery">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+       <link rel="stylesheet" href="<%=request.getScheme()+"://"+request.getServerName()+":"+ request.getServerPort()+request.getContextPath()%>/apps/css/bootstrap.css"> 
+        <link rel="stylesheet" href="<%=request.getScheme()+"://"+request.getServerName()+":"+ request.getServerPort()+request.getContextPath()%>/apps/js/FlexSlider/flexslider.css" type="text/css" media="screen" /> 
+        <link rel="stylesheet" href="<%=request.getScheme()+"://"+request.getServerName()+":"+ request.getServerPort()+request.getContextPath()%>/apps/css/color.css">
+        <link rel="stylesheet" href="<%=request.getScheme()+"://"+request.getServerName()+":"+ request.getServerPort()+request.getContextPath()%>/apps/css/loader.css">
+        <link rel="stylesheet" href="<%=request.getScheme()+"://"+request.getServerName()+":"+ request.getServerPort()+request.getContextPath()%>/apps/css/custom.css">
+
+        <script src="<%=request.getScheme()+"://"+request.getServerName()+":"+ request.getServerPort()+request.getContextPath()%>/apps/js/jquery.min.js"></script>
+        <script src="<%=request.getScheme()+"://"+request.getServerName()+":"+ request.getServerPort()+request.getContextPath()%>/apps/js/bootstrap.min.js"></script>
+        <script src="<%=request.getScheme()+"://"+request.getServerName()+":"+ request.getServerPort()+request.getContextPath()%>/apps/js/jquery.bootpag.min.js"></script>
+        <script src="<%=request.getScheme()+"://"+request.getServerName()+":"+ request.getServerPort()+request.getContextPath()%>/apps/js/FlexSlider/jquery.flexslider.js"></script>
+        <script src="<%=request.getScheme()+"://"+request.getServerName()+":"+ request.getServerPort()+request.getContextPath()%>/apps/js/hover-dropdown/bootstrap-hover-dropdown.min.js"></script>
+
+   
+    </head> 
+ <body>
+ <%load("../common/header.esp");%>   
+ 
+<script src="<%=request.getScheme()+"://"+request.getServerName()+":"+ request.getServerPort()+request.getContextPath()%>/apps/js/scrollbar/jquery.mCustomScrollbar.concat.min.js"></script>
+<link rel="stylesheet" href="<%=request.getScheme()+"://"+request.getServerName()+":"+ request.getServerPort()+request.getContextPath()%>/apps/js/scrollbar/jquery.mCustomScrollbar.css">
+<link rel="stylesheet" href="<%=request.getScheme()+"://"+request.getServerName()+":"+ request.getServerPort()+request.getContextPath()%>/apps/js/scrollbar/style.css">
+
+<section class="new_description_page">
+		
+			<div class="container">
+				<div class="row">
+					<div class="col-sm-12 col-xs-12">
+						<div class="row">
+							<div class="col-xs-12 ">
+								<h3><b style="font-size:30px;color:#5d5dbb">About Us</b><h3>
+								
+								<figure class="banner">
+									<img style="width:1000px;height:260px" src="<%=request.getContextPath()%>/apps/images/static/aboutus.png" alt="New Description">
+								</figure>
+								<p style="font-size:18px;">
+								Bizlem is the nextgen global trade platform for the connected world where trade can be transacted in a social way. We aim to transform the way global trade is done with our cutting edge technologies, high quality and vast business content and state-of-art collaboration and language translation tools.
+								</p><br>
+								<p style="font-size:18px;">
+								Integral to the trade platform,  is the trade platform is the bizlem social network which using advanced social interfaces gives the users a dashboard view of their all their social networks. All business transactions happen within this social scrutiny. The interaction of the users with content as well as the transactions build an online reputation our advanced machine learning algorithms process for relevance to a given user, buyer or seller.
+								</p><br>
+								<p style="font-size:18px;">
+								A path breaking innovation is our ability to rationalize the product and services master data to ensure that the RFPs send out our accurate and complete, thereby radically sashing the transaction time and cost. 
+								</p><br>
+								<p style="font-size:18px;">
+								A host of voice, multilingual chat and video collaboration tools provide a seams buying and selling experience.
+								</p><br>
+								
+							</div>
+						</div><br>
+						
+						
+							<div class="row">
+							<div class="col-xs-12 ">
+								<h3><b style="font-size:30px;color:#5d5dbb">Mission</b><h3>
+								
+								<figure class="banner">
+									<img style="width:1000px;height:260px" src="<%=request.getContextPath()%>/apps/images/static/mission.png" alt="New Description">
+								</figure>
+								
+								<p style="font-size:18px;">
+								Our mission to create a new global eco system for trade that leverages on the power of internet and where information is freely available without ambiguity for all stake holders of trade.
+								</p><br>
+								<p style="font-size:18px;">
+								<b>Our mission hinges on the following pillars:</b>
+								<ul>
+								<li>People</li><br>
+								<li>Processes</li><br>
+								<li>Companies</li><br>
+								<li>Products</li><br>
+								<li>Events</li>
+								</ul>
+								</p><br>
+								<p style="font-size:18px;">
+								We want to redefine the time, cost and reach of global trade. 
+								</p><br>
+								
+								
+							</div>
+							</div>
+							
+							<div class="row">
+							<div class="col-xs-12 ">
+								<h3><b style="font-size:30px;color:#5d5dbb">Target Audience</b><h3>
+								
+								<figure class="banner">
+									<img style="width:1000px;height:260px" src="<%=request.getContextPath()%>/apps/images/static/targetaudience.png" alt="New Description">
+								</figure>
+								
+								<p style="font-size:18px;">
+								Our target audience is as under:
+								</p><br>
+								<p style="font-size:18px;">
+								<b>For our market place solutions:</b>
+								<ul>
+								<li><b>Sellers</b> (manufacturers and service providers) : Small, medium and large product manufacturers and service providers all over the world.</li><br>
+								<li><b>Buyers</b>: Small, medium to large enterprises who need to discover new global sources.</li><br>
+								<li><b>Information consumers:</b> Design engineers, business analyst, engineering students or business professionals.</li>
+								</ul>
+								</p><br>
+								<p style="font-size:18px;">
+								<b>For Buy side solutions:</b>
+								<ul>
+								<li><b>Buyers</b>: Medium to large enterprises who use an ERP system which in turn has master data.</li><br>
+								<li><b>Sellers</b>: Medium to large manufacturers and service providers who want to continuously synchronize the master data of manufacturers to drive accurate leads.</li>
+								</ul>
+								</p><br>
+								
+								
+							</div>
+							</div>
+							
+							<div class="row">
+							<div class="col-xs-12 ">
+								<h3><b style="font-size:30px;color:#5d5dbb">Executive Team</b><h3>
+								<figure class="banner">
+									<img style="width:1000px;height:260px" src="<%=request.getContextPath()%>/apps/images/static/team.png" alt="New Description">
+								</figure>
+								
+								
+								<p style="font-size:18px;">
+								<b>Geetanjali Agarwal, Founder & CEO<b>
+								</p><br>
+								
+							</div>
+							</div>
+							
+							
+							
+						</div>
+					</div>
+
+
+
+					<!--<div class="col-sm-3 col-xs-12">
+						<div class="advertise">
+          <img alt="advertise" src="<%=request.getContextPath()%>/apps/images/advertise3.jpg">
+      </div>			<div class="advertise">
+          <img alt="advertise" src="<%=request.getContextPath()%>/apps/images/advertise3.jpg">
+      </div>
+      
+      
+					</div>-->
+				</div>
+			</div>
+
+</section>
+
+
+  <%load("../common/footer.esp");%>
+
+<!-- Login Modal Start  -->
+<div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="loginModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+    <form class="form-horizontal">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="loginModalLabel">Login Details</h4>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+            <label class="col-sm-3 control-label">Name</label>
+            <div class="col-sm-9">
+              <input type="text" class="form-control">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-3 control-label">Password</label>
+            <div class="col-sm-9">
+              <input type="password" class="form-control">
+            </div>
+          </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary">Login</button>
+      </div>
+      </form>
+    </div>
+  </div>
+</div>
+<!-- Login Modal End  -->
+
+<!-- register Modal Start  -->
+<div class="modal fade" id="registerModal" tabindex="-1" role="dialog" aria-labelledby="registerModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+    <form class="form-horizontal">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="registerModalLabel">Registration Form</h4>
+      </div>
+      <div class="modal-body">
+          <div class="form-group">
+            <label class="col-sm-3 control-label">Full Name</label>
+            <div class="col-sm-9">
+              <input type="text" class="form-control">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-3 control-label">Full Name</label>
+            <div class="col-sm-9">
+              <input type="text" class="form-control">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-3 control-label">Password</label>
+            <div class="col-sm-9">
+              <input type="password" class="form-control">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-3 control-label">Confirm Password</label>
+            <div class="col-sm-9">
+              <input type="password" class="form-control">
+            </div>
+          </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary">Register</button>
+      </div>
+    </form>
+    </div>
+  </div>
+</div>
+<!-- register Modal End  -->
+
+
+
+
+    
+    <body>
+        
+    </body>
+</html>

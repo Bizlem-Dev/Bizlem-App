@@ -1,0 +1,1146 @@
+package biz.com.app.servlet;
+
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.lang.reflect.Array;
+import java.util.*;
+
+import jxl.*;
+import jxl.write.*;
+import jxl.write.biff.RowsExceededException;
+
+import javax.jcr.LoginException;
+import javax.jcr.Node;
+import javax.jcr.NodeIterator;
+import javax.jcr.PropertyIterator;
+import javax.jcr.RepositoryException;
+import javax.jcr.Session;
+import javax.jcr.SimpleCredentials;
+import javax.jcr.Workspace;
+import javax.jcr.query.Query;
+import javax.jcr.query.QueryResult;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpSession;
+
+import org.apache.felix.scr.annotations.Component;
+import org.apache.felix.scr.annotations.Properties;
+import org.apache.felix.scr.annotations.Property;
+import org.apache.felix.scr.annotations.Reference;
+import org.apache.felix.scr.annotations.Service;
+import org.apache.sling.api.SlingHttpServletRequest;
+import org.apache.sling.api.SlingHttpServletResponse;
+import org.apache.sling.api.servlets.SlingAllMethodsServlet;
+import org.apache.sling.jcr.api.SlingRepository;
+import org.osgi.service.http.HttpService;
+
+import biz.com.service.EventService;
+import biz.com.service.ProductService;
+
+
+@Component(immediate = true, metatype = false)
+@Service(value = javax.servlet.Servlet.class)
+@Properties({
+		@Property(name = "service.description", value = "Save product Servlet"),
+		@Property(name = "service.vendor", value = "VISL Company"),
+		@Property(name = "sling.servlet.paths", value = { "/servlet/service/productselection" }),
+		@Property(name = "sling.servlet.resourceTypes", value = "sling/servlet/default"),
+		@Property(name = "sling.servlet.extensions", value = { "hotproducts","cat",
+				"latestproducts", "brief", "prodlist","catalog","viewcart","productslist","addcart","createproduct","checkmodelno","productEdit" }) })
+@SuppressWarnings("serial")
+public class ProductsServlet extends SlingAllMethodsServlet {
+
+	@Reference
+	private SlingRepository repos;
+	
+	final int NUMBEROFRESULTSPERPAGE = 10;
+	
+	@Reference
+	private ProductService product;
+	
+	@Reference
+	private EventService eventservice;
+		
+	ArrayList prodID = new ArrayList();
+	@Override
+	protected void doGet(SlingHttpServletRequest request,
+			SlingHttpServletResponse response) throws ServletException,
+			IOException {
+
+		if (request.getRequestPathInfo().getExtension().equals("hotproducts")) {
+			Node rootNode = null;
+			Session session;
+			PrintWriter o = response.getWriter();
+			try {
+				// String k=request.getParameter("idp");
+				session = repos.login(new SimpleCredentials("admin", "admin"
+						.toCharArray()));
+
+				// rootNode = session.getRootNode().getNode("content");
+				rootNode = session.getRootNode().getNode("content");
+				//PropertyIterator rootNodes = session.getRootNode().getNode("content").getProperties();
+				//javax.jcr.Property p=rootNodes.nextProperty();
+			
+				request.getRequestDispatcher("/content/products/.hotproducts")
+						.forward(request, response);
+			} catch (Exception e) {
+				o.print("Error" + e.getMessage());
+			}
+
+			// response.getOutputStream().println(request.getParameter("companyName"));
+
+		} else if (request.getRequestPathInfo().getExtension().equals("brief")) {
+			Node rootNode = null;
+			Session session;
+			String productId;
+			PrintWriter p = response.getWriter();
+
+			try {
+				productId = request.getParameter("pid");
+				session = repos.login(new SimpleCredentials("admin", "admin"
+						.toCharArray()));
+
+				boolean order = session.getRootNode().getNode("content").getNode("product").getNode("products").hasNode(productId);
+			if(order){	
+				request.setAttribute("hotproductsearch", eventservice.getHotProductSearchText(request));
+				request.setAttribute("hotsellersearch", eventservice.getHotSellerSearchText(request));				
+				request.setAttribute("news", eventservice.getnewsList(request));
+				request.getRequestDispatcher("/content/products/.productbrief")
+						.forward(request, response);
+			}else{
+				p.print("No such product found---404pagee");
+			}
+			} catch (Exception e) {
+				p.print(e.getMessage());
+				p.print("From add exception" + e.getCause());
+
+				// request.getRequestDispatcher("/content/products/*.error")
+				// /.forward(request, response);
+
+			}
+		} else if (request.getRequestPathInfo().getExtension().equals("catalog")) {
+			Node rootNode = null;
+			Session session;
+			String productId;
+			PrintWriter p = response.getWriter();
+
+			try {
+				productId = request.getParameter("pid");
+				session = repos.login(new SimpleCredentials("admin", "admin"
+						.toCharArray()));
+
+				rootNode = session.getRootNode().getNode("content");
+
+				request.getRequestDispatcher(
+						"/content/products/.productcatalog")
+						.forward(request, response);
+
+			} catch (Exception e) {
+				p.print(e.getMessage());
+				p.print("From add exception" + e.getCause());
+
+				// request.getRequestDispatcher("/content/products/*.error")
+				// /.forward(request, response);
+
+			}
+		} else if (request.getRequestPathInfo().getExtension()
+				.equals("productlist")) {
+
+			String from = null;
+			String to = null;
+			int t, f;
+			String search = request.getParameter("query");
+			from = request.getParameter("from");
+			to =from;
+			request.setAttribute("total", product.getProductListByCatId(search).size());
+			if (to != null && from != null) {
+				try {
+					t = Integer.parseInt(to);
+					f = Integer.parseInt(from);
+					f=(f-1)*NUMBEROFRESULTSPERPAGE;
+					t=t*NUMBEROFRESULTSPERPAGE;
+					ArrayList<Node> m = product
+							.getProductListByCatId(search);
+					ArrayList<Node> alist = new ArrayList<Node>();
+					if(m.size()>t){
+						for (int i = f; i < t; i++) {
+							alist.add(m.get(i));
+						}
+					}else{
+					for (int i = f; i < m.size(); i++) {
+						alist.add(m.get(i));
+					}
+					}
+					request.setAttribute("product", alist);
+					request.getRequestDispatcher(
+							"/content/products/.propagination")
+							.forward(request, response);
+				} catch (NumberFormatException e) {
+					ArrayList<Node> m = product
+							.getProductListByCatId(search);
+					ArrayList<Node> alist = new ArrayList<Node>();
+					if (m.size() > NUMBEROFRESULTSPERPAGE) {
+						for (int i = 0; i < NUMBEROFRESULTSPERPAGE; i++) {
+							alist.add(m.get(i));
+
+						}
+					} else {
+						for (int i = 0; i < m.size(); i++) {
+							alist.add(m.get(i));
+
+						}
+					}
+
+					request.setAttribute("product", alist);
+					request.getRequestDispatcher(
+							"/content/products/.propagination")
+							.forward(request, response);
+
+				}
+
+			} else {
+				ArrayList<Node> m = product.getProductListByCatId(search);
+				ArrayList<Node> alist = new ArrayList<Node>();
+				if (m.size() > NUMBEROFRESULTSPERPAGE) {
+					for (int i = 0; i < NUMBEROFRESULTSPERPAGE; i++) {
+						alist.add(m.get(i));
+
+					}
+				} else {
+					for (int i = 0; i < m.size(); i++) {
+						alist.add(m.get(i));
+
+					}
+				}
+				request.setAttribute("product", alist);
+				request.setAttribute("hotproductsearch",eventservice.getHotProductSearchText(request));	
+				
+				request.getRequestDispatcher("/content/products/.prodlist").forward(
+						request, response);
+			}
+			
+			
+
+		} else if (request.getRequestPathInfo().getExtension()
+				.endsWith("samplenode")) {
+
+			Node rootNode = null;
+			Session session;
+
+			PrintWriter p = response.getWriter();
+			try {
+
+				session = repos.login(new SimpleCredentials("admin", "admin"
+						.toCharArray()));
+
+				Node f = session.getRootNode().getNode("content")
+						.getNode("news");
+				for (int i = 0; i < 100; i++) {
+					f.addNode("" + i);
+				}
+				NodeIterator itr = session.getRootNode().getNode("content")
+						.getNode("news").getNodes();
+				int j=0;
+				while (itr.hasNext()) {
+					Node n = itr.nextNode();
+				n.setProperty("Title", "This is tilte testoin g new s"+j);
+				n.setProperty("Auther", "A.K Mishra"+j);	
+				n.setProperty("Date","30-06-2015"+j);
+				n.setProperty("Link", "http://google.com/"+j);
+				n.setProperty("Description", "Repellat quis doloribus pariatur, ducimus quisquam. Accusamus cum tempore, labore. Aut sequi ipsa eum, voluptatum quas, beatae blanditiis esse rem veritatis possimus repellat non harum sapiente quibusdam consequatur expedita recusandae."+j);
+				Node img=n.addNode("images");
+				Node vid=n.addNode("videos");
+				
+				j++;				}
+
+				session.save();
+
+			} catch (Exception e) {
+				p.print(e.getMessage());
+				p.print("From add exception" + e.getCause());
+
+				// request.getRequestDispatcher("/content/products/*.error")
+				// /.forward(request, response);
+
+			}
+
+		}else if (request.getRequestPathInfo().getExtension()
+				.endsWith("samplenode1")) {
+
+			Node rootNode = null;
+			Session session;
+
+			PrintWriter p = response.getWriter();
+			try {
+
+				session = repos.login(new SimpleCredentials("admin", "admin"
+						.toCharArray()));
+
+				NodeIterator itr = session.getRootNode().getNode("content")
+						.getNode("news").getNodes();
+				int j=0;
+				while (itr.hasNext()) {
+					if(j<25){
+						itr.nextNode().setProperty("newsType", "0");		
+					}else if(j<40){
+						itr.nextNode().setProperty("newsType", "1");
+					}else if(j<60){
+						itr.nextNode().setProperty("newsType", "2");
+					}else if(j<80){
+						itr.nextNode().setProperty("newsType", "3");
+					}else if(j<101){
+						itr.nextNode().setProperty("newsType", "4");
+					}
+					j++;
+				}
+
+				session.save();
+
+			} catch (Exception e) {
+				p.print(e.getMessage());
+				p.print("From add exception" + e.getCause());
+
+				// request.getRequestDispatcher("/content/products/*.error")
+				// /.forward(request, response);
+
+			}
+
+		}else if(request.getRequestPathInfo().getExtension()
+				.endsWith("compareprod")){
+			
+			request.getRequestDispatcher("/content/products/.compareproduct").forward(
+					request, response);
+
+			
+		}else if(request.getRequestPathInfo().getExtension()
+				.endsWith("loadsttemplate")){
+			
+			request.getRequestDispatcher("/content/products/.loadTableProductStandard").forward(
+					request, response);
+
+			
+		}else if(request.getRequestPathInfo().getExtension()
+				.endsWith("createproduct")){
+			if(request.getAttribute("catalogpath")!=null){
+				request.setAttribute("catalogpath",request.getAttribute("catalogpath"));
+			}else{
+				request.setAttribute("catalogpath",request.getParameter("id"));
+			}
+			if(request.getSession(false).getAttribute("error")!=null){
+				request.setAttribute("error",request.getSession(false).getAttribute("error"));
+			}else{
+				request.setAttribute("error","no session");
+			}
+			
+	        if(request.getSession(false)!=null){
+				//request.setAttribute("fileError",(String)request.getSession().getAttribute("fileError"));
+	        	
+				request.getRequestDispatcher("/content/products/.createProductNew").forward(
+						request, response);
+	        		}else{
+	        			request.getRequestDispatcher("/content/products/.createProductNew").forward(
+	        					request, response);
+	        		}
+			
+		}else if(request.getRequestPathInfo().getExtension()
+				.endsWith("viewcart")){
+			
+			request.getRequestDispatcher("/content/products/.shoppingcart").forward(
+					request, response);
+
+			
+		}else if (request.getRequestPathInfo().getExtension()
+				.equals("getTypeInfo")) {
+			Node rootNode = null;
+			Session session;
+
+			//PrintWriter p = response.getWriter();
+			try {
+
+				session = repos.login(new SimpleCredentials("admin", "admin"
+						.toCharArray()));
+
+			if (session.getRootNode().getNode("content").getNode("attribute").getNode("type").hasNode(request.getParameter("typeId")))
+					{
+			//	String	labelname=session.getRootNode().getNode("content").getNode("attribute").getNode("type").getNode(request.getParameter("typeId")).getNodes();
+				String res = "";
+				NodeIterator itr = session.getRootNode().getNode("content").getNode("attribute").getNode("type").getNode(request.getParameter("typeId")).getNodes();
+			//	int j=0;
+				while (itr.hasNext()) {
+				String a =	itr.nextNode().getProperty("placeholder").getString();
+				//.getProperty("placeholder").getString();
+					res = res + "<div class='col-xs-3'><input type='text' required class='form-control' name='"+a+"' placeholder='"+a+"'></div>";
+				}
+
+				response.getWriter().print(res);
+					
+					}
+					
+			}catch (Exception e) {
+//				p.print(e.getMessage());
+	//			p.print("From add exception" + e.getCause());
+
+				// request.getRequestDispatcher("/content/products/*.error")
+				// /.forward(request, response);
+
+			}
+
+		}
+		else if (request.getRequestPathInfo().getExtension().equals("productslist")) {
+			try{
+				
+			Node prodNode= null;
+            Session session;
+            
+        	String from = null;
+			String to = null;
+			int t, f;
+			from = request.getParameter("from");
+			to =from;
+
+			if (to != null && from != null) {
+				try {
+					t = Integer.parseInt(to);
+					f = Integer.parseInt(from);
+					f=(f-1)*NUMBEROFRESULTSPERPAGE;
+					t=t*NUMBEROFRESULTSPERPAGE;
+					Node tempCmpNode = null;
+					ArrayList<Node> m = new ArrayList<Node>();
+					  session = repos.login(new SimpleCredentials("admin", "admin"
+			                    .toCharArray()));
+			            prodNode = session.getRootNode().getNode("content").getNode("product").getNode("products");
+			            if (prodNode.hasNodes()) {
+			            	NodeIterator iterator = prodNode.getNodes();
+			            	while (iterator.hasNext()){
+			            		tempCmpNode = iterator.nextNode();
+			                m.add(tempCmpNode);
+			                
+			                
+			            	}
+			            }
+			            request.setAttribute("total",m.size());
+					ArrayList<Node> alist = new ArrayList<Node>();
+					if(m.size()>t){
+						for (int i = f; i < t; i++) {
+							alist.add(m.get(i));
+						}
+					}else{
+					for (int i = f; i < m.size(); i++) {
+						alist.add(m.get(i));
+					}
+					}
+					request.setAttribute("companylist", alist);
+					 request.getRequestDispatcher(
+			                    "/content/company/.companyListDiv").forward(request,
+			                    response);
+				} catch (NumberFormatException e) {
+					Node tempCmpNode = null;
+					ArrayList<Node> m = new ArrayList<Node>();
+					  session = repos.login(new SimpleCredentials("admin", "admin"
+			                    .toCharArray()));
+					  prodNode = session.getRootNode().getNode("content").getNode("product").getNode("products");
+			            if (prodNode.hasNodes()) {
+			            	NodeIterator iterator = prodNode.getNodes();
+			            	while (iterator.hasNext()){
+			            		tempCmpNode = iterator.nextNode();
+			                m.add(tempCmpNode);
+			                
+			                
+			            	}
+			            }
+
+			            request.setAttribute("total",m.size());
+					ArrayList<Node> alist = new ArrayList<Node>();
+					if (m.size() > NUMBEROFRESULTSPERPAGE) {
+						for (int i = 0; i < NUMBEROFRESULTSPERPAGE; i++) {
+							alist.add(m.get(i));
+
+						}
+					} else {
+						for (int i = 0; i < m.size(); i++) {
+							alist.add(m.get(i));
+
+						}
+					}
+
+					request.setAttribute("companylist", alist);
+					 request.getRequestDispatcher(
+			                    "/content/company/.companyListDiv").forward(request,
+			                    response);
+				}
+
+			} else {
+				Node tempCmpNode = null;
+				ArrayList<Node> m = new ArrayList<Node>();
+				  session = repos.login(new SimpleCredentials("admin", "admin"
+		                    .toCharArray()));
+				  prodNode = session.getRootNode().getNode("content").getNode("product").getNode("products");
+		            if (prodNode.hasNodes()) {
+		            	NodeIterator iterator = prodNode.getNodes();
+		            	while (iterator.hasNext()){
+		            		tempCmpNode = iterator.nextNode();
+		            		m.add(tempCmpNode);
+		               	}
+		            }
+
+		            request.setAttribute("total",m.size());
+				ArrayList<Node> alist = new ArrayList<Node>();
+				if (m.size() > NUMBEROFRESULTSPERPAGE) {
+					for (int i = 0; i < NUMBEROFRESULTSPERPAGE; i++) {
+						alist.add(m.get(i));
+
+					}
+				} else {
+					for (int i = 0; i < m.size(); i++) {
+						alist.add(m.get(i));
+
+					}
+				}
+				request.setAttribute("productslist", alist);
+	            request.getRequestDispatcher("/content/products/.prodlistcart")
+                .forward(request, response);
+			}
+
+
+		}catch(Exception e){
+			
+		}
+
+		}else if (request.getRequestPathInfo().getExtension().equals("addcart")) {
+		String strProductId = request.getParameter("productid");
+		if (prodID.contains(strProductId)) {
+			response.getWriter().print("false");
+        } else {
+        	prodID.add(strProductId);
+        	 
+        	request.getSession().setAttribute("productIdList",prodID);
+    		response.getWriter().print("true");
+        }
+		
+		}else if (request.getRequestPathInfo().getExtension().equals("checkout")) {
+			
+			ArrayList productIdLis = (ArrayList)request.getSession().getAttribute("productIdList");
+			StringBuffer sb = new StringBuffer();
+			for(int i = 0;i<productIdLis.size();i++){
+				sb.append(productIdLis.get(i));
+			}
+			response.getWriter().print(sb);
+			}else if (request.getRequestPathInfo().getExtension().equals("removefromcart")) {
+				String strProductId1 = request.getParameter("prdId");
+				String r = "";
+				ArrayList productIdLis1 = (ArrayList)request.getSession().getAttribute("productIdList");
+				StringBuffer sb1 = new StringBuffer();
+				for(int i = 0;i<productIdLis1.size();i++){
+					if(strProductId1.equals(productIdLis1.get(i))){
+					boolean result = prodID.remove(prodID.get(i));
+					request.getSession().setAttribute("productIdList",prodID);
+					}
+				}
+				
+				for(int i = 0;i<productIdLis1.size();i++){
+					if(strProductId1.equals(productIdLis1.get(i))){
+					
+					}else{
+						sb1.append(productIdLis1.get(i));	
+					}
+				}
+				
+				response.getWriter().print(sb1);
+				}else if(request.getRequestPathInfo().getExtension()
+						.endsWith("addCartInfo")){
+					
+					request.getRequestDispatcher("/content/user/.customerVerification").forward(
+							request, response);
+
+					
+				}else if (request.getRequestPathInfo().getExtension().equals("companyproductlst")) {
+					try{
+						
+						Node prodNode= null;
+						Node companyNode= null;
+			            Session session;
+			            String companyName = null;
+			        	String from = null;
+						String to = null;
+						int t, f;
+						companyName = request.getParameter("compN");
+						from = request.getParameter("from");
+						to =from;
+
+						if (to != null && from != null) {
+							try {
+								t = Integer.parseInt(to);
+								f = Integer.parseInt(from);
+								f=(f-1)*NUMBEROFRESULTSPERPAGE;
+								t=t*NUMBEROFRESULTSPERPAGE;
+								Node tempCmpNode = null;
+								ArrayList<Node> m = new ArrayList<Node>();
+								  session = repos.login(new SimpleCredentials("admin", "admin"
+						                    .toCharArray()));
+								  companyNode = session.getRootNode().getNode("content").getNode("company").getNode(companyName);
+									//	  prodNode = session.getRootNode().getNode("content").getNode("product").getNode("products");
+								            if (companyNode.hasNode("product")) {
+								            	prodNode = companyNode.getNode("product");
+								            	if(prodNode.hasNodes()){
+								            	NodeIterator iterator = prodNode.getNodes();
+								            	while (iterator.hasNext()){
+								            		tempCmpNode = iterator.nextNode();
+								            		m.add(tempCmpNode);
+								               	}
+								            	}
+								            }
+						            request.setAttribute("total",m.size());
+								ArrayList<Node> alist = new ArrayList<Node>();
+								if(m.size()>t){
+									for (int i = f; i < t; i++) {
+										alist.add(m.get(i));
+									}
+								}else{
+								for (int i = f; i < m.size(); i++) {
+									alist.add(m.get(i));
+								}
+								}
+								request.setAttribute("productslist", alist);
+								 request.getRequestDispatcher(
+						                    "/content/company/.paginationcompanyProdView").forward(request,
+						                    response);
+							} catch (NumberFormatException e) {
+								Node tempCmpNode = null;
+								ArrayList<Node> m = new ArrayList<Node>();
+								  session = repos.login(new SimpleCredentials("admin", "admin"
+						                    .toCharArray()));
+								  companyNode = session.getRootNode().getNode("content").getNode("company").getNode(companyName);
+									//	  prodNode = session.getRootNode().getNode("content").getNode("product").getNode("products");
+								            if (companyNode.hasNode("product")) {
+								            	prodNode = companyNode.getNode("product");
+								            	if(prodNode.hasNodes()){
+								            	NodeIterator iterator = prodNode.getNodes();
+								            	while (iterator.hasNext()){
+								            		tempCmpNode = iterator.nextNode();
+								            		m.add(tempCmpNode);
+								               	}
+								            	}
+								            }
+
+						            request.setAttribute("total",m.size());
+								ArrayList<Node> alist = new ArrayList<Node>();
+								if (m.size() > NUMBEROFRESULTSPERPAGE) {
+									for (int i = 0; i < NUMBEROFRESULTSPERPAGE; i++) {
+										alist.add(m.get(i));
+
+									}
+								} else {
+									for (int i = 0; i < m.size(); i++) {
+										alist.add(m.get(i));
+
+									}
+								}
+
+								request.setAttribute("productslist", alist);
+								 request.getRequestDispatcher(
+						                    "/content/company/.paginationcompanyProdView").forward(request,
+						                    response);
+							}
+
+						} else {
+							Node tempCmpNode = null;
+							ArrayList<Node> m = new ArrayList<Node>();
+							  session = repos.login(new SimpleCredentials("admin", "admin"
+					                    .toCharArray()));
+							  companyNode = session.getRootNode().getNode("content").getNode("company").getNode(companyName);
+						//	  prodNode = session.getRootNode().getNode("content").getNode("product").getNode("products");
+					            if (companyNode.hasNode("product")) {
+					            	prodNode = companyNode.getNode("product");
+					            	if(prodNode.hasNodes()){
+					            	NodeIterator iterator = prodNode.getNodes();
+					            	while (iterator.hasNext()){
+					            		tempCmpNode = iterator.nextNode();
+					            		m.add(tempCmpNode);
+					               	}
+					            	}
+					            }
+
+					            request.setAttribute("total",m.size());
+							ArrayList<Node> alist = new ArrayList<Node>();
+							if (m.size() > NUMBEROFRESULTSPERPAGE) {
+								for (int i = 0; i < NUMBEROFRESULTSPERPAGE; i++) {
+									alist.add(m.get(i));
+
+								}
+							} else {
+								for (int i = 0; i < m.size(); i++) {
+									alist.add(m.get(i));
+
+								}
+							}
+							request.setAttribute("productslist", alist);
+				            request.getRequestDispatcher("/content/company/.companyProdView")
+			                .forward(request, response);
+						}
+
+
+					}catch(Exception e){
+						
+					}
+
+					}else if (request.getRequestPathInfo().getExtension().equals("companymanagementlst")) {
+					try{
+						
+						Node prodNode= null;
+						Node companyNode= null;
+			            Session session;
+			            String companyName = null;
+			        	String from = null;
+						String to = null;
+						int t, f;
+						companyName = request.getParameter("compN");
+						from = request.getParameter("from");
+						to =from;
+
+						if (to != null && from != null) {
+							try {
+								t = Integer.parseInt(to);
+								f = Integer.parseInt(from);
+								f=(f-1)*NUMBEROFRESULTSPERPAGE;
+								t=t*NUMBEROFRESULTSPERPAGE;
+								Node tempCmpNode = null;
+								ArrayList<Node> m = new ArrayList<Node>();
+								  session = repos.login(new SimpleCredentials("admin", "admin"
+						                    .toCharArray()));
+								  companyNode = session.getRootNode().getNode("content").getNode("company").getNode(companyName);
+									//	  prodNode = session.getRootNode().getNode("content").getNode("product").getNode("products");
+								            if (companyNode.hasNode("managementteam")) {
+								            	prodNode = companyNode.getNode("managementteam");
+								            	if(prodNode.hasNodes()){
+								            	NodeIterator iterator = prodNode.getNodes();
+								            	while (iterator.hasNext()){
+								            		tempCmpNode = iterator.nextNode();
+								            		m.add(tempCmpNode);
+								               	}
+								            	}
+								            }
+						            request.setAttribute("total",m.size());
+								ArrayList<Node> alist = new ArrayList<Node>();
+								if(m.size()>t){
+									for (int i = f; i < t; i++) {
+										alist.add(m.get(i));
+									}
+								}else{
+								for (int i = f; i < m.size(); i++) {
+									alist.add(m.get(i));
+								}
+								}
+								request.setAttribute("productslist", alist);
+								 request.getRequestDispatcher(
+						                    "/content/user/.paginationmanagementProdView").forward(request,
+						                    response);
+							} catch (NumberFormatException e) {
+								Node tempCmpNode = null;
+								ArrayList<Node> m = new ArrayList<Node>();
+								  session = repos.login(new SimpleCredentials("admin", "admin"
+						                    .toCharArray()));
+								  companyNode = session.getRootNode().getNode("content").getNode("company").getNode(companyName);
+									//	  prodNode = session.getRootNode().getNode("content").getNode("product").getNode("products");
+								            if (companyNode.hasNode("managementteam")) {
+								            	prodNode = companyNode.getNode("managementteam");
+								            	if(prodNode.hasNodes()){
+								            	NodeIterator iterator = prodNode.getNodes();
+								            	while (iterator.hasNext()){
+								            		tempCmpNode = iterator.nextNode();
+								            		m.add(tempCmpNode);
+								               	}
+								            	}
+								            }
+
+						            request.setAttribute("total",m.size());
+								ArrayList<Node> alist = new ArrayList<Node>();
+								if (m.size() > NUMBEROFRESULTSPERPAGE) {
+									for (int i = 0; i < NUMBEROFRESULTSPERPAGE; i++) {
+										alist.add(m.get(i));
+
+									}
+								} else {
+									for (int i = 0; i < m.size(); i++) {
+										alist.add(m.get(i));
+
+									}
+								}
+
+								request.setAttribute("productslist", alist);
+								 request.getRequestDispatcher(
+						                    "/content/user/.paginationmanagementProdView").forward(request,
+						                    response);
+							}
+
+						} else {
+							Node tempCmpNode = null;
+							ArrayList<Node> m = new ArrayList<Node>();
+							  session = repos.login(new SimpleCredentials("admin", "admin"
+					                    .toCharArray()));
+							  companyNode = session.getRootNode().getNode("content").getNode("company").getNode(companyName);
+						//	  prodNode = session.getRootNode().getNode("content").getNode("product").getNode("products");
+					            if (companyNode.hasNode("managementteam")) {
+					            	prodNode = companyNode.getNode("managementteam");
+					            	if(prodNode.hasNodes()){
+					            	NodeIterator iterator = prodNode.getNodes();
+					            	while (iterator.hasNext()){
+					            		tempCmpNode = iterator.nextNode();
+					            		m.add(tempCmpNode);
+					               	}
+					            	}
+					            }
+
+					            request.setAttribute("total",m.size());
+							ArrayList<Node> alist = new ArrayList<Node>();
+							if (m.size() > NUMBEROFRESULTSPERPAGE) {
+								for (int i = 0; i < NUMBEROFRESULTSPERPAGE; i++) {
+									alist.add(m.get(i));
+
+								}
+							} else {
+								for (int i = 0; i < m.size(); i++) {
+									alist.add(m.get(i));
+
+								}
+							}
+							request.setAttribute("productslist", alist);
+				            request.getRequestDispatcher("/content/user/.managementProdView")
+			                .forward(request, response);
+						}
+
+
+					}catch(Exception e){
+						
+					}
+
+					}
+				else if (request.getRequestPathInfo().getExtension().equals("cat")) {
+    		try{
+
+    		     String search_key = request.getParameter("cat");
+    		     String currNode = "";
+    		     Session session;
+
+    		     session = repos.login(new SimpleCredentials("admin", "admin"
+    		       .toCharArray()));
+
+    		     if (session.getRootNode().getNode("content")
+    		       .hasNode("category")) {
+    		      currNode = "/content/unspsc/";
+    		     }
+
+    		     HashMap getList = (HashMap) product
+    		       .getCategoryByNode(currNode,
+    		         search_key, request, response);
+
+    		     PrintWriter out = response.getWriter();
+
+    		     /*
+    		      * out.println(getList.size()); out.println(currNode);
+    		      * out.print(search_key);
+    		      */
+    		  // Get a set of the entries
+    		      Set set = getList.entrySet();
+    		      // Get an iterator
+    		      Iterator i = set.iterator();
+    		   // Display elements
+    		      out.print("<select id='cat' style='height:25px'>");
+    		      if(!getList.isEmpty()){
+    		      while(i.hasNext()) {
+    		         Map.Entry me = (Map.Entry)i.next();
+    		         out.print("<option value='" + me.getKey() + "'>"
+    	    		         + me.getValue() + "</option>");
+    		         
+    		      }
+    		      out.print("</select><input style='height:25px' type='button' value='Get Selected Value' onclick='getCategoryValue()'>");
+    		      }else {
+    		      out.print("No record found !");
+    		     }
+    		}catch (Exception e) {
+    		     PrintWriter out = response.getWriter();
+    		     out.print(e.getMessage());
+    		    }
+         }else 		if (request.getRequestPathInfo().getExtension().equals("comp")) {
+     		try{
+
+   		     String search_key = request.getParameter("userId");
+   		     String currNode = "";
+   		     Session session;
+
+   		     session = repos.login(new SimpleCredentials("admin", "admin"
+   		       .toCharArray()));
+
+   		     if (session.getRootNode().getNode("content")
+   		       .hasNode("company")) {
+   		      currNode = "/content/company/";
+   		     }
+
+   		     HashMap getList = (HashMap) product
+   		       .getCompanyByNode(currNode,
+   		         search_key, request, response);
+
+   		     PrintWriter out = response.getWriter();
+
+   		     /*
+   		      * out.println(getList.size()); out.println(currNode);
+   		      * out.print(search_key);
+   		      */
+   		  // Get a set of the entries
+   		      Set set = getList.entrySet();
+   		      // Get an iterator
+   		      Iterator i = set.iterator();
+   		   // Display elements
+   		      
+   		      if(!getList.isEmpty()){
+   		    	  if(set.size() > 1){
+   		    	out.print("<select readonly class='form-control' id='companyId' name='companyId' style='height:30px'>");
+   		    	  }else{
+   		    	out.print("<select readonly class='form-control' id='companyId' name='companyId' style='height:30px'>");
+   		    	  }
+   		      while(i.hasNext()) {
+   		         Map.Entry me = (Map.Entry)i.next();
+   		         out.print("<option value='" + me.getKey() + "'>"+me.getValue()+"</option>");
+   		         
+   		      }
+   		      out.print("</select>");
+   		    	  
+   		      //out.print("</select><input style='height:25px' type='button' value='Get Selected Value' onclick='getCategoryValue()'>");
+   		      }else {
+   		      out.print("<b>Company Not found. please create company !</b>");
+   		     }
+   		}catch (Exception e) {
+   		     PrintWriter out = response.getWriter();
+   		     out.print(e.getMessage());
+   		    }
+        }else if(request.getRequestPathInfo().getExtension()
+				.endsWith("addproduct")){
+        if(request.getSession(false)!=null){
+			request.setAttribute("fileError",(String)request.getSession().getAttribute("fileError"));
+			request.getRequestDispatcher("/content/products/.createProduct1").forward(
+					request, response);
+
+        		}else{
+        			request.getRequestDispatcher("/content/products/.createProduct1").forward(
+        					request, response);
+		
+        		}		
+		}else if(request.getRequestPathInfo().getExtension().equals("downloadtemp")){
+       	 String prodid = request.getParameter("id");
+       	 try{
+       	 product.createTemplate(request,response,prodid);
+       	 }catch(Exception e){
+       		response.getWriter().print("-----------"+e.getMessage());
+       	 }
+        }else if(request.getRequestPathInfo().getExtension().equals("viewuploades")){
+          	       
+          	request.setAttribute("products",(ArrayList<String>)request.getSession().getAttribute("products"));
+			request.getRequestDispatcher("/content/products/.uploadExtraFiles").forward(
+					request, response);
+            }else if(request.getRequestPathInfo().getExtension()
+    				.endsWith("checkmodelno")){
+    			String strCompanyId = request.getParameter("companyId");
+    			String strModelNo =	request.getParameter("modelno");	
+    			String result = product.checkModelExistence(strCompanyId,strModelNo);
+    			response.getWriter().print(result);
+    			
+    		}else if(request.getRequestPathInfo().getExtension().equals("viewMasterCountry")){
+    			request.getRequestDispatcher("/content/products/.uploadCountry").forward(
+    					request, response);
+    		}else if(request.getRequestPathInfo().getExtension().equals("productEdit")){
+    			if(request.getRemoteUser()!=null && !request.getRemoteUser().equals("anonymous")){
+    				
+    			request.getRequestDispatcher("/content/products/.editProduct").forward(
+    					request, response);
+    			}else{
+    			response.getWriter().print("----------");	
+    				
+    			}
+    		}else if(request.getRequestPathInfo().getExtension().equals("myproduct")){
+    			if(request.getRemoteUser()!=null && !request.getRemoteUser().equals("anonymous")){
+    				
+    			
+    			  HashMap getList = (HashMap) product.getCompanyByNode("/content/company/", request.getRemoteUser(), request, response);
+    			  Set set = getList.entrySet();
+    			try {
+					Session  session = repos.login(new SimpleCredentials("admin", "admin"
+						       .toCharArray()));
+				
+    		      Iterator i = set.iterator();
+    		      HashMap sm=new HashMap();
+    		    ArrayList<Node>al=new ArrayList<Node>();
+    		      while(i.hasNext()) {
+    		    	  Map.Entry me = (Map.Entry)i.next();
+    		    	  Node com=session.getRootNode().getNode("content").getNode("company").getNode(me.getKey().toString());
+    		    	  if(com.hasNode("product") && com.getNode("product").hasNodes()){
+    		    		  NodeIterator it=com.getNode("product").getNodes();
+    		    		 
+    		    		  while(it.hasNext()){
+    		    			  sm.put(it.nextNode().getName(), "");    		    			
+    		    			 // al.add(session.getRootNode().getNode("content").getNode("product").getNode("products").getNode(it.nextNode().getName())); 
+    		    		 
+    		    		  }
+    		    	  	}
+    		    	  
+    		      	}
+    		      Set  p=sm.entrySet();
+    		      Iterator itr=p.iterator();
+    		      while(itr.hasNext()){
+    		    	  Map.Entry me = (Map.Entry)itr.next();
+    		    	  al.add(session.getRootNode().getNode("content").getNode("product").getNode("products").getNode(me.getKey().toString()));
+    		      }
+    		      request.setAttribute("product", al);
+    		      request.getRequestDispatcher("/content/products/.myproductList").forward(
+      					request, response);
+    		      } catch (LoginException e) {
+  					// TODO Auto-generated catch block
+  					e.printStackTrace();
+  				} catch (RepositoryException e) {
+  					// TODO Auto-generated catch block
+  					e.printStackTrace();
+  				}
+    			}else{
+    			response.getWriter().print("----------");	
+    				
+    			}
+    		}
+		
+		
+	}
+	
+    @Override
+    protected void doPost(SlingHttpServletRequest request,
+            SlingHttpServletResponse response) throws ServletException,
+            IOException {
+    	 if (request.getRequestPathInfo().getExtension().equals("save")) {
+    		//	response.getWriter().print("vzvdzvdssss");
+    		 try{
+    		
+    		// changes made for different tab	 
+    		 //String[] attrValue = request.getParameterValues("label");
+    		 //String[] freeattrValue = request.getParameterValues("txtheading");
+//    		 String compId = request.getParameter("companyId");
+             Long n=product.saveProductInfo(request,response);
+          //   product.createTemplate(request,response,n);
+         //    response.getWriter().print("end---"+n);
+             //response.sendRedirect(request.getContextPath()
+              //   + "/servlet/service/productselection.addproduct?pid=" + n);
+             response.sendRedirect(request.getContextPath()
+                     + "/servlet/service/productselection.createproduct?id="+n+"&param=edit&catalogpath="+n);
+    		 }catch(Exception e){
+    			 
+    		 }
+         }else if (request.getRequestPathInfo().getExtension().equals("saveother")) {
+    		//	response.getWriter().print("vzvdzvdssss");
+    		 try{
+    		
+    		// changes made for different tab	 
+    		 //String[] attrValue = request.getParameterValues("label");
+    		 //String[] freeattrValue = request.getParameterValues("txtheading");
+//    		 String compId = request.getParameter("companyId");
+             Long n=product.saveProductOtherInfo(request,response);
+          //   product.createTemplate(request,response,n);
+         //    response.getWriter().print("end---"+n);
+             //response.sendRedirect(request.getContextPath()
+              //   + "/servlet/service/productselection.addproduct?pid=" + n);
+             response.sendRedirect(request.getContextPath()
+                     + "/servlet/service/productselection.createproduct?id="+n+"&param=edit&catalogpath="+n);
+    		 }catch(Exception e){
+    			 
+    		 }
+         }else if (request.getRequestPathInfo().getExtension().equals("saveCatalog")) {
+    		//	response.getWriter().print("vzvdzvdssss");
+    		 try{
+    		
+    		// changes made for different tab	 
+    		 //String[] attrValue = request.getParameterValues("label");
+    		 //String[] freeattrValue = request.getParameterValues("txtheading");
+    		// String compId = request.getParameter("companyId");
+             Long n=product.saveProductCatalogInfo(request,response);
+          //   product.createTemplate(request,response,n);
+         //    response.getWriter().print("end---"+n);
+//             String btnName = request.getParameter("save");
+//             if(btnName.equals("Save Catalog")){
+             
+             response.sendRedirect(request.getContextPath()
+                 + "/servlet/service/productselection.createproduct?id="+request.getParameter("id")+"&param=edit&catalogpath="+request.getParameter("catalogpath"));
+//             }else{
+//            	 response.sendRedirect(request.getContextPath()
+//                         + "/servlet/service/productselection.createproduct?id="+n+"&param=edit&download=yes");
+//            	 PrintWriter o = response.getWriter();
+//            	// request.getContextPath()+ "/servlet/service/productselection.viewuploades?pid=" + prodid;
+//            	 String prod = request.getParameter("id");
+//            	 String uri = request.getContextPath()+"/servlet/service/productselection.downloadtemp?pid="+prod;
+//            	 o.print("<script>var link = document.createElement('a');if (typeof link.download === 'string') {link.href = "+uri+";link.download = Template;document.body.appendChild(link);link.click();document.body.removeChild(link);} else {window.open(uri);}</script>");
+//             }
+    		 }catch(Exception e){
+    			 
+    		 }
+         }else if(request.getRequestPathInfo().getExtension().equals("saveChild")){
+        	 
+        	 product.saveChildProduct(request, response);
+        	 String pathChild = request.getParameter("childPath");
+ 			 request.setAttribute("catalogpath",pathChild);
+        	 response.sendRedirect(request.getContextPath()
+                   + "/servlet/service/productselection.createproduct?id="+request.getParameter("id")+"&param=edit&catalogpath="+pathChild);
+        	 
+         }else if(request.getRequestPathInfo().getExtension().equals("uploadTemplate")){
+        	 
+        	 try{
+        		 String prodid = request.getParameter("id");
+        		 //response.getWriter().print(prodid);
+        		 String state="";
+        		 ArrayList<String> al=product.validateXLSFile(request, response);
+        		 if(al.size()==0){
+        		 state = product.readXLSTemplateFile(request,response,prodid);
+        		 response.getWriter().print(state+"-----ddddd---");
+        		 response.sendRedirect(request.getContextPath()
+         					+"/servlet/service/productselection.createproduct?id="+prodid+"&param=edit&catalogpath="+request.getParameter("catalogpath"));
+         	    
+        		 }else{
+//        			for(int i=0;i<al.size();i++){
+//        				response.getWriter().print(al.get(i));
+//        			}
+//        			
+        			 HttpSession session = request.getSession(true);
+        			 session.setAttribute("error",al);
+//        			 if(request.getSession(true)!=null){
+//        					//request.setAttribute("fileError",(String)request.getSession().getAttribute("fileError"));
+//        		        	if(request.getSession(false).getAttribute("error")!=null){
+//        		        		request.getSession(false).setAttribute("error",al);
+//        					}}
+        			 response.sendRedirect(request.getContextPath()
+             					+"/servlet/service/productselection.createproduct?id="+prodid+"&param=edit&catalogpath="+request.getParameter("catalogpath"));
+             	    
+        			 
+        		 }
+        		 
+    			    //session.setAttribute("fileError","Sorry there is some issue with file ,we are unble to processs the file !");
+        			//response.sendRedirect(request.getContextPath()
+        				//	+"/servlet/service/productselection.createproduct?id="+prodid+"&param=edit");
+        	        //           + "/servlet/service/productselection.addproduct?pid=" + prodid);
+        		
+        		 // response.getWriter().print(a);
+        	 }catch(Exception e){
+        		 response.getWriter().print(e.getMessage()+"-----ddddd---");
+        	 }
+         		}else if(request.getRequestPathInfo().getExtension().equals("uploadAttach")){
+         			String pid=request.getParameter("productid");
+         			String status=product.uploadAttachements(request, response, pid);
+         		if(status!=null && status.equals("success")){
+         			response.getWriter().print(status);
+         			}else{
+         				response.getWriter().print("Fails"+status);	
+         			}	
+         		}else if(request.getRequestPathInfo().getExtension().equals("uploadCountryMaster")){
+               	 
+               	 try{
+               		 String productCodes="";
+               		 productCodes = product.readPincodeView(request,response);
+               		 response.getWriter().print(productCodes+"-----country---");
+               
+               	 }catch(Exception e){
+               		 response.getWriter().print(e.getMessage()+"-----ddddd---");
+               	 }
+                		}
+    	 }
+	
+}

@@ -1,0 +1,170 @@
+package biz.com.app.servlet;
+
+import java.io.IOException;
+import java.io.PrintWriter;
+
+import javax.jcr.Node;
+import javax.jcr.Session;
+import javax.jcr.SimpleCredentials;
+import javax.servlet.ServletException;
+
+import org.apache.felix.scr.annotations.Component;
+import org.apache.felix.scr.annotations.Properties;
+import org.apache.felix.scr.annotations.Property;
+import org.apache.felix.scr.annotations.Reference;
+import org.apache.felix.scr.annotations.Service;
+import org.apache.sling.api.SlingHttpServletRequest;
+import org.apache.sling.api.SlingHttpServletResponse;
+import org.apache.sling.api.servlets.SlingAllMethodsServlet;
+import org.apache.sling.jcr.api.SlingRepository;
+
+import biz.com.service.EventService;
+import biz.com.service.PersonService;
+
+@Component(immediate = true, metatype = false)
+@Service(value = javax.servlet.Servlet.class)
+@Properties({
+		@Property(name = "service.description", value = "Save product Servlet"),
+		@Property(name = "service.vendor", value = "VISL Company"),
+	@Property(name = "sling.servlet.paths", value = { "/servlet/service/page" }),
+		@Property(name = "sling.servlet.resourceTypes", value = "sling/servlet/default"),
+		@Property(name = "sling.servlet.extensions", value = {"buyer", "manufacturer" }) })
+@SuppressWarnings("serial")
+public class CommonPageServlet extends SlingAllMethodsServlet {
+
+	@Reference
+	private EventService eventService;
+	@Override
+	protected void doGet(SlingHttpServletRequest request,
+			SlingHttpServletResponse response) throws ServletException,
+			IOException {
+		
+			
+		if (request.getRequestPathInfo().getExtension().equals("manufacturer")) {
+			
+			PrintWriter o=response.getWriter();
+			try{
+			request.getRequestDispatcher("/content/static/.manufacturer").forward(
+					request, response);
+			} catch (Exception e) {
+	           o.print(e.getMessage());
+	           }		
+
+				// response.getOutputStream().println(request.getParameter("companyName"));
+
+		}
+		else if (request.getRequestPathInfo().getExtension().equals("buyers")) {
+			
+			PrintWriter o=response.getWriter();
+			try{
+			request.getRequestDispatcher("/content/static/.buyers").forward(
+					request, response);
+			} catch (Exception e) {
+	           o.print(e.getMessage());
+	           }		
+
+				// response.getOutputStream().println(request.getParameter("companyName"));
+
+		}
+else if (request.getRequestPathInfo().getExtension().equals("advertise")) {
+			
+			PrintWriter o=response.getWriter();
+			try{
+			request.getRequestDispatcher("/content/static/.advertise").forward(
+					request, response);
+			} catch (Exception e) {
+	           o.print(e.getMessage());
+	           }		
+
+				// response.getOutputStream().println(request.getParameter("companyName"));
+
+		}		
+else if (request.getRequestPathInfo().getExtension().equals("profile")) {
+	
+	PrintWriter o=response.getWriter();
+	try{
+	request.getRequestDispatcher("/content/static/.profile").forward(
+			request, response);
+	} catch (Exception e) {
+       o.print(e.getMessage());
+       }		
+
+		// response.getOutputStream().println(request.getParameter("companyName"));
+
+}		
+else if (request.getRequestPathInfo().getExtension().equals("aboutus")) {
+	
+	PrintWriter o=response.getWriter();
+	try{
+	request.getRequestDispatcher("/content/static/.aboutus").forward(
+			request, response);
+	} catch (Exception e) {
+       o.print(e.getMessage());
+       }		
+
+		// response.getOutputStream().println(request.getParameter("companyName"));
+
+}		
+else if (request.getRequestPathInfo().getExtension().equals("productlist")) {
+	
+	PrintWriter o=response.getWriter();
+	try{
+	request.getRequestDispatcher("/content/static/.productlist").forward(
+			request, response);
+	} catch (Exception e) {
+       o.print(e.getMessage());
+       }		
+
+		// response.getOutputStream().println(request.getParameter("companyName"));
+
+}
+else if (request.getRequestPathInfo().getExtension().equals("contactus")) {
+	
+	PrintWriter o=response.getWriter();
+	try{
+	request.getRequestDispatcher("/content/static/.contactus").forward(
+			request, response);
+	} catch (Exception e) {
+       o.print(e.getMessage());
+       }		
+
+		// response.getOutputStream().println(request.getParameter("companyName"));
+
+}else if (request.getRequestPathInfo().getExtension().equals("servicelist")) {
+	
+	PrintWriter o=response.getWriter();
+	try{
+	request.getRequestDispatcher("/content/products/.servicelist").forward(
+			request, response);
+	} catch (Exception e) {
+       o.print(e.getMessage());
+       }		
+
+		// response.getOutputStream().println(request.getParameter("companyName"));
+
+}else if (request.getRequestPathInfo().getExtension().equals("topnews")) {
+	
+	PrintWriter o=response.getWriter();
+	try{
+		if(request.getParameter("actionType")!=null){
+			request.setAttribute("news",eventService.getnewsList(request)); 
+			request.getRequestDispatcher("/content/products/.topnews").forward(request, response);
+			}
+	} catch (Exception e) {
+       o.print(e.getMessage());
+       }		
+
+		// response.getOutputStream().println(request.getParameter("companyName"));
+
+}else if (request.getRequestPathInfo().getExtension()
+		.equals("loadTable")) {
+	request.getParameter("pid");
+	request.getRequestDispatcher("/content/products/.loadTableProduct")
+			.forward(request, response);
+}
+
+
+	}
+}
+
+	

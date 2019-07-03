@@ -1,0 +1,609 @@
+<%
+//out.print(currentNode);
+if(request.getParameter("id")!="new"){
+currentNode=currentNode.session.getRootNode().getNode("content").getNode("product").getNode("products").getNode(request.getParameter("id"));
+}
+//out.print(currentNode);
+var currentNodeProvided = ((typeof currentNode != "undefined") );
+function getCurrentNodeValue(prop) {
+    var result = "";
+    if(request.getParameter("id")!="new"){
+    if(currentNodeProvided && currentNode[prop]) {
+        result = currentNode[prop];
+        
+    }
+    }
+    return result;
+}
+%>
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Home</title> 
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="description" content="Demo project with jQuery">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+       <%load("../common/links.esp");%>
+       <script>
+       function categoryDetails(event) {
+  var a=document.getElementById("category1").value;
+ 
+  if(event.keyCode==13){ 
+  if(a.length>3){
+ var getcategory=document.getElementById("category1").value;
+ var data='cat='+getcategory;
+  $(".pace-active").show();
+   $.ajax({
+        url:'<%=request.getContextPath()%>/servlet/service/productselection.cat',
+        data:data,
+        success: function(data1) {
+       //alert(data1);
+        
+          $("#attCat").html(data1);
+           $(".pace-active").hide();
+          
+        }
+    });
+    return false;
+    }else{
+  alert("Please enter 4 character to search category");
+  return false;
+   }
+    } 
+  
+  }
+function getCategoryValue()
+{
+var cat="";
+var cat1="";
+  //var x=document.getElementById("cat");
+  //for (var i = 0; i < x.options.length; i++) {
+     //if(x.options[i].selected ==true){
+      //  cat=cat+x.options[i].value;
+      //}
+    
+      
+  //}
+    cat = $('#cat').find('option:selected').text();
+    cat1 = $('#cat').find('option:selected').val();
+ //   alert(cat);
+  document.getElementById("category").value=cat;
+  document.getElementById("category2").value=cat1;
+  //document.getElementById("category").value=document.getElementById("category").value+cat;
+}
+      
+      function subForm(){
+      //alert();
+      document.getElementById("prodSub").submit();
+      }
+       
+       </script>
+           </head>
+<body>
+<div class="pace pace-active" style="display:none;">
+<div class="pace-progress">
+<div class="pace-progress-inner"></div>
+</div>
+<div class="pace-activity"></div>
+</div>
+    <%load("../common/header.esp");%>
+
+
+<script src="<%=request.getContextPath()%>/apps/js/step-form.js"></script>
+<link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/apps/css/step-form.css">
+<script>
+function checkModel(){
+var a = document.getElementById("companyId").value;
+var b = document.getElementById("modelno").value;
+		//alert(a+"~~~"+b);
+        $.ajax({
+        type:'GET',
+        url:'<%=request.getContextPath()%>/servlet/service/productselection.checkmodelno',
+        data:{
+        companyId:a,
+        modelno:b
+        },
+        success: function(data2) {
+       //alert(data2);
+        if(data2 == "true"){
+        $("#modelifexist").show();
+        $("#modelifexist").html("Model No is Already Present");
+        $("#sf-next").hide();
+        }else{
+        $("#modelifexist").hide();
+        //$("#modelifexist").html("Model No is Already Present");
+        $("#sf-next").show();
+        }
+          
+        }
+    });
+ 
+
+}
+    $(document).ready(function(e) {
+        
+        $(".stepsForm").stepsForm({
+            theme:'purple'
+        }); 
+        
+        $(".container .themes>span").click(function(e) {
+            $(".container .themes>span").removeClass("selectedx");
+            $(this).addClass("selectedx");
+            $(".stepsForm").removeClass().addClass("stepsForm");
+            $(".stepsForm").addClass("sf-theme-"+$(this).attr("data-value"));
+        });
+        var data1 = '<%=request.getRemoteUser()%>';
+        var supid = '<%=request.getParameter("id")%>';
+        if(supid == "new"){
+        supid = 0;
+        }
+         $.ajax({
+        url:'<%=request.getContextPath()%>/servlet/service/productselection.comp',
+        data:{
+        userId:data1,
+        
+        },
+        success: function(data2) {
+       //alert(data1);
+        
+          $("#attCom").html(data2);
+           $(".pace-active").hide();
+          
+        }
+    });
+    });
+</script>
+<script src="<%=request.getContextPath()%>/apps/js/dropzone/dropzone.min.js"></script>
+<link rel="stylesheet" href="<%=request.getContextPath()%>/apps/js/dropzone/dropzone.css"> 
+
+ <script src="<%=request.getContextPath()%>/apps/js/fine-uploader/fine-uploader.js"></script>
+<link rel="stylesheet" href="<%=request.getContextPath()%>/apps/js/fine-uploader/fine-uploader-new.css"> 
+
+<style type="text/css">
+#dropzone { margin-bottom: 3rem; }
+.dropzone { border: 2px dashed #0087F7; border-radius: 5px; padding: 0px;}
+.dropzone .dz-message { font-weight: 400; }
+.dropzone .dz-message .note { font-size: 0.8em; font-weight: 200; display: block; margin-top: 1.4rem; }
+.dropzone .dz-message {
+    margin: 2em 0;
+    text-align: center;
+}
+.dropzone .dz-preview .dz-details, .dropzone-previews .dz-preview .dz-details {width: 100%; height: 30px;}
+</style>
+
+<section class="Profile_page">
+		
+			<div class="container">
+				<div class="row">
+					<div class="col-sm-10 col-xs-12">
+						<div class="row">
+							<div class="col-xs-12 ">
+							<!--STEPS FORM START  -->
+        <div class="stepsForm">
+            <form method="post" id="prodSub"  action="<%=request.getContextPath()%>/servlet/service/productselection.save" enctype="multipart/form-data"  class="form-horizontal">
+                                
+                <div class="sf-steps-form sf-radius"> 
+                    
+                    <ul class="sf-content"> <!-- form step one --> 
+					<!--<li><div class="profile-user-thumb">
+		<img src="images/logo.png"  height="80px" width="125px" />
+		
+			
+			<div><a rel="facebox"  class="btn btn-primary">Change Picture</a></div>
+		</div></li>-->
+                         <li>
+                            <div class="sf_columns column_6">
+                            <div class="form-group">
+								    <label for="" class="col-sm-2 control-label">Select Company</label>
+								    <div class="col-sm-10">
+								      
+								      <div id="attCom"></div>
+								    </div>
+								</div>
+								<div class="form-group">
+								    <label for="" class="col-sm-2 control-label">Product Model No</label>
+								    <div class="col-sm-10">
+								      <input type="text" class="form-control" value="<%=getCurrentNodeValue("modelno")%>" name="modelno" id="modelno" placeholder="Enter product model number" data-required="true" onblur="checkModel()">
+								      <label  style="display:none;color:red" id="modelifexist"></label>
+								    </div>
+								</div>
+                            	<div class="form-group">
+								    <label for="" class="col-sm-2 control-label">Product Name</label>
+								    <div class="col-sm-10">
+								      <input type="text" class="form-control" value="<%=getCurrentNodeValue("name")%>" name="proname" placeholder="Product Name" data-required="true">
+								    </div>
+								</div>
+								<div class="form-group">
+								    <label for="" class="col-sm-2 control-label">Product Short Description</label>
+								    <div class="col-sm-10">
+								      <textarea class="form-control" name="proshortdesc" placeholder="Product Short Description" data-required="true"><%=getCurrentNodeValue("shortdescription")%></textarea>
+								    </div>
+								</div>
+								<div class="form-group">
+								    <label for="" class="col-sm-2 control-label">Product Long Description</label>
+								    <div class="col-sm-10">
+								      <textarea class="form-control" name="prolongdesc" placeholder="Product Long Description" data-required="true"><%=getCurrentNodeValue("description")%></textarea>
+								    </div>
+								</div>
+								<div class="form-group">
+								    <label for="" class="col-sm-2 control-label">Keyword</label>
+								    <div class="col-sm-10">
+								      <input type="text" class="form-control" name="keyword" value="<%=getCurrentNodeValue("keyword")%>" placeholder="Keyword" data-required="true">
+								    </div>
+								</div>
+								<div class="form-group">
+								    <label for="" class="col-sm-2 control-label">Upload Image</label>
+								    <div class="col-sm-10">
+								      <input type="file" class="form-control" name="upimg" placeholder="Upload Image" data-required="true">
+								    </div>
+								</div>
+								<div class="form-group">
+								    <label for="" class="col-sm-2 control-label">Upload Video</label>
+								    <div class="col-sm-10">
+								      <input type="file" class="form-control" name="upvid" placeholder="Upload Video" data-required="true">
+								    </div>
+								</div>
+								<div class="form-group">
+								    <label for="" class="col-sm-2 control-label">Upload Document</label>
+								    <div class="col-sm-10">
+								      <input type="file" class="form-control" name="updoc" placeholder="Upload Document" data-required="true">
+								    </div>
+								</div>
+								<div class="form-group">
+								    <label for="" class="col-sm-2 control-label">Wholesale Price</label>
+								    <div class="col-sm-10">
+								      <input type="text" class="form-control" value="<%=getCurrentNodeValue("price")%>" name="whprice" placeholder="Wholesale Price" data-required="true">
+								    </div>
+								</div>
+								<div class="form-group">
+								    <label for="" class="col-sm-2 control-label">Min. Order</label>
+								    <div class="col-sm-10">
+								      <input type="text" class="form-control" value="<%=getCurrentNodeValue("moq")%>" name="minorder" placeholder="Min. Order" data-required="true">
+								    </div>
+								</div>
+								<div class="form-group">
+								    <label for="" class="col-sm-2 control-label">Sell by Lot</label>
+								    <div class="col-sm-10">
+								      <input type="text" class="form-control" value="<%=getCurrentNodeValue("sbl")%>" name="sellbylot" placeholder="Sell by Lot" data-required="true">
+								    </div>
+								</div>
+								<div class="form-group">
+								    <label for="" class="col-sm-2 control-label">Product Category</label>
+								    <div class="col-sm-10">
+								      <input type="text" class="form-control" name="prdcat" id="category1" placeholder="Category" onkeypress="categoryDetails(event);" data-required="true">
+								      <div id="attCat"></div>
+								    </div>
+								</div>
+								<div class="form-group">
+								    <label for="" class="col-sm-2 control-label">Selected Category</label>
+								    <div class="col-sm-10">
+								      <input type="text" class="form-control" id="category" name="selprdcat" placeholder="Category" data-required="true">
+								      <input type="hidden" class="form-control" id="category2" name="selprdcat1" placeholder="Category">
+								    </div>
+								</div>
+								
+								<div class="form-group" style="margin-bottom: 0px;">
+                                                                        <div class="" style="margin-left:110px">
+                                                                            <script type="text/javascript">
+                                                                                $(document).ready(function() {
+                                                                                
+                                                                                    var addDiv = $('#attr-product');
+                                                                                    var i = parseInt($('#attr-product .row').size()) + 1;
+                                                                                    $('#addAttribute').on('click', function() {
+                                                                                    var a = document.getElementById('day').innerHTML;
+                                                                                //alert(a);
+                                                                                        $("<div class='row remove2' + i + '' id='remAttrHead'><div class='col-xs-2'><input type='text' class='form-control' name='label' placeholder='Label'></div><div class='col-xs-2'><input type='text' class='form-control' name='type' placeholder='Type'></div><div class='col-xs-2'><input type='text' class='form-control' name='min' placeholder='Min'></div><div class='col-xs-2'><input type='text' class='form-control' name='max' placeholder='Max'></div><div class='col-xs-2'><select data-placeholder='UOM' class='form-control' name='uom'>"+a+"</select></div><div class='col-xs-2'><span id='remAttribute' class='glyphicon glyphicon-minus btn btn-default'></span></div></div>").appendTo(addDiv);
+                                                                                        });
+
+                                                                                    $(document).on('click', '#remAttribute', function() {
+                                                                                        $(this).parents('#remAttrHead').remove();
+                                                                                    });
+                                                                                });
+                                                                            </script>
+                                                                            <div id="attr-product">
+                                                                                <div class="row">
+                                                                                    <label class="col-xs-2">Label</label>
+                                                                                    <label class="col-xs-2">Type</label>
+																					<label class="col-xs-2">Min</label>
+																					<label class="col-xs-2">Max</label>
+																					<label class="col-xs-2">UOM</label>
+                                                                                </div>
+                                                                               <% if(request.getParameter("id")=="new"){%>
+                                                                               <div class="row" style="margin-bottom: 15px;">
+                                                                                    <div class="col-xs-2"><input type="text" class="form-control" name="label" placeholder="Label"></div>
+																					<div class="col-xs-2"><input type="text" class="form-control" name="type" placeholder="Type"></div>
+																					<div class="col-xs-2"><input type="text" class="form-control" name="min" placeholder="Min"></div>
+																					<div class="col-xs-2"><input type="text" class="form-control" name="max" placeholder="Max"></div>
+                                                                                    <div class="col-xs-2">
+                                                                                        <select data-placeholder="UOM" id="day" class="form-control" name="uom">
+                                                                                        <%
+                                                                                        if(currentNode.session.getRootNode().getNode("content").hasNode("uom")){
+                                                                                        var uomNode = currentNode.session.getRootNode().getNode("content").getNode("uom");
+                                                                                        if(uomNode.hasNodes()){
+                                                                                        var uomNodes = uomNode.getNodes();
+                                                                                        for(var i=0;i<uomNodes.length;i++){
+                                                                                        %>
+                                                                                        <option value="<%=uomNodes[i].description%>"><%=uomNodes[i].description%></option>
+                                                                                        <%}
+                                                                                        }
+                                                                                        }
+                                                                                        %>
+                                                                                            
+                                                                                        </select>
+                                                                                    </div>
+                                                                                    <div class="col-xs-2"><span id="addAttribute" class="glyphicon glyphicon-plus btn btn-default"></span></div>
+																					<!--<div class="col-xs-2"><span id='remAttribute' class='glyphicon glyphicon-minus btn btn-default'></span></div>-->
+
+                                                                                </div>
+                                                                                <%}else{
+                                                                                if(currentNode.hasNode("spec")){
+                                                                                var attrNode=currentNode.getNode("spec");
+              																	//var attProp=attrNode.getProperties();
+																				if(attrNode.hasNode("attr")){
+																				var attrNode = attrNode.getNode("attr");
+																				if(attrNode.hasNodes()){
+																				var attrNodes = attrNode.getNodes();
+              																	var s = 0;
+              																	for(j=0;j<attrNodes.length;j++){
+               																	s++;
+                        														%>
+                        														<div class="row" style="margin-bottom: 15px;">
+                                                                                    <div class="col-xs-2"><input type="text" value="<%=attrNodes[j].name%>" class="form-control" name="label" placeholder="Label"></div>
+																					<div class="col-xs-2"><input type="text" class="form-control" value="<%=attrNodes[j].value%>" name="type" placeholder="Type"></div>
+																					<div class="col-xs-2"><input type="text" class="form-control" value="<%=attrNodes[j].min%>" name="min" placeholder="Min"></div>
+																					<div class="col-xs-2"><input type="text" class="form-control" value="<%=attrNodes[j].max%>" name="max" placeholder="Max"></div>
+                                                                                    <div class="col-xs-2">
+                                                                                        <select data-placeholder="UOM" id="day" class="form-control" name="uom">
+                                                                                        <%
+                                                                                        if(currentNode.session.getRootNode().getNode("content").hasNode("uom")){
+                                                                                        var uomNode = currentNode.session.getRootNode().getNode("content").getNode("uom");
+                                                                                        if(uomNode.hasNodes()){
+                                                                                        var uomNodes = uomNode.getNodes();
+                                                                                        for(var k=0;k<uomNodes.length;k++){
+                                                                                        %>
+                                                                                        <%if((attrNodes[j].uom).equals(uomNodes[k].description)){%>
+                                                                                        <option value="<%=attrNodes[j].uom%>" selected><%=attrNodes[j].uom%></option>
+                                                                                        <%}else{%>
+                                                                                        <option value="<%=uomNodes[k].description%>"><%=uomNodes[k].description%></option>
+                                                                                        <%}%>
+                                                                                        <%}
+                                                                                        }
+                                                                                        }
+                                                                                        %>
+                                                                                            
+                                                                                        </select>
+                                                                                    </div>
+                                                                                    <%if(s==1){%>
+                                                                                    <div class="col-xs-2"><span id="addAttribute" class="glyphicon glyphicon-plus btn btn-default"></span></div>
+                                                                                    <%}else{%>
+																					<div class="col-xs-2"><span id='remAttribute' class='glyphicon glyphicon-minus btn btn-default'></span></div>
+																					<%}%>
+
+                                                                                </div>
+                        														
+                        														<%
+																				}
+               																	}
+                                                                                }
+                                                                                }
+                                                                                }
+																				%>
+                                                                            </div>
+
+                                                                        </div>
+                                                                    </div>
+																<div class="form-group" style="margin-bottom: 0px;">
+                                                                        <div class="" style="margin-left:110px">
+                                                                            <script type="text/javascript">
+                                                                                $(document).ready(function() {
+                                                                                    var addDiv = $('#attr-product-heading');
+                                                                                    var i = parseInt($('#attr-product-heading .row').size()) + 1;
+                                                                                    $('#addFreeAttribute').on('click', function() {
+                                                                                        $("<div class='row remove2' + i + '' id='remFreeAttrHead'><div class='col-xs-5'><input type='text' class='form-control' name='txtheading' placeholder='Heading'></div><div class='col-xs-5'><input type='text' class='form-control' name='txtvalue' placeholder='Value'></div><div class='col-xs-2'><span id='remFreeAttribute' class='glyphicon glyphicon-minus btn btn-default'></span></div></div>").appendTo(addDiv);
+                                                                                        });
+
+                                                                                    $(document).on('click', '#remFreeAttribute', function() {
+                                                                                        $(this).parents('#remFreeAttrHead').remove();
+                                                                                    });
+                                                                                });
+                                                                            </script>
+                                                                            <div id="attr-product-heading">
+                                                                            <div class="row">
+                                                                                    <label class="col-xs-5">Text Heading</label>
+                                                                                    <label class="col-xs-5">Text Value</label>
+																			</div>
+																				<% if(request.getParameter("id")=="new"){%>
+																			   <div class="row" style="margin-bottom: 15px;">
+                                                                                    <div class="col-xs-5"><input type="text" class="form-control" name="txtheading" placeholder="Heading"></div>
+																					<div class="col-xs-5"><input type="text" class="form-control" name="txtvalue" placeholder="Value"></div>
+																					<div class="col-xs-2"><span id="addFreeAttribute" class="glyphicon glyphicon-plus btn btn-default"></span></div>
+																					<!--<div class="col-xs-2"><span id='remFreeAttribute' class='glyphicon glyphicon-minus btn btn-default'></span></div>-->
+
+                                                                                </div>
+                                                                            <%}else{
+                                                                                if(currentNode.hasNode("spec")){
+                                                                                var attrNode=currentNode.getNode("spec");
+              																	//var attProp=attrNode.getProperties();
+																				if(attrNode.hasNode("fattr")){
+																				var fattrNode = attrNode.getNode("fattr");
+																				if(fattrNode.hasNodes()){
+																				var fattrNodes = fattrNode.getNodes();
+              																	var v = 0;
+              																	for(j=0;j<fattrNodes.length;j++){
+               																	%>
+               																	<div class="row" style="margin-bottom: 15px;">
+                                                                                    <div class="col-xs-5"><input type="text" class="form-control" value="<%=fattrNodes[j].name%>" name="txtheading" placeholder="Heading"></div>
+																					<div class="col-xs-5"><input type="text" class="form-control" value="<%=fattrNodes[j].value%>" name="txtvalue" placeholder="Value"></div>
+																					<%v++;if(v==1){%>
+																					<div class="col-xs-2"><span id="addFreeAttribute" class="glyphicon glyphicon-plus btn btn-default"></span></div>
+																					<%}else{%>
+																					<div class="col-xs-2"><span id='remFreeAttribute' class='glyphicon glyphicon-minus btn btn-default'></span></div>
+																					<%}%>
+                                                                                </div>
+               																	    <%}}}}}%>
+                                                                            </div>
+
+                                                                        </div>
+                                                                    </div>
+                            </div>
+                         </li>
+                    </ul>
+                     
+                   
+                    
+                </div>
+
+<input type="hidden" value="<%=request.getParameter("param")%>" name="param">
+                
+                <div class="sf-steps-navigation sf-align-right">
+                    <span id="sf-msg" class="sf-msg-error"></span>
+                    
+                    <button id="sf-next" type="button" onclick="subForm()" class="btn btn-primary">Create</button>
+                </div>
+            </form>
+        </div>
+                
+        							</div>
+						</div>
+					</div>
+<!--
+           <form method="post" id="prodSub1"  action="<%=request.getContextPath()%>/servlet/service/productselection.save" enctype="multipart/form-data"  class="form-horizontal">
+                    <button id="sf-next1" type="button" onclick="subForm()" style="margin-top:33px" class="btn btn-primary">Download Template</button><br><br>
+                    <input style="width:164px" type="file" id="uploadtemplate" name="uploadtemplate"><button id="sf-next2" type="button" onclick="subForm()" class="btn btn-primary">Upload Template</button>
+            </form>
+-->
+				</div>
+			</div>
+
+</section>
+
+<%load("../common/footer.esp");%>
+
+
+<!-- Login Modal Start  -->
+<div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="loginModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+    <form class="form-horizontal">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="loginModalLabel">Login Details</h4>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+            <label class="col-sm-3 control-label">Name</label>
+            <div class="col-sm-9">
+              <input type="text" class="form-control">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-3 control-label">Password</label>
+            <div class="col-sm-9">
+              <input type="password" class="form-control">
+            </div>
+          </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary">Login</button>
+      </div>
+      </form>
+    </div>
+  </div>
+</div>
+<!-- Login Modal End  -->
+
+<!-- register Modal Start  -->
+<div class="modal fade" id="registerModal" tabindex="-1" role="dialog" aria-labelledby="registerModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+    <form class="form-horizontal">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="registerModalLabel">Registration Form</h4>
+      </div>
+      <div class="modal-body">
+          <div class="form-group">
+            <label class="col-sm-3 control-label">Full Name</label>
+            <div class="col-sm-9">
+              <input type="text" class="form-control">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-3 control-label">Full Name</label>
+            <div class="col-sm-9">
+              <input type="text" class="form-control">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-3 control-label">Password</label>
+            <div class="col-sm-9">
+              <input type="password" class="form-control">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-3 control-label">Confirm Password</label>
+            <div class="col-sm-9">
+              <input type="password" class="form-control">
+            </div>
+          </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary">Register</button>
+      </div>
+    </form>
+    </div>
+  </div>
+</div>
+<!-- register Modal End  -->
+
+
+<!-- contactsupplier Modal Start  -->
+<div class="modal fade contactsupplier" tabindex="-1" role="dialog" aria-labelledby="registerModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+    <form class="form-horizontal">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="registerModalLabel">Contact Supplier</h4>
+      </div>
+      <div class="modal-body">
+          <div class="form-group">
+            <label class="col-sm-3 control-label">Full Name</label>
+            <div class="col-sm-9">
+              <input type="text" class="form-control">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-3 control-label">Full Name</label>
+            <div class="col-sm-9">
+              <input type="text" class="form-control">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-3 control-label">Password</label>
+            <div class="col-sm-9">
+              <input type="password" class="form-control">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-3 control-label">Confirm Password</label>
+            <div class="col-sm-9">
+              <input type="password" class="form-control">
+            </div>
+          </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary">Register</button>
+      </div>
+    </form>
+    </div>
+  </div>
+</div>
+<!-- register Modal End  -->
+    
+  
+        
+    </body>
+</html>
+

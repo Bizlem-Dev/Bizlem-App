@@ -1,0 +1,53 @@
+  
+	   <link rel="stylesheet" href="<%=request.getContextPath()%>/apps/css/bootstrap.css">
+	    <link rel="stylesheet" href="<%=request.getContextPath()%>/apps/js/datetimepicker/datepicker.css">
+        <link rel="stylesheet" href="<%=request.getContextPath()%>/apps/css/font-awesome.min.css"> 
+        <link rel="stylesheet" href="<%=request.getContextPath()%>/apps/js/FlexSlider/flexslider.css" type="text/css" media="screen" /> 
+        <link rel="stylesheet" href="<%=request.getContextPath()%>/apps/css/color.css">
+        <link rel="stylesheet" href="<%=request.getContextPath()%>/apps/css/loader.css">
+        <link rel="stylesheet" href="<%=request.getContextPath()%>/apps/css/custom.css">
+        <link rel="stylesheet" href="<%=request.getContextPath()%>/apps/css/bootstrap-social.css"> 
+		<!--<script src="<%=request.getContextPath()%>/apps/js/jquery.min.js"></script>-->
+		<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+		<script src="<%=request.getContextPath()%>/apps/js/bootstrap.min.js"></script>
+    	<script src="<%=request.getContextPath()%>/apps/js/datetimepicker/bootstrap-datepicker.js"></script>
+        <script src="<%=request.getContextPath()%>/apps/js/FlexSlider/jquery.flexslider.js"></script>
+        <script src="<%=request.getContextPath()%>/apps/js/tabdrop/js/bootstrap-tabdrop.js"></script>
+        <script src="<%=request.getContextPath()%>/apps/js/jquery.bootpag.min.js"></script>
+        <script src="<%=request.getScheme()+"://"+request.getServerName()+":"+ request.getServerPort()+request.getContextPath()%>/apps/js/hover-dropdown/bootstrap-hover-dropdown.min.js"></script>
+        <link rel="stylesheet" href="<%=request.getContextPath()%>/apps/js/tabdrop/css/tabdrop.css">
+		
+        <script type="text/javascript" src="<%=request.getScheme()+"://"+request.getServerName()+":"+ request.getServerPort()+request.getContextPath()%>/apps/js/zoom/js/cloudzoom.js"></script>
+         <script type="text/javascript" src="<%=request.getScheme()+"://"+request.getServerName()+":"+ request.getServerPort()+request.getContextPath()%>/apps/js/zoom/js/thumbelina.js"></script>
+          <script src="<%=request.getScheme()+"://"+request.getServerName()+":"+ request.getServerPort()+request.getContextPath()%>/apps/js/scrollbar/minified/jquery-1.11.0.min.js"></script>
+        <script src="<%=request.getScheme()+"://"+request.getServerName()+":"+ request.getServerPort()+request.getContextPath()%>/apps/js/scrollbar/jquery.mCustomScrollbar.concat.min.js"></script>
+<link rel="stylesheet" href="<%=request.getScheme()+"://"+request.getServerName()+":"+ request.getServerPort()+request.getContextPath()%>/apps/js/scrollbar/jquery.mCustomScrollbar.css">  
+        <script type="text/javascript">
+          $(document).ready(function(){
+            
+        }); 
+          </script>
+
+<script src="<%=request.getContextPath()%>/apps/js/chosen/chosen.jquery.js"></script>
+<link href="<%=request.getContextPath()%>/apps/js/chosen/chosen.min.css" rel="stylesheet">
+<script type='text/javascript' src='<%=request.getContextPath()%>/dwr/engine.js'></script>
+<script type='text/javascript' src='<%=request.getContextPath()%>/dwr/util.js'></script>
+<script type='text/javascript' src='<%=request.getContextPath()%>/dwr/interface/UserDWRService.js'></script>
+<script>
+    $(function() {
+        $('.chosen-select').chosen();
+        $('.chosen-select-deselect').chosen({ allow_single_deselect: true });
+    });
+</script>
+
+<!-- custom scrollbar plugin -->
+
+
+<!-- blueimp Gallery styles -->
+<link rel="stylesheet" href="//blueimp.github.io/Gallery/css/blueimp-gallery.min.css">
+<!-- CSS to style the file input field as button and adjust the Bootstrap progress bars -->
+<link rel="stylesheet" href="<%=request.getContextPath()%>/apps/css/jquery.fileupload.css">
+<link rel="stylesheet" href="<%=request.getContextPath()%>/apps/css/jquery.fileupload-ui.css">
+
+
+

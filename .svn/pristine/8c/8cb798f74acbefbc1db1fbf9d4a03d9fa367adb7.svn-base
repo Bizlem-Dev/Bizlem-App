@@ -1,0 +1,30 @@
+												<div class="form-group" style="margin-bottom: 0px;">
+                                    				<div class="" >
+                                                                            
+                                   					 <div id="attr-product11">
+                                                                                <div class="row">
+                                                                                  <label class="col-xs-2">Catalog Number</label>
+                                                                                  <label class="col-xs-2">Label</label>
+                                                                                   <label class="col-xs-2">Type</label>  
+                                                                                  <label class="col-xs-2">Value</label>                                                                                    
+                                                                                                                                                                     
+                                                                                    <label class="col-xs-2">UOM</label>
+                                                                                    <label class="col-xs-2">Min</label>
+                                                                                    <label class="col-xs-2">Max</label>
+
+                                                                                </div>
+                                                                              
+                                                                                <div class="row" style="margin-bottom: 15px;">
+                                                                                    <div class="col-xs-2"><input type="text" class="form-control" name="cats" placeholder="Catalog No"></div>
+                                                                                    <div class="col-xs-2"><input type="text" class="form-control" name="labels" placeholder="Label"></div>
+                                                                                     <div class="col-xs-2"><input type="text" class="form-control" name="types" placeholder="Type"></div>
+                                                                                    <div class="col-xs-2">
+                                                                                       <input type="text" class="form-control" name="values" placeholder="Value">
+                                                                                    </div>			
+                                                                                   
+                                                                                    <div class="col-xs-2"><input type="text" class="form-control" name="uoms" placeholder="Uom"></div>
+          																		     <div class="col-xs-2"><input type="text" class="form-control" name="mins" placeholder="Min"></div>
+                                                                                    <div class="col-xs-2"><input type="text" class="form-control" name="maxs" placeholder="Max"></div>
+                                                                             </div>
+                                                                       </div><div class="col-xs-2"><span id="addAttribute1" class="glyphicon glyphicon-plus btn btn-default"></span></div>
+                                                             </div>   </div>

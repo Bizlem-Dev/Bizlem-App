@@ -1,0 +1,170 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<% var currentNodeProvided = ((typeof currentNode != "undefined"));  %>
+<% currentNode=currentNode.session.getNode("/content"); %>
+<html>
+    <head>     
+          </script>
+        <title>Home</title> 
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="description" content="Demo project with jQuery">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+         <%load("../common/links.esp");%>
+         
+         
+<script type="text/javascript">
+                      $('#slider-home').flexslider({
+                        animation: "slide",
+                        //controlNav: "thumbnails",
+                        start: function(slider){
+                          $('body').removeClass('loading');
+                        }
+                      });
+                      
+                     
+                  </script>
+
+
+            <script language="javascript">
+ function contactSupplier(){
+                      alert("paretss");
+                     
+                      }
+  $(document).ready(function() {
+ 		 $("#dateto").datepicker({
+            format: "yyyy-mm-dd",
+            
+        })
+        .on('changeDate', function(ev){
+        var birthDay = document.getElementById('dateto').value;
+           
+            if(new Date(birthDay).getTime() > new Date().getTime())
+{
+//alert("onside if"); 
+document.getElementById('dateto').value = "";
+ $(this).datepicker('hide');
+alert("Date should not be after or before  current date");
+}else{
+$(this).datepicker('hide');
+document.getElementById("widgetIframee").src="http://54.225.114.173/piwik/index.php?module=Widgetize&action=iframe&widget=1&moduleToWidgetize=UserCountryMap&actionToWidgetize=visitorMap&period=range&disableLink=1&widget=1&idSite=<%=request.getAttribute('idsite')%>&token_auth=<%=request.getAttribute('authcode')%>&segment=contentName=@<%=request.getAttribute('segment')%>&date="+document.getElementById('datefrom').value+","+document.getElementById('dateto').value;
+document.getElementById("widgetIframe11").src="http://54.225.114.173/piwik/index.php?module=Widgetize&action=iframe&widget=1&moduleToWidgetize=Contents&actionToWidgetize=getContentNames&idSite=<%=request.getAttribute('idsite')%>&token_auth=<%=request.getAttribute('authcode')%>&period=range&segment=contentName=@<%=request.getAttribute('segment')%>&date="+document.getElementById('datefrom').value+","+document.getElementById('dateto').value;
+ var  param=["email","sdate","edate"];
+ 	 var paramValue=["<%=request.getRemoteUser()%>",document.getElementById('datefrom').value,document.getElementById('dateto').value];
+ UserDWRService.callGetService("http://50.17.231.172/bsearch/report.php",param,paramValue,function(data) {
+         console.log(data);
+	    var parsed=JSON.parse(data);
+         var titl=document.getElementById("campaignameinput").value;
+         if(parsed.length>0){
+         for(var i=0;i<parsed.length;i++){
+         
+         if(titl==parsed[i].campaignName){
+         $("#campaigname").html(parsed[i].campaignName);
+          $("#impression").html(parsed[i].impressions);
+           $("#click").html(parsed[i].clicks);
+            $("#revenue").html(parsed[i].revenue);
+            
+             $("#ctr").html((parseFloat(parsed[i].clicks)*100)/parseFloat(parsed[i].impressions));
+         	}
+         }}else{
+         
+          $("#impression").html();
+           $("#click").html();
+            $("#revenue").html();
+            
+             $("#ctr").html();
+         }
+	 
+	 });
+	 	
+}
+
+        });	
+         $("#datefrom").datepicker({
+            format: "yyyy-mm-dd",
+            
+        })
+        .on('changeDate', function(ev){
+        var birthDay = document.getElementById('datefrom').value;
+           
+            if(new Date(birthDay).getTime() > new Date().getTime())
+{
+//alert("onside if"); 
+document.getElementById('datefrom').value = "";
+ $(this).datepicker('hide');
+alert("Date should not be after or before  current date");
+}else{
+$(this).datepicker('hide');
+
+
+}
+
+        });	
+  });	
+ 
+ 
+        </script>
+   <%load("../common/header.esp");%>
+  
+<section class="email_service">
+
+   <div class="container">
+        <div class="row">
+        <div class="col-xs-12">
+                     <div class="form-group">
+                        <div class="col-sm-4">
+        
+        From : <input type="text" id='datefrom' class="form-control" value="<%=request.getAttribute('fromdate')%>">
+        </div>
+         <div class="col-sm-4">
+         To  : <input type="text" id='dateto' class="form-control" value="<%=request.getAttribute('todate')%>">
+         </div>
+         </div>
+         </div>
+        <div id="widgetIframe"><iframe width="100%" height="350" id="widgetIframee" src="http://54.225.114.173/piwik/index.php?module=Widgetize&action=iframe&widget=1&moduleToWidgetize=UserCountryMap&actionToWidgetize=visitorMap&period=range&date=<%=request.getAttribute('fromdate')%>,<%=request.getAttribute('todate')%>&disableLink=1&widget=1&idSite=<%=request.getAttribute('idsite')%>&token_auth=<%=request.getAttribute('authcode')%>&segment=contentName=@<%=request.getAttribute('segment')%>" scrolling="no" frameborder="0" marginheight="0" marginwidth="0"></iframe></div>
+        <div id="widgetIframe1"><iframe width="100%" height="350" id="widgetIframe11" src="http://54.225.114.173/piwik/index.php?module=Widgetize&action=iframe&widget=1&moduleToWidgetize=Contents&actionToWidgetize=getContentNames&period=range&date=<%=request.getAttribute('fromdate')%>,<%=request.getAttribute('todate')%>&disableLink=1&widget=1&idSite=<%=request.getAttribute('idsite')%>&token_auth=<%=request.getAttribute('authcode')%>&segment=contentName=@<%=request.getAttribute('segment')%>" scrolling="no" frameborder="0" marginheight="0" marginwidth="0"></iframe></div>
+        <div>
+        <table class = "table">
+   <caption>Reports</caption>
+   
+   <thead>
+      <tr>
+         <th>Campaign Name</th>
+         <th>Impression</th>
+         <th>Clicks</th>
+         <th>Revenue</th>
+         <th>CTR</th>
+      </tr>
+   </thead>
+   
+   <tbody>
+      <tr>
+      <%
+       var daata=request.getAttribute("openx");
+   //  out.print(daata+daata.size());
+    // out.print(daata.get(0));
+      if(daata!=null && daata.size()>0 ){ 
+      
+      %>
+          <td><div id="campaigname"><%out.print(daata.get(0));%></div></td>
+          <td><div id="impression"><%out.print(daata.get(1));%></div></td>
+          <td><div id="clicks"><%out.print(daata.get(2));%></div></td>
+          <td><div id="revenue"><%out.print(daata.get(3));%></div></td>
+          <td><div id="ctr"><%out.print(daata.get(4));%></div>%</td>
+         <input type="hidden" id="campaignameinput" value="<%=daata.get(0)%>">
+         
+       <%}%>
+      </tr>
+    
+   </tbody>
+	
+</table>
+        </div>
+        
+        </div>
+   </div>
+</section>
+        <%load("../common/footer.esp");%>
+  
+        
+    </body>
+</html>

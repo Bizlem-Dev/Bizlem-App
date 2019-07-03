@@ -1,0 +1,1317 @@
+<%
+//out.print(currentNode);
+    if (request.getParameter("id") != "new") {
+        currentNode = currentNode.session.getRootNode().getNode("content").getNode("product").getNode("products").getNode(request.getParameter("id"));
+    }
+//out.print(currentNode);
+    var currentNodeProvided = ((typeof currentNode !=   "undefined") );
+function getCurrentNodeValue(prop
+    
+        ) {
+    var result = "";
+        if (request.getParameter("id") != "new") {
+            if (currentNodeProvided && currentNode[prop]) {
+                result = currentNode[prop];
+
+            }
+        }
+        return result;
+    }
+%>
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Home</title> 
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="description" content="Demo project with jQuery">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <%load("../common/links.esp");%>
+        <script>
+			function labelDetailsDWR1(count) {
+                document.getElementById("labelId"+count).value = "";
+                var a = document.getElementById("label"+count).value;
+                //if (a.length > 0) {
+                    var value = document.getElementById("label"+count).value;
+                    while (value.indexOf(" ") > -1) {
+                        value = value.replace(" ", "+");
+                    }
+                    var param = ["paravalue", "paraname", "path", "isparent"];
+                    var isparent = "0,0";
+                    var paramValue = [value, "name,id", "/content/attribute/label/", isparent];
+                    UserDWRService.callGetService("http://35.221.160.146:8082/portal/servlet/exhibition/flash.eventNameSuggetion", param, paramValue, function(data) {
+
+                        console.log(data);
+                        var parsed = JSON.parse(data);
+                        console.log(parsed);
+                        var sugData = "";
+                        for (var i = 0; i < parsed.length; i++) {
+                            sugData = sugData + "<a href='javascript:void(0)' id='sugIdLabelN" + i + "' style='color:black' onclick='selectValLabel1(this.id," + parsed[i].id + "," + count + ")' >" + parsed[i].name + "</a></br>";
+                        }
+						sugData = sugData + "<input type='button' value='Add New' onclick='addNewMaster(" + count + ")' /></br>"; 
+                        $("#suggestionLabel"+count).css('visibility', 'visible');
+                        $("#suggestionLabel"+count).css('border-style', 'outset');
+
+
+                        $("#suggestionLabel"+count).hide();
+                        $("#suggestionLabel"+count).fadeIn('slow');
+                        $("#searchLabel"+count).html(sugData);
+                        var offsetHeight = document.getElementById('suggestionLabel'+count).offsetHeight;
+                        //alert("after---"+offsetHeight);
+                        if (offsetHeight > 80)
+                        {
+                            $("#suggestionLabel"+count).css('overflow-y', 'auto');
+                            $("#suggestionLabel"+count).css('height', '80px');
+                        }
+                    });
+
+                //}
+            }
+            
+            function selectValLabel1(id, value1,count) {
+                document.getElementById("label"+count).value = document.getElementById(id).innerHTML;
+                document.getElementById("labelId"+count).value = value1;
+                $("#suggestionLabel"+count).hide();
+            }
+        	
+        
+        	function typeDetailsDWR1(count) {
+        		document.getElementById("uomId"+count).value = "";
+                var a = document.getElementById("uom"+count).value;
+                //if (a.length > 3) {
+                    var value = document.getElementById("uom"+count).value;
+                    while (value.indexOf(" ") > -1) {
+                        value = value.replace(" ", "+");
+                    }
+                    var param = ["paravalue", "paraname", "path", "isparent"];
+                    var isparent = "0,0";
+                    var paramValue = [value, "description,id", "/content/uom/", isparent];
+                    UserDWRService.callGetService("http://35.221.160.146:8082/portal/servlet/exhibition/flash.eventNameSuggetion", param, paramValue, function(data) {
+
+                        console.log(data);
+                        var parsed = JSON.parse(data);
+                        console.log(parsed);
+                        var sugData = "";
+                        for (var i = 0; i < parsed.length; i++) {
+                            sugData = sugData + "<a href='javascript:void(0)' id='sugIdTypeN" + i + "' style='color:black' onclick='selectValType1(this.id," + parsed[i].id + "," + count + ")' >" + parsed[i].description + "</a></br>";
+                        }
+						sugData = sugData + "<input type='button' value='Add New' onclick='addNewUom(" + count + ")' /></br>";	
+                        $("#suggestionType"+count).css('visibility', 'visible');
+                        $("#suggestionType"+count).css('border-style', 'outset');
+
+
+                        $("#suggestionType"+count).hide();
+                        $("#suggestionType"+count).fadeIn('slow');
+                        $("#searchType"+count).html(sugData);
+                        var offsetHeight = document.getElementById('suggestionType'+count).offsetHeight;
+                        //alert("after---"+offsetHeight);
+                        if (offsetHeight > 80)
+                        {
+                            $("#suggestionType"+count).css('overflow-y', 'auto');
+                            $("#suggestionType"+count).css('height', '80px');
+                        }
+                    });
+
+                //}
+            }
+        	
+        	function selectValType1(id, value1,count) {
+                document.getElementById("uom"+count).value = document.getElementById(id).innerHTML;
+                document.getElementById("uomId"+count).value = value1;
+                $("#suggestionType"+count).hide();
+            }
+			        
+        
+        
+        
+        	function labelDetailsDWR() {
+                document.getElementById("labelId").value = "";
+                var a = document.getElementById("label").value;
+                //if (a.length > 0) {
+                    var value = document.getElementById("label").value;
+                    while (value.indexOf(" ") > -1) {
+                        value = value.replace(" ", "+");
+                    }
+                    var param = ["paravalue", "paraname", "path", "isparent"];
+                    var isparent = "0,0";
+                    var paramValue = [value, "name,id", "/content/attribute/label/", isparent];
+                    UserDWRService.callGetService("http://35.221.160.146:8082/portal/servlet/exhibition/flash.eventNameSuggetion", param, paramValue, function(data) {
+
+                        console.log(data);
+                        var parsed = JSON.parse(data);
+                        console.log(parsed);
+                        var sugData = "";
+                        for (var i = 0; i < parsed.length; i++) {
+                            sugData = sugData + "<a href='javascript:void(0)' id='sugIdLabel" + i + "' style='color:black' onclick='selectValLabel(this.id," + parsed[i].id + ")' >" + parsed[i].name + "</a></br>";
+                        }
+						sugData = sugData + "<input type='button' id='new' value='Add New' onclick='addNewMaster(this.id)' /></br>";
+                        $("#suggestionLabel").css('visibility', 'visible');
+                        $("#suggestionLabel").css('border-style', 'outset');
+
+
+                        $("#suggestionLabel").hide();
+                        $("#suggestionLabel").fadeIn('slow');
+                        $("#searchLabel").html(sugData);
+                        var offsetHeight = document.getElementById('suggestionLabel').offsetHeight;
+                        //alert("after---"+offsetHeight);
+                        if (offsetHeight > 80)
+                        {
+                            $("#suggestionLabel").css('overflow-y', 'auto');
+                            $("#suggestionLabel").css('height', '80px');
+                        }
+                    });
+
+                //}
+            }
+            
+            function selectValLabel(id, value1) {
+                document.getElementById("label").value = document.getElementById(id).innerHTML;
+                document.getElementById("labelId").value = value1;
+                $("#suggestionLabel").hide();
+            }
+        	
+        
+        	function typeDetailsDWR() {
+                document.getElementById("uomId").value = "";
+                var a = document.getElementById("uom").value;
+                //if (a.length > 3) {
+                    var value = document.getElementById("uom").value;
+                    while (value.indexOf(" ") > -1) {
+                        value = value.replace(" ", "+");
+                    }
+                    var param = ["paravalue", "paraname", "path", "isparent"];
+                    var isparent = "0,0";
+                    var paramValue = [value,  "description,id", "/content/uom/", isparent];
+                    UserDWRService.callGetService("http://35.221.160.146:8082/portal/servlet/exhibition/flash.eventNameSuggetion", param, paramValue, function(data) {
+
+                        console.log(data);
+                        var parsed = JSON.parse(data);
+                        console.log(parsed);
+                        var sugData = "";
+                        for (var i = 0; i < parsed.length; i++) {
+                            sugData = sugData + "<a href='javascript:void(0)' id='sugIdType" + i + "' style='color:black' onclick='selectValType(this.id," + parsed[i].id + ")' >" + parsed[i].description + "</a></br>";
+                        }
+						sugData = sugData + "<input type='button' id='new' value='Add New' onclick='addNewUom(this.id)' /></br>";
+                        $("#suggestionType").css('visibility', 'visible');
+                        $("#suggestionType").css('border-style', 'outset');
+
+
+                        $("#suggestionType").hide();
+                        $("#suggestionType").fadeIn('slow');
+                        $("#searchType").html(sugData);
+                        var offsetHeight = document.getElementById('suggestionType').offsetHeight;
+                        //alert("after---"+offsetHeight);
+                        if (offsetHeight > 80)
+                        {
+                            $("#suggestionType").css('overflow-y', 'auto');
+                            $("#suggestionType").css('height', '80px');
+                        }
+                    });
+
+                //}
+            }
+        	
+        	function selectValType(id, value1) {
+                document.getElementById("uom").value = document.getElementById(id).innerHTML;
+                document.getElementById("uomId").value = value1;
+                $("#suggestionType").hide();
+            }
+        
+			 function industryDetailsDWR() {
+                var a = document.getElementById("industry").value;
+                if (a.length > 3) {
+                    var value = document.getElementById("industry").value;
+                    while (value.indexOf(" ") > -1) {
+                        value = value.replace(" ", "+");
+                    }
+                    var param = ["paravalue", "paraname", "path", "isparent"];
+                    var isparent = "0,0";
+                    var paramValue = [value, "name,id", "/content/industry/", isparent];
+                    UserDWRService.callGetService("http://35.221.160.146:8082/portal/servlet/exhibition/flash.eventNameSuggetion", param, paramValue, function(data) {
+
+                        console.log(data);
+                        var parsed = JSON.parse(data);
+                        console.log(parsed);
+                        var sugData = "";
+                        for (var i = 0; i < parsed.length; i++) {
+                            sugData = sugData + "<a href='javascript:void(0)' id='sugIdIndustry" + i + "' style='color:black' onclick='selectValIn(this.id," + parsed[i].id + ")' >" + parsed[i].name + "</a></br>";
+                        }
+
+                        $("#suggestionIndustry").css('visibility', 'visible');
+                        $("#suggestionIndustry").css('border-style', 'outset');
+
+
+                        $("#suggestionIndustry").hide();
+                        $("#suggestionIndustry").fadeIn('slow');
+                        $("#searchIndustry").html(sugData);
+                        var offsetHeight = document.getElementById('suggestionIndustry').offsetHeight;
+                        //alert("after---"+offsetHeight);
+                        if (offsetHeight > 80)
+                        {
+                            $("#suggestionIndustry").css('overflow-y', 'auto');
+                            $("#suggestionIndustry").css('height', '80px');
+                        }
+                    });
+
+                }
+            }
+            
+            			 function tgeoDetailsDWR() {
+                var a = document.getElementById("tgeo").value;
+                if (a.length > 3) {
+                    var value = document.getElementById("tgeo").value;
+                    while (value.indexOf(" ") > -1) {
+                        value = value.replace(" ", "+");
+                    }
+                    var param = ["paravalue", "paraname", "path", "isparent"];
+                    var isparent = "0,0";
+                    var paramValue = [value, "name,id", "/content/targetgeo/", isparent];
+                    UserDWRService.callGetService("http://35.221.160.146:8082/portal/servlet/exhibition/flash.eventNameSuggetion", param, paramValue, function(data) {
+
+                        console.log(data);
+                        var parsed = JSON.parse(data);
+                        console.log(parsed);
+                        var sugData = "";
+                        for (var i = 0; i < parsed.length; i++) {
+                            sugData = sugData + "<a href='javascript:void(0)' id='sugIdTGeo" + i + "' style='color:black' onclick='selectValTGeo(this.id," + parsed[i].id + ")' >" + parsed[i].name + "</a></br>";
+                        }
+
+                        $("#suggestionTarget").css('visibility', 'visible');
+                        $("#suggestionTarget").css('border-style', 'outset');
+
+
+                        $("#suggestionTarget").hide();
+                        $("#suggestionTarget").fadeIn('slow');
+                        $("#searchTarget").html(sugData);
+                        var offsetHeight = document.getElementById('suggestionTarget').offsetHeight;
+                        //alert("after---"+offsetHeight);
+                        if (offsetHeight > 80)
+                        {
+                            $("#suggestionTarget").css('overflow-y', 'auto');
+                            $("#suggestionTarget").css('height', '80px');
+                        }
+                    });
+
+                }
+            }
+
+            function selectValTGeo(id, value1) {
+                document.getElementById("tgeo").value = document.getElementById(id).innerHTML;
+                document.getElementById("tgeoId").value = value1;
+                $("#suggestionTarget").hide();
+            }
+
+            function selectValIn(id, value1) {
+                document.getElementById("industry").value = document.getElementById(id).innerHTML;
+                document.getElementById("industryId").value = value1;
+                $("#suggestionIndustry").hide();
+            }
+			
+			var checkboxesChecked = [];
+var checkboxesCheckedvalue = [];
+
+function getCategoryValueNew(id)
+{
+var globalcat=""; 
+var globalcatid="";
+var checkboxes = document.getElementById(id);
+       if(checkboxes.checked){
+        checkboxesChecked.push(checkboxes.getAttribute("data-id"));
+        checkboxesCheckedvalue.push(checkboxes.value);
+       
+       }else{
+        var index = checkboxesChecked.indexOf(id);
+      var index1=    checkboxesCheckedvalue.push(checkboxes.value);
+      if (index !=-1 && index1 !=-1 ) {    
+         checkboxesChecked.splice(index, 1);
+          checkboxesCheckedvalue.splice(index, 1);
+       }
+  }
+  
+ for (var i=0; i<checkboxesChecked.length; i++) {
+      globalcat=checkboxesCheckedvalue[i]+","+globalcat;
+      globalcatid=checkboxesChecked[i]+","+globalcatid;
+ 	}
+  
+ document.getElementById("category").value=globalcat;
+  document.getElementById("category2").value=globalcatid;
+}
+			
+			
+            function categoryDetailsDWR() {
+                var a = document.getElementById("category1").value;
+                if (a.length > 3) {
+                    var value = document.getElementById("category1").value;
+                    while (value.indexOf(" ") > -1) {
+                        value = value.replace(" ", "+");
+                    }
+                    var param = ["paravalue", "paraname", "path", "isparent"];
+                    var isparent = "0,0";
+                    var paramValue = [value, "searchtext,unspsc", "/content/unspsc/", isparent];
+                    UserDWRService.callGetService("http://35.221.160.146:8082/portal/servlet/exhibition/flash.eventNameSuggetion", param, paramValue, function(data) {
+
+                        console.log(data);
+                        var parsed = JSON.parse(data);
+                        console.log(parsed);
+                        var sugData = "";
+                        for (var i = 0; i < parsed.length; i++) {
+                            if((document.getElementById("category2").value).indexOf(parsed[i].unspsc)!=-1){
+						      	sugData=sugData+"<input type='checkBox' checked='true' id='"+parsed[i].unspsc+"' name='catcheck' style='color:black' onclick='getCategoryValueNew(this.id)' value='"+parsed[i].searchtext+"' data-id='"+parsed[i].unspsc+"'  >"+parsed[i].searchtext+"</br>";
+      		 				}else{
+        						sugData=sugData+"<input type='checkBox' id='"+parsed[i].unspsc+"' name='catcheck' style='color:black' onclick='getCategoryValueNew(this.id)' value='"+parsed[i].searchtext+"' data-id='"+parsed[i].unspsc+"'  >"+parsed[i].searchtext+"</br>";
+        					}
+                        	
+                            //sugData = sugData + "<a href='javascript:void(0)' id='sugIdCat" + i + "' style='color:black' onclick='selectValCat(this.id," + parsed[i].unspsc + ")' >" + parsed[i].searchtext + "</a></br>";
+                        }
+
+                        $("#suggestionCategory").css('visibility', 'visible');
+                        $("#suggestionCategory").css('border-style', 'outset');
+
+
+                        $("#suggestionCategory").hide();
+                        $("#suggestionCategory").fadeIn('slow');
+                        $("#searchCategory").html(sugData);
+                        var offsetHeight = document.getElementById('suggestionCategory').offsetHeight;
+                        //alert("after---"+offsetHeight);
+                        if (offsetHeight > 80)
+                        {
+                            $("#suggestionCategory").css('overflow-y', 'auto');
+                            $("#suggestionCategory").css('height', '80px');
+                        }
+                    });
+
+                }
+            }
+
+            function selectValCat(id, value1) {
+                document.getElementById("category1").value = document.getElementById(id).innerHTML;
+                document.getElementById("categoryUnspcId").value = value1;
+                $("#suggestionCategory").hide();
+            }
+
+
+            function categoryDetails(event) {
+                var a = document.getElementById("category1").value;
+
+                if (event.keyCode == 13) {
+                    if (a.length > 3) {
+                        var getcategory = document.getElementById("category1").value;
+                        var data = 'cat=' + getcategory;
+                        $(".pace-active").show();
+                        $.ajax({
+                            url: '<%=request.getContextPath()%>/servlet/service/productselection.cat',
+                            data: data,
+                            success: function(data1) {
+                                //alert(data1);
+
+                                $("#attCat").html(data1);
+                                $(".pace-active").hide();
+
+                            }
+                        });
+                        return false;
+                    } else {
+                        alert("Please enter 4 character to search category");
+                        return false;
+                    }
+                }
+
+            }
+            function getCategoryValue()
+            {
+                var cat = "";
+                var cat1 = "";
+                //var x=document.getElementById("cat");
+                //for (var i = 0; i < x.options.length; i++) {
+                //if(x.options[i].selected ==true){
+                //  cat=cat+x.options[i].value;
+                //}
+
+
+                //}
+                cat = $('#cat').find('option:selected').text();
+                cat1 = $('#cat').find('option:selected').val();
+                //   alert(cat);
+                document.getElementById("category").value = cat;
+                document.getElementById("category2").value = cat1;
+                //document.getElementById("category").value=document.getElementById("category").value+cat;
+            }
+
+            function subForm() {
+                //alert();
+                var strProname = document.getElementById("proname").value;
+                var strModelNo = document.getElementById("modelno").value;
+                var strKeyword = document.getElementById("keyword").value;
+                var strPrice = "";
+                var strCategory = document.getElementById("category").value;
+
+                UserDWRService.getCreateProductMsg(strModelNo, strProname, strKeyword, strPrice, strCategory, function(data) {
+                    console.log("data---" + data);
+                    if (data != "true") {
+                        var strData = data.split("~");
+                        if (strData[0] == 1) {
+                            $("#modelifexist").show();
+                            $("#modelifexist").html(strData[1]);
+                            $("#p_name").hide();
+                            $("#p_keyword").hide();
+                            $("#p_whprice").hide();
+                            $("#p_cat").hide();
+                        } else if (strData[0] == 2) {
+                            $("#modelifexist").hide();
+                            $("#p_name").show();
+                            $("#p_name").html(strData[1]);
+                            $("#p_keyword").hide();
+                            $("#p_whprice").hide();
+                            $("#p_cat").hide();
+                        } else if (strData[0] == 3) {
+                            $("#modelifexist").hide();
+                            $("#p_name").hide();
+                            $("#p_keyword").show();
+                            $("#p_keyword").html(strData[1]);
+                            $("#p_whprice").hide();
+                            $("#p_cat").hide();
+                        } else if (strData[0] == 4) {
+                            $("#modelifexist").hide();
+                            $("#p_name").hide();
+                            $("#p_whprice").show();
+                            $("#p_whprice").html(strData[1]);
+                            $("#p_keyword").hide();
+                            $("#p_cat").hide();
+                        } else if (strData[0] == 5) {
+                            $("#modelifexist").hide();
+                            $("#p_name").hide();
+                            $("#p_cat").show();
+                            $("#p_cat").html(strData[1]);
+                            $("#p_keyword").hide();
+                            $("#p_whprice").hide();
+                        }
+                    } else if (data == "true") {
+                        var idR = '<%=request.getParameter("id")%>';
+                        if (idR == "new") {
+                            if (strCategory == "") {
+                                $("#modelifexist").hide();
+                                $("#p_name").hide();
+                                $("#p_cat").show();
+                                $("#p_cat").html("Please Enter Category of Product");
+                                $("#p_keyword").hide();
+                                $("#p_whprice").hide();
+                            } else {
+                                document.getElementById("fileupload").submit();
+                            }
+                        } else {
+                            document.getElementById("fileupload").submit();
+                        }
+                    }
+
+                });
+
+            }
+
+        </script>
+    </head>
+    <body>
+        <div class="pace pace-active" style="display:none;">
+            <div class="pace-progress">
+                <div class="pace-progress-inner"></div>
+            </div>
+            <div class="pace-activity"></div>
+        </div>
+        <%load("../common/header.esp");%>
+
+
+        <script src="<%=request.getContextPath()%>/apps/js/step-form.js"></script>
+        <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/apps/css/step-form.css">
+        <script>
+        	       	function onkeyupForProductName(id1){
+        var value=document.getElementById(id1).value;
+   //var  param=["companyName"];
+    //var paramValue=[value];
+     //var param = ["paravalue", "paraname", "path"];
+            //var paramValue = [value, "companyName", "/content/company/"];
+            while(value.indexOf(" ") > -1){
+            value = value.replace(" ","+");
+            }
+            var  param=["paravalue","paraname","path","isparent"];
+     var  isparent="0";
+    var paramValue=[value, "name", "/content/product/products/",isparent];
+        UserDWRService.callGetService("http://35.221.160.146:8082/portal/servlet/exhibition/flash.eventNameSuggetion",param,paramValue,function(data) {
+        
+     console.log(data);
+        var parsed=JSON.parse(data);
+            console.log(parsed);
+            if(parsed.length > 0){
+        var sugData="";
+        for(var i=0;i<parsed.length;i++){
+       
+        sugData=sugData+"<a href='javascript:void(0)' id='sugIdP"+i+"' style='color:black' onclick='selectValProduct(this.id)' >"+parsed[i].name+"</a></br>";
+        }
+        
+     $("#suggestionPName").css('visibility', 'visible');
+     $("#suggestionPName").css('border-style', 'outset');
+     
+     
+    $("#suggestionPName").hide();
+    $("#suggestionPName").fadeIn('slow');
+    $("#searchPName").html(sugData);
+    $("#suggestionPName").css('width', '95%');
+     var offsetHeight = document.getElementById('suggestionPName').offsetHeight;
+    //alert("after---"+offsetHeight);
+    if(offsetHeight > 80)
+    {
+    	$("#suggestionPName").css('overflow-y', 'auto');
+     $("#suggestionPName").css('height', '80px');
+    }
+    }else{
+    $("#suggestionPName").hide();
+    }
+        }); 
+        }
+function selectValProduct(id){
+document.getElementById("proname").value = document.getElementById(id).innerHTML; 
+$("#suggestionPName").hide();
+}
+        
+            function checkModel() {
+                var a = document.getElementById("companyId").value;
+                var b = document.getElementById("modelno").value;
+                var url = 'http://35.221.160.146:8082/portal/servlet/service/productselection.checkmodelno';
+                UserDWRService.checkProductModel(url, a, b, function(data) {
+                    //dwr.util.setValue("divResponse", data);
+                    console.log("data---" + data);
+                    if (data != "true") {
+                        $("#modelifexist").show();
+                        $("#modelifexist").html(data);
+                        $("#sf-next").hide();
+                    } else if (data == "true") {
+                        $("#modelifexist").hide();
+                        //$("#modelifexist").html("Model No is Already Present");
+                        $("#sf-next").show();
+                    }
+
+                });
+            }
+
+            function checkPName() {
+                var a = document.getElementById("proname").value;
+                UserDWRService.checkProductName(a, function(data) {
+                    //dwr.util.setValue("divResponse", data);
+                    console.log("data---" + data);
+                    if (data != "true") {
+                        $("#p_name").show();
+                        $("#p_name").html(data);
+                        $("#sf-next").hide();
+                    } else if (data == "true") {
+                        $("#p_name").hide();
+                        //$("#modelifexist").html("Model No is Already Present");
+                        $("#sf-next").show();
+                    }
+
+                });
+            }
+
+            function checkPKeyword() {
+                var a = document.getElementById("keyword").value;
+                UserDWRService.checkProductKeyword(a, function(data) {
+                    //dwr.util.setValue("divResponse", data);
+                    console.log("data---" + data);
+                    if (data != "true") {
+                        $("#p_keyword").show();
+                        $("#p_keyword").html(data);
+                        $("#sf-next").hide();
+                    } else if (data == "true") {
+                        $("#p_keyword").hide();
+                        //$("#modelifexist").html("Model No is Already Present");
+                        $("#sf-next").show();
+                    }
+
+                });
+            }
+
+            function checkWPrice() {
+                var a = document.getElementById("whprice").value;
+                UserDWRService.checkProductPrice(a, function(data) {
+                    //dwr.util.setValue("divResponse", data);
+                    console.log("data---" + data);
+                    if (data != "true") {
+                        $("#p_whprice").show();
+                        $("#p_whprice").html(data);
+                        $("#sf-next").hide();
+                    } else if (data == "true") {
+                        $("#p_whprice").hide();
+                        //$("#modelifexist").html("Model No is Already Present");
+                        $("#sf-next").show();
+                    }
+
+                });
+            }
+
+            function checkSCategory() {
+                var a = document.getElementById("category").value;
+                UserDWRService.checkProductCategory(a, function(data) {
+                    //dwr.util.setValue("divResponse", data);
+                    console.log("data---" + data);
+                    if (data != "true") {
+                        $("#p_cat").show();
+                        $("#p_cat").html(data);
+                        //$("#sf-next").hide();
+                    } else if (data == "true") {
+                        $("#p_cat").hide();
+                        //$("#modelifexist").html("Model No is Already Present");
+                        $("#sf-next").show();
+                    }
+
+                });
+            }
+
+            $(document).ready(function(e) {
+                var strDownLaod = '<%=request.getParameter("download")%>';
+                if (strDownLaod != null || strDownLaod != "") {
+                    if (strDownLaod == "yes") {
+                        var link = document.createElement('a');
+                        if (typeof link.download === 'string')
+                        {
+                            link.href = '<%=request.getContextPath()%>/servlet/service/productselection.downloadtemp?pid=<%=request.getParameter("id")%>';
+                                                link.download = "Template";
+                                                document.body.appendChild(link);
+                                                link.click();
+                                                document.body.removeChild(link);
+                                            }
+                                            else
+                                            {
+                                                window.open(uri);
+                                            }
+                                        } else {
+                                        }
+                                    }
+
+
+									$('#addIndustry').on('click', function() {
+										if(document.getElementById("industry").value == ""){
+										}else if(document.getElementById("industry").value != "" && document.getElementById("industryId").value != ""){
+                                        var selInId = document.getElementById("industryId").value;
+                                        var selInText = document.getElementById("industry").value;
+                                        var selPInText = document.getElementById("selIndustry").value;
+                                        var selPInId = document.getElementById("selIndustryId").value;
+                                        if (selPInId != "" && selPInText != "") {
+                                            if (selPInText.indexOf(",") != -1) {
+
+                                                var catArray = selPInText.split(",");
+                                                for (var i = 0; i < catArray.length; i++) {
+                                                    if (catArray[i] == selInText) {
+                                                        alert("selected industry is already present please select another industry");
+                                                        document.getElementById("industry").value = "";
+                                       document.getElementById("industryId").value = "";
+                                                        return false;
+                                                    }
+                                                }
+                                                selPInText = selPInText + "," + selInText;
+                                                document.getElementById("selIndustry").value = selPInText;
+                                                selPInId = selPInId + "," + selInId;
+                                                document.getElementById("selIndustryId").value = selPInId;
+
+                                            } else {
+                                                if (selPInText == selInText) {
+                                                    alert("selected industry is already present please select another industry");
+                                                    document.getElementById("industry").value = "";
+                                       document.getElementById("industryId").value = "";
+                                                } else {
+                                                    selPInText = selPInText + "," + selInText;
+                                                    document.getElementById("selIndustry").value = selPInText;
+                                                    selPInId = selPInId + "," + selInId;
+                                                    document.getElementById("selIndustryId").value = selPInId;
+                                                }
+                                            }
+                                        } else {
+                                            document.getElementById("selIndustryId").value = selInId;
+                                            document.getElementById("selIndustry").value = selInText;
+                                            document.getElementById("industry").value = "";
+                                       document.getElementById("industryId").value = "";
+                                        }
+                                        document.getElementById("industry").value = "";
+                                       document.getElementById("industryId").value = "";
+                                       }else{
+                                       	var value = document.getElementById("industry").value;
+                    					while (value.indexOf(" ") > -1) {
+                        						value = value.replace(" ", "+");
+                    					}
+                    					var param = ["propertyvalue", "propertyname", "path", "isparent","searchTextvalue","isExist"];
+                    					var isparent = "0,0";
+										var valueRes = value+","+"0";
+										//alert(valueRes);
+                    					var paramValue = [valueRes, "name,id", "/content/industry/", isparent,value,"0"];
+										//alert(paramValue);
+										UserDWRService.callGetService("http://35.221.160.146:8082/portal/servlet/common/search.inrichme", param, paramValue, function(data) {
+
+                        					console.log(data);
+                        					if(data.indexOf("~") != "-1"){
+                        						var dataRes = data.split("~");
+                        						if(dataRes[0] == "exist"){
+                        						var existParsed = JSON.parse(dataRes[1]);
+                        						console.log("exists==="+existParsed[0].id);
+                        						document.getElementById("industryId").value = existParsed[0].id; 
+                        						document.getElementById("industry").value = existParsed[0].name;
+                        						}else if(dataRes[0] == "success"){
+                        						var successParsed = JSON.parse(dataRes[1]);
+                        						console.log("success==="+successParsed[0].id);
+                        						document.getElementById("industryId").value = successParsed[0].id;
+                        						document.getElementById("industry").value = successParsed[0].name;
+                        						}else{
+                        						console.log("facing some issue");
+                        						}
+                        					var selInId = document.getElementById("industryId").value;
+                                        var selInText = document.getElementById("industry").value;
+                                        //alert(selInText);
+                                        var selPInText = document.getElementById("selIndustry").value;
+                                        var selPInId = document.getElementById("selIndustryId").value;
+                                        if (selPInId != "" && selPInText != "") {
+                                            if (selPInText.indexOf(",") != -1) {
+
+                                                var catArray = selPInText.split(",");
+                                                for (var i = 0; i < catArray.length; i++) {
+                                                    if (catArray[i] == selInText) {
+                                                        alert("selected industry is already present please select another industry");
+                                                        document.getElementById("industry").value = "";
+                                       					document.getElementById("industryId").value = "";
+                                                        return false;
+                                                    }
+                                                }
+                                                selPInText = selPInText + "," + selInText;
+                                                document.getElementById("selIndustry").value = selPInText;
+                                                selPInId = selPInId + "," + selInId;
+                                                document.getElementById("selIndustryId").value = selPInId;
+
+                                            } else {
+                                                if (selPInText == selInText) {
+                                                    alert("selected industry is already present please select another industry");
+                                                    document.getElementById("industry").value = "";
+                                       				document.getElementById("industryId").value = "";
+                                                } else {
+                                                    selPInText = selPInText + "," + selInText;
+                                                    document.getElementById("selIndustry").value = selPInText;
+                                                    selPInId = selPInId + "," + selInId;
+                                                    document.getElementById("selIndustryId").value = selPInId;
+                                                }
+                                            }
+                                            document.getElementById("industry").value = "";
+                                       document.getElementById("industryId").value = "";
+                                        } else {
+                                            document.getElementById("selIndustryId").value = selInId;
+                                            document.getElementById("selIndustry").value = selInText;
+                                            document.getElementById("industry").value = "";
+                                       document.getElementById("industryId").value = "";
+                                            
+                                        }
+                        					
+                        					}
+                        				});
+                                        
+                                       }
+                                       
+                                    });
+									
+									
+									$('#addTGeo').on('click', function() {
+									if(document.getElementById("tgeo").value == ""){
+										}else if(document.getElementById("tgeo").value != "" && document.getElementById("tgeoId").value != ""){
+                                        var selCatId = document.getElementById("tgeoId").value;
+                                        var selCatText = document.getElementById("tgeo").value;
+                                        var selPCatText = document.getElementById("seltgeo").value;
+                                        var selPCatId = document.getElementById("seltgeoId").value;
+                                        if (selPCatId != "" && selPCatText != "") {
+                                            if (selPCatText.indexOf(",") != -1) {
+
+                                                var catArray = selPCatText.split(",");
+                                                for (var i = 0; i < catArray.length; i++) {
+                                                    if (catArray[i] == selCatText) {
+                                                        alert("selected geography is already present please select another target geography");
+														document.getElementById("tgeoId").value = "";
+														document.getElementById("tgeo").value = "";
+                                                        return false;
+                                                    }
+                                                }
+                                                selPCatText = selPCatText + "," + selCatText;
+                                                document.getElementById("seltgeo").value = selPCatText;
+                                                selPCatId = selPCatId + "," + selCatId;
+                                                document.getElementById("seltgeoId").value = selPCatId;
+
+                                            } else {
+                                                if (selPCatText == selCatText) {
+                                                    alert("selected geography is already present please select another target geography");
+													document.getElementById("tgeoId").value = "";
+														document.getElementById("tgeo").value = "";
+                                                } else {
+                                                    selPCatText = selPCatText + "," + selCatText;
+                                                    document.getElementById("seltgeo").value = selPCatText;
+                                                    selPCatId = selPCatId + "," + selCatId;
+                                                    document.getElementById("seltgeoId").value = selPCatId;
+                                                }
+                                            }
+                                        } else {
+                                            document.getElementById("seltgeoId").value = selCatId;
+                                            document.getElementById("seltgeo").value = selCatText;
+											document.getElementById("tgeoId").value = "";
+														document.getElementById("tgeo").value = "";
+                                        }
+										document.getElementById("tgeoId").value = "";
+														document.getElementById("tgeo").value = "";
+										}else{
+                                       	var value = document.getElementById("tgeo").value;
+                    					while (value.indexOf(" ") > -1) {
+                        						value = value.replace(" ", "+");
+                    					}
+                    					var param = ["propertyvalue", "propertyname", "path", "isparent","searchTextvalue","isExist"];
+                    					var isparent = "0,0";
+										var valueRes = value+","+"0";
+										//alert(valueRes);
+                    					var paramValue = [valueRes, "name,id", "/content/targetgeo/", isparent,value,"0"];
+										//alert(paramValue);
+										UserDWRService.callGetService("http://35.221.160.146:8082/portal/servlet/common/search.inrichme", param, paramValue, function(data) {
+
+                        					console.log(data);
+                        					if(data.indexOf("~") != "-1"){
+                        						var dataRes = data.split("~");
+                        						if(dataRes[0] == "exist"){
+                        						var existParsed = JSON.parse(dataRes[1]);
+                        						console.log("exists==="+existParsed[0].id);
+                        						document.getElementById("tgeoId").value = existParsed[0].id; 
+                        						document.getElementById("tgeo").value = existParsed[0].name;
+                        						}else if(dataRes[0] == "success"){
+                        						var successParsed = JSON.parse(dataRes[1]);
+                        						console.log("success==="+successParsed[0].id);
+                        						document.getElementById("tgeoId").value = successParsed[0].id;
+                        						document.getElementById("tgeo").value = successParsed[0].name;
+                        						}else{
+                        						console.log("facing some issue");
+                        						}
+                        				var selCatId = document.getElementById("tgeoId").value;
+                                        var selCatText = document.getElementById("tgeo").value;
+                                        var selPCatText = document.getElementById("seltgeo").value;
+                                        var selPCatId = document.getElementById("seltgeoId").value;
+                                        if (selPCatId != "" && selPCatText != "") {
+                                            if (selPCatText.indexOf(",") != -1) {
+
+                                                var catArray = selPCatText.split(",");
+                                                for (var i = 0; i < catArray.length; i++) {
+                                                    if (catArray[i] == selCatText) {
+                                                        alert("selected geography is already present please select another target geography");
+														document.getElementById("tgeoId").value = "";
+														document.getElementById("tgeo").value = "";
+                                                        return false;
+                                                    }
+                                                }
+                                                selPCatText = selPCatText + "," + selCatText;
+                                                document.getElementById("seltgeo").value = selPCatText;
+                                                selPCatId = selPCatId + "," + selCatId;
+                                                document.getElementById("seltgeoId").value = selPCatId;
+												document.getElementById("tgeoId").value = "";
+														document.getElementById("tgeo").value = "";
+
+                                            } else {
+                                                if (selPCatText == selCatText) {
+                                                    alert("selected geography is already present please select another target geography");
+													document.getElementById("tgeoId").value = "";
+														document.getElementById("tgeo").value = "";
+                                                } else {
+                                                    selPCatText = selPCatText + "," + selCatText;
+                                                    document.getElementById("seltgeo").value = selPCatText;
+                                                    selPCatId = selPCatId + "," + selCatId;
+                                                    document.getElementById("seltgeoId").value = selPCatId;
+                                                }
+												document.getElementById("tgeoId").value = "";
+														document.getElementById("tgeo").value = "";
+                                            }
+                                        } else {
+                                            document.getElementById("seltgeoId").value = selCatId;
+                                            document.getElementById("seltgeo").value = selCatText;
+											document.getElementById("tgeoId").value = "";
+														document.getElementById("tgeo").value = "";
+                                        }
+                        					
+                        					}
+											document.getElementById("tgeoId").value = "";
+														document.getElementById("tgeo").value = "";
+                        				});
+                                        
+                                       }
+                                    });
+									
+									
+
+											
+
+                                    $('#addCat').on('click', function() {
+                                        var selCatId = document.getElementById("categoryUnspcId").value;
+                                        var selCatText = document.getElementById("category1").value;
+                                        var selPCatText = document.getElementById("category").value;
+                                        var selPCatId = document.getElementById("category2").value;
+                                        if (selPCatId != "" && selPCatText != "") {
+                                            if (selPCatText.indexOf(",") != -1) {
+
+                                                var catArray = selPCatText.split(",");
+                                                for (var i = 0; i < catArray.length; i++) {
+                                                    if (catArray[i] == selCatText) {
+                                                        alert("selected category is already present please select another category");
+                                                        return false;
+                                                    }
+                                                }
+                                                selPCatText = selPCatText + "," + selCatText;
+                                                document.getElementById("category").value = selPCatText;
+                                                selPCatId = selPCatId + "," + selCatId;
+                                                document.getElementById("category2").value = selPCatId;
+
+                                            } else {
+                                                if (selPCatText == selCatText) {
+                                                    alert("selected category is already present please select another category");
+                                                } else {
+                                                    selPCatText = selPCatText + "," + selCatText;
+                                                    document.getElementById("category").value = selPCatText;
+                                                    selPCatId = selPCatId + "," + selCatId;
+                                                    document.getElementById("category2").value = selPCatId;
+                                                }
+                                            }
+                                        } else {
+                                            document.getElementById("category2").value = selCatId;
+                                            document.getElementById("category").value = selCatText;
+                                        }
+                                    });
+
+                                    $(".stepsForm").stepsForm({
+                                        theme: 'purple'
+                                    });
+
+                                    $(".container .themes>span").click(function(e) {
+                                        $(".container .themes>span").removeClass("selectedx");
+                                        $(this).addClass("selectedx");
+                                        $(".stepsForm").removeClass().addClass("stepsForm");
+                                        $(".stepsForm").addClass("sf-theme-" + $(this).attr("data-value"));
+                                    });
+                                    var data1 = '<%=request.getRemoteUser()%>';
+                                    var supid = '<%=request.getParameter("id")%>';
+                                    if (supid == "new") {
+                                        supid = 0;
+                                    }
+                                    $.ajax({
+                                        url: '<%=request.getContextPath()%>/servlet/service/productselection.comp',
+                                        data: {
+                                            userId: data1,
+                                        },
+                                        success: function(data2) {
+                                            //alert(data1);
+                                            if (data2 == "<b>Company Not found. please create company !</b>") {
+                                                //alert("if");
+                                                $("#sf-next").hide();
+                                                location.replace('<%=request.getContextPath()%>/servlet/company/show.com?id=new');
+                                            } else {
+                                                $("#sf-next").show();
+                                            }
+                                            $("#attCom").html(data2);
+                                            $(".pace-active").hide();
+
+                                        }
+                                    });
+                                });
+        </script>
+        <script src="<%=request.getContextPath()%>/apps/js/dropzone/dropzone.min.js"></script>
+        <link rel="stylesheet" href="<%=request.getContextPath()%>/apps/js/dropzone/dropzone.css"> 
+
+        <script src="<%=request.getContextPath()%>/apps/js/fine-uploader/fine-uploader.js"></script>
+        <link rel="stylesheet" href="<%=request.getContextPath()%>/apps/js/fine-uploader/fine-uploader-new.css"> 
+
+        <style type="text/css">
+            #dropzone { margin-bottom: 3rem; }
+            .dropzone { border: 2px dashed #0087F7; border-radius: 5px; padding: 0px;}
+            .dropzone .dz-message { font-weight: 400; }
+            .dropzone .dz-message .note { font-size: 0.8em; font-weight: 200; display: block; margin-top: 1.4rem; }
+            .dropzone .dz-message {
+                margin: 2em 0;
+                text-align: center;
+            }
+            .dropzone .dz-preview .dz-details, .dropzone-previews .dz-preview .dz-details {width: 100%; height: 30px;}
+            .error{color:red;font-size: 13px;}
+        </style>
+
+        <section class="profile_update_page">
+            <div class="container">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="tab-two" style="width: 100%; float: left; margin-bottom: 20px;">
+                            <ul class="nav nav-tabs" id="myTab">
+                                <li class="active"><a data-toggle="tab" href="#basicinfo">Basic Info</a></li>
+                                <%if(request.getParameter("id") != "new") {%>
+                                <!--<li id="shortCatLi"><a data-toggle="tab" href="#catalog">Create Template</a></li>-->
+                                <li><a data-toggle="tab" href="#addproduct">Add Product</a></li>
+                                <li><a data-toggle="tab" href="#otherinfo">Other Details</a></li>
+                                <li><a data-toggle="tab" href="#reviewproduct">Review</a></li>
+                                <%}%>
+                            </ul>
+
+                            <div class="tab-content" id="myTabContent">
+                                <% load("productBasicinfo.esp");%>
+                                <% load("productAddProduct.esp");%>
+                                <% load("productOtherDetail.esp");%> 
+                                <div id="reviewproduct" class="tab-pane fade">
+                                    <h3>Review</h3>
+                                    <div class="row">                  	
+                                        <div class="col-sm-10">
+                                            <div class="row">
+                                                <div class="col-xs-12">
+
+                                                    <div class="col-sm-2">
+                                                        <figure class="image">
+                                                            <% if (currentNode.hasNode("media") && currentNode.getNode("media").hasNode("images") && currentNode.getNode("media").getNode("images").hasNodes()) {
+
+                                                                    var itr = currentNode.getNode("media").getNode("images").getNodes();
+                                                                    for (k in  itr) {
+                                                            %>			
+                                                            <img id="pdShImg" src="<%=request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath() + itr[k].imgpath%>" />
+
+                                                            <%}
+                                            } else {%>
+                                                            <img id="pdShImg" src="<%=request.getContextPath()%>/apps/user/css/images/photo.gif" /> 
+                                                            <%}%>      </figure>          				
+
+                                                        <input class="form-control" type="file" class="btn btn-info" id="pdUpImg" name="upimg" />
+                                                        <!--<a data-target="#userPic" data-toggle="modal" href="#" class="btn btn-info"> Change Picture</a>
+                                                        <div class="modal fade" id="userPic" tabindex="-1" role="dialog" aria-labelledby="loginModalLabel" aria-hidden="true">
+                                                            <div class="modal-dialog modal-xs">
+                                                                <div class="modal-content">
+                                                                    <form class="form-horizontal" method="POST" id="save" action="<%=request.getContextPath()%>/content/user/save.up" enctype="multipart/form-data">
+                                                                        <div class="modal-header">
+                                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                                                            <h4 class="modal-title" id="loginModalLabel">Change Profile picture</h4>
+                                                                        </div>
+                                                                        <div class="modal-body" style="height:50px;">
+                                                                            <input type="hidden" name="userId" id="userId" value="<%=request.getRemoteUser().replace("@", "_")%>" />
+                                                                            <div class="form-group">
+                                                                                <label class="col-sm-3 control-label">File</label>
+                                                                                <div class="col-sm-9">
+                                                                                    <input class="form-control" type="file" name="myFile" />
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="modal-footer">
+                                                                            <button type="submit" class="btn btn-primary">Post</button>
+                                                                        </div>
+                                                                    </form>
+                                                                </div>
+                                                            </div>
+                                                        </div>-->
+
+                                                    </div>
+                                                    <!-- Display user info-->
+
+                                                    <div class="col-sm-10">
+                                                        <form  method="POST" action="<%=request.getContextPath()%>/content/user/save.pro" id="myfoem">
+                                                            <div class="row">
+                                                                <div class="col-xs-12">
+                                                                    <div class="form-group">
+
+                                                                        <div class="col-sm-12">
+                                                                            <div class="category-list">
+                                                                                <!-- content -->
+                                                                                <div class="content mCustomScrollbar" style="height:134px">
+                                                                                    <h2><%=getCurrentNodeValue("name")%></h2>
+                                                                                    <h5><%=getCurrentNodeValue("modelno")%>  </h5>
+                                                                                    <hr />
+
+
+                                                                                    <p>
+                                                                                        <%=getCurrentNodeValue("description")%>
+                                                                                    </p> 
+
+                                                                                </div>
+
+                                                                                <script>
+                                                                                    (function($) {
+                                                                                        $(window).load(function() {
+
+                                                                                            $("a[rel='load-content']").click(function(e) {
+                                                                                                e.preventDefault();
+                                                                                                var url = $(this).attr("href");
+                                                                                                $.get(url, function(data) {
+                                                                                                    $(".content .mCSB_container").append(data); //load new content inside .mCSB_container
+                                                                                                    //scroll-to appended content 
+                                                                                                    $(".content").mCustomScrollbar("scrollTo", "h2:last");
+                                                                                                });
+                                                                                            });
+
+                                                                                            $(".content").delegate("a[href='top']", "click", function(e) {
+                                                                                                e.preventDefault();
+                                                                                                $(".content").mCustomScrollbar("scrollTo", $(this).attr("href"));
+                                                                                            });
+
+                                                                                        });
+                                                                                    })(jQuery);
+                                                                                </script>
+                                                                            </div>
+
+                                                                        </div>
+                                                                    </div>
+
+
+
+                                                                    <div class="col-xs-12">
+
+                                                                        <input type="button" onclick="subForm()" class="btn btn-primary"
+                                                                               value="Save" />
+
+
+                                                                    </div>         
+                                                                    </form>
+
+
+                                                                </div>
+                                                            </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                   
+
+                           
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </section>
+
+
+        <%load("../common/footer.esp");%>
+
+
+        <!-- Login Modal Start  -->
+        <div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="loginModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <form class="form-horizontal">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title" id="loginModalLabel">Login Details</h4>
+                        </div>
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">Name</label>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">Password</label>
+                                <div class="col-sm-9">
+                                    <input type="password" class="form-control">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-primary">Login</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <!-- Login Modal End  -->
+
+        <!-- register Modal Start  -->
+        <div class="modal fade" id="registerModal" tabindex="-1" role="dialog" aria-labelledby="registerModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <form class="form-horizontal">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title" id="registerModalLabel">Registration Form</h4>
+                        </div>
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">Full Name</label>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">Full Name</label>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">Password</label>
+                                <div class="col-sm-9">
+                                    <input type="password" class="form-control">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">Confirm Password</label>
+                                <div class="col-sm-9">
+                                    <input type="password" class="form-control">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-primary">Register</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <!-- register Modal End  -->
+
+
+        <!-- contactsupplier Modal Start  -->
+        <div class="modal fade contactsupplier" tabindex="-1" role="dialog" aria-labelledby="registerModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <form class="form-horizontal">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title" id="registerModalLabel">Contact Supplier</h4>
+                        </div>
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">Full Name</label>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">Full Name</label>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">Password</label>
+                                <div class="col-sm-9">
+                                    <input type="password" class="form-control">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">Confirm Password</label>
+                                <div class="col-sm-9">
+                                    <input type="password" class="form-control">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-primary">Register</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <!-- register Modal End  -->
+
+
+
+    </body>
+</html>
+

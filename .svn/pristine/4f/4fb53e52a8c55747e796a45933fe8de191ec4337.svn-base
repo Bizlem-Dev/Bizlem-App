@@ -1,0 +1,782 @@
+package biz.com.app.servlet;
+
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.net.URL;
+
+import java.util.ArrayList;
+
+import javax.jcr.Node;
+import javax.jcr.Session;
+import javax.jcr.SimpleCredentials;
+import javax.servlet.ServletException;
+
+import org.apache.felix.scr.annotations.Component;
+import org.apache.felix.scr.annotations.Properties;
+import org.apache.felix.scr.annotations.Property;
+import org.apache.felix.scr.annotations.Reference;
+import org.apache.felix.scr.annotations.Service;
+import org.apache.sling.api.SlingHttpServletRequest;
+import org.apache.sling.api.SlingHttpServletResponse;
+import org.apache.sling.api.servlets.SlingAllMethodsServlet;
+import org.apache.sling.jcr.api.SlingRepository;
+
+import biz.com.service.NewsService;
+import biz.com.service.RSSReader;
+import biz.com.service.impl.SimpleTriggerExample;
+
+@Component(immediate = true, metatype = false)
+@Service(value = javax.servlet.Servlet.class)
+@Properties({
+		@Property(name = "service.description", value = "View News Servlet"),
+		@Property(name = "service.vendor", value = "VISL Company"),
+		@Property(name = "sling.servlet.paths", value = { "/servlet/service/news" }),
+		@Property(name = "sling.servlet.resourceTypes", value = "sling/servlet/default"),
+		@Property(name = "sling.servlet.extensions", value = { "viewnews",
+				"pageview" }) })
+@SuppressWarnings("serial")
+public class NewsServlet extends SlingAllMethodsServlet {
+
+	@Reference
+	private SlingRepository repos;
+
+	@Reference
+	private NewsService service;
+
+//	@Reference
+//	private RSSReader reader;
+
+	@Override
+	protected void doGet(SlingHttpServletRequest request,
+			SlingHttpServletResponse response) throws ServletException,
+			IOException {
+
+		@SuppressWarnings("unused")
+		Node rootNode, rootNode1 = null;
+		if (request.getRequestPathInfo().getExtension().equals("viewnews")) {
+			Session session;
+			PrintWriter o = response.getWriter();
+			try {
+
+				request.setAttribute("normal", service.getNewsList("0"));
+				request.setAttribute("science", service.getNewsList("1"));
+				request.setAttribute("envoirment", service.getNewsList("2"));
+				request.setAttribute("technology", service.getNewsList("3"));
+				request.setAttribute("business", service.getNewsList("4"));
+				request.getRequestDispatcher("/content/news/.news").forward(
+						request, response);
+			} catch (Exception e) {
+				o.print(e.getMessage());
+			}
+
+		}else if(request.getRequestPathInfo().getExtension()
+				.equals("getDevice")){
+			PrintWriter o = response.getWriter();
+			String s = service.callPostService(request.getParameter("url"),
+					null, null);
+			o.print(s);
+		}
+		else if (request.getRequestPathInfo().getExtension()
+				.equals("createstylemaster")) {
+			request.getRequestDispatcher("/content/news/.createStyleMaster")
+					.forward(request, response);
+		} else if (request.getRequestPathInfo().getExtension()
+				.equals("createsourcemaster")) {
+			request.getRequestDispatcher("/content/news/.createSourceMaster")
+					.forward(request, response);
+		} else if (request.getRequestPathInfo().getExtension()
+				.equals("feedstylelist")) {
+
+			request.getRequestDispatcher("/content/news/.listfeedstyle")
+					.forward(request, response);
+		} else if (request.getRequestPathInfo().getExtension()
+				.equals("getfeed")) {
+			request.getRequestDispatcher("/content/news/.feedNews").forward(
+					request, response);
+		} else if (request.getRequestPathInfo().getExtension().equals("checks")) {
+			// response.getWriter().print(service.callGetService(request.getParameter("url"),
+			// null,null));
+			try {
+				InputStream streams = new ByteArrayInputStream(
+						service.callGetService(request.getParameter("url"),
+								null, null).toString().getBytes());
+				response.getWriter().print(streams);
+				BufferedReader rd = new BufferedReader(new InputStreamReader(
+						streams));
+				StringBuilder responsee = new StringBuilder();
+				String line;
+				while ((line = rd.readLine()) != null) {
+					responsee.append(line);
+				}
+				rd.close();
+				response.getWriter().print(responsee.toString());
+			} catch (Exception ew) {
+				response.getWriter().print("eeeeeeeee" + ew.getMessage());
+			}
+		} else if (request.getRequestPathInfo().getExtension()
+				.equals("schedularcall")) {
+
+			String feedurl = request.getParameter("urlid");
+			String nodename=request.getParameter("node");
+			try {
+				Session session = repos.login(new SimpleCredentials("admin",
+						"admin".toCharArray()));
+				Node content = session.getRootNode().getNode("content");
+				if (content.hasNode("newsfeed")) {
+					content = content.getNode("newsfeed");
+				} else {
+					content = content.addNode("newsfeed");
+				}
+
+				if (content.hasNode(nodename)) {
+					content = content.getNode(nodename);
+				} else {
+					content = content.addNode(nodename);
+					content.setProperty("count", Long.valueOf("0"));
+				}
+
+				if (content.hasNode(feedurl)) {
+					if(nodename.equals("widget")){
+
+						String url = content.getNode(feedurl)
+								.getProperty("url").getString();
+						content = content.getNode(feedurl);
+
+						InputStream streams = new ByteArrayInputStream(service
+								.callGetService(url, null, null).toString()
+								.getBytes());
+
+						content.getNode(feedurl).remove();
+						Node fileNode = content.addNode(String.valueOf(feedurl),
+								"nt:file");
+
+						Node jcrNode = fileNode.addNode("jcr:content",
+								"nt:resource");
+						response.getWriter().print("Stage 2 clear");
+						jcrNode.setProperty("jcr:data", streams);
+						//
+						response.getWriter().print("Stage 3 clear");
+						jcrNode.setProperty("jcr:mimeType", "text/html");
+						response.getWriter().print("Stage 4 clear");
+					}else{
+						
+					
+					String url = content.getNode(feedurl)
+							.getProperty("feedurl").getString();
+					content = content.getNode(feedurl);
+
+					InputStream streams = new ByteArrayInputStream(service
+							.callGetService(url, null, null).toString()
+							.getBytes());
+
+					content.getNode(feedurl).remove();
+					Node fileNode = content.addNode(String.valueOf(feedurl),
+							"nt:file");
+
+					Node jcrNode = fileNode.addNode("jcr:content",
+							"nt:resource");
+					response.getWriter().print("Stage 2 clear");
+					jcrNode.setProperty("jcr:data", streams);
+					//
+					response.getWriter().print("Stage 3 clear");
+					jcrNode.setProperty("jcr:mimeType", "text/plain");
+					response.getWriter().print("Stage 4 clear");
+					}
+					session.save();
+					response.getWriter().print("success");
+				}
+
+			} catch (Exception e) {
+				response.getWriter().print(
+						"rrrrr" + e.getLocalizedMessage() + "-------"
+								+ e.getMessage());
+				// response.sendRedirect("/portal/servlet/service/news.createsourcemaster?state=failed"
+				// + e.getMessage());
+			}
+		} else if (request.getRequestPathInfo().getExtension()
+				.equals("getstyles")) {
+
+			String styleid = request.getParameter("styleid");
+
+			try {
+				Session session = repos.login(new SimpleCredentials("admin",
+						"admin".toCharArray()));
+				Node content = session.getRootNode().getNode("content");
+				if (content.hasNode("newsfeed")) {
+					content = content.getNode("newsfeed");
+				} else {
+					content = content.addNode("newsfeed");
+				}
+
+				if (content.hasNode("stylemaster")) {
+					content = content.getNode("stylemaster");
+				} else {
+					content = content.addNode("stylemaster");
+					content.setProperty("count", Long.valueOf("0"));
+				}
+
+				content = content.getNode(styleid);
+				response.getWriter().print(
+						"&titlestyle="
+								+ content.getProperty("titlestyle").getString()
+								+ "&descriptionstyle="
+								+ content.getProperty("descriptionstyle")
+										.getString()
+								+ "&headerstyle="
+								+ content.getProperty("headerstyle")
+										.getString() + "&datestyle="
+								+ content.getProperty("datestyle").getString()
+								+ "&headerTitle="
+								+ content.getProperty("title").getString()
+								+ "&type="
+								+ content.getProperty("type").getString()
+								+ "&theme="+content.getProperty("theme").getString()+"' style='"
+								+ content.getProperty("framestyle").getString()
+								+ "'");
+			} catch (Exception e) {
+
+			}
+
+		} else if (request.getRequestPathInfo().getExtension()
+				.equals("searchinsolr")) {
+
+			String[] para = { "process", "query" };
+			String[] paravalue = { "notstore", request.getParameter("query") };
+
+			String res = service.callPostService(
+					"http://50.17.231.172/bsearch/ressfeedtoDB.php", para,
+					paravalue);
+			ArrayList al = new ArrayList();
+			String ulr = "<select id='mystyle'>";
+			if (res != null) {
+				String[] urlid = res.split(",");
+
+				try {
+					Session session = repos.login(new SimpleCredentials(
+							"admin", "admin".toCharArray()));
+					Node d = session.getRootNode().getNode("content")
+							.getNode("newsfeed").getNode("sourcemaster");
+
+					for (int i = 0; i < urlid.length; i++) {
+						response.getWriter().write(urlid[i]);
+						if (urlid[i] != null && !urlid[i].equals("")
+								&& d.hasNode(urlid[i])) {
+
+							Node p = d.getNode(urlid[i].trim());
+							ulr = ulr + "<option value='"
+									+ p.getProperty("id").getString() + "'>"
+									+ p.getProperty("title").getString()
+									+ "</option>";
+						}
+
+					}
+				} catch (Exception e) {
+					response.getWriter().write(
+							"exception --" + e.getMessage() + res);
+				}
+			}
+			response.getWriter().write(ulr + "</select>");
+
+		} else if (request.getRequestPathInfo().getExtension()
+				.equals("searchinsolrview")) {
+			request.getRequestDispatcher(
+					"/content/news/.solrcreateSourceMaster").forward(request,
+					response);
+		} else if (request.getRequestPathInfo().getExtension()
+				.equals("activaterevisite")) {
+			try {
+				Session session = repos.login(new SimpleCredentials("admin",
+						"admin".toCharArray()));
+				Node d = session.getRootNode().getNode("content")
+						.getNode("newsfeed").getNode("sourcemaster");
+				if (d.hasNodes()) {
+
+				}
+
+			} catch (Exception e) {
+				response.getWriter().write("exception --" + e.getMessage());
+			}
+		} else if (request.getRequestPathInfo().getExtension()
+				.equals("staticnew")) {
+			request.getRequestDispatcher("/content/news/.staticnews").forward(
+					request, response);
+		} else if (request.getRequestPathInfo().getExtension()
+				.equals("dynamicsimple")) {
+			request.getRequestDispatcher("/content/news/.dynamicsimple")
+					.forward(request, response);
+		} else if (request.getRequestPathInfo().getExtension()
+				.equals("dynamiccomposite")) {
+			request.getRequestDispatcher("/content/news/.dynamiccomposite")
+					.forward(request, response);
+		}
+		else if (request.getRequestPathInfo().getExtension()
+				.equals("newspage")) {
+			// call to solr using user data
+			
+			String[] para = { "process", "query" };
+			String[] paravalue = { "notstore", request.getParameter("metadeta") };
+
+			String res = service.callPostService(
+					"http://50.17.231.172/bsearch/ressfeedtoDBwidget.php", para,
+					paravalue);
+			String []da=res.split(",");
+			request.setAttribute("widgets", da);
+			request.getRequestDispatcher("/content/news/.finalnews")
+					.forward(request, response);
+		}else if (request.getRequestPathInfo().getExtension()
+				.equals("solrurls")) {
+			String[] para = { "process", "query" };
+			String[] paravalue = { "notstore", request.getParameter("metadeta") };
+
+			String res = service.callPostService(
+					"http://50.17.231.172/bsearch/ressfeedtoDB.php", para,
+					paravalue);
+			String []da=res.split(",");
+			String urls="";
+			
+			try{
+				Session session = repos.login(new SimpleCredentials("admin",
+			"admin".toCharArray()));
+				Node d=session.getRootNode().getNode("content").getNode("newsfeed").getNode("sourcemaster");
+				for(int i=0;i<da.length;i++){
+					if(da[i]!=null && !da[i].trim().equals("")){
+						urls="http://35.221.160.146:8082/portal"+d.getNode(da[i].trim()).getProperty("bizurl").getString()+"@_}_}"+urls;
+						
+					}
+				}
+			}catch(Exception e){
+			response.getWriter().print("Error "+e.getMessage());
+			}
+			response.getWriter().print(urls);
+		}else if (request.getRequestPathInfo().getExtension()
+				.equals("solrurlskeyup")) {
+			String[] para = { "process", "query" };
+			String[] paravalue = { "notstore", request.getParameter("metadeta") };
+
+			String res = service.callPostService(
+					"http://50.17.231.172/bsearch/ressfeedtoDBwidget.php", para,
+					paravalue);
+			String []da=res.split(",");
+			String urls="";
+			int o=0;
+			String themeid="";
+			try{
+				Session session = repos.login(new SimpleCredentials("admin",
+			"admin".toCharArray()));
+				Node d=session.getRootNode().getNode("content").getNode("newsfeed").getNode("widget");
+				Node style=session.getRootNode().getNode("content").getNode("newsfeed").getNode("stylemaster");
+				for(int i=0;i<da.length;i++){
+					if(da[i]!=null && !da[i].trim().equals("")){
+						urls="http://35.221.160.146:8082/portal"+d.getNode(da[i].trim()).getProperty("accessurl").getString()+"%%##"+urls;
+						themeid=style.getNode(d.getNode(da[i].trim()).getProperty("style").getString()).getProperty("theme").getString()+"%%##"+themeid;
+						o++;
+					}
+				}
+			}catch(Exception e){
+			response.getWriter().print("failed%%##"+e.getMessage());
+			}
+			if(o>0){
+			response.getWriter().print("success[_]"+urls+"[_]"+themeid);
+			}else{
+				response.getWriter().print("notsuccess[_]"+urls);
+			}
+		}else if (request.getRequestPathInfo().getExtension()
+				.equals("previewwidget")) {
+			request.getRequestDispatcher(
+					"/content/news/.previewwidget").forward(request,
+					response);
+		}
+	}
+
+	@Override
+	protected void doPost(SlingHttpServletRequest request,
+			SlingHttpServletResponse response) throws ServletException,
+			IOException {
+		long l = 0;
+		if (request.getRequestPathInfo().getExtension()
+				.equals("addstylemaster")) {
+			String htmlcode = request.getParameter("htmlcode");
+			String placename = request.getParameter("caption");
+			String id = request.getParameter("styleid");
+			try {
+				Session session = repos.login(new SimpleCredentials("admin",
+						"admin".toCharArray()));
+				Node content = session.getRootNode().getNode("content");
+				if (content.hasNode("newsfeed")) {
+					content = content.getNode("newsfeed");
+				} else {
+					content = content.addNode("newsfeed");
+				}
+
+				if (content.hasNode("stylemaster")) {
+					content = content.getNode("stylemaster");
+				} else {
+					content = content.addNode("stylemaster");
+					content.setProperty("count", Long.valueOf("0"));
+				}
+
+				if (content.hasNode(id)) {
+					content = content.getNode(id);
+					content.setProperty("title", placename);
+					String headerstyle = "color:"
+							+ request.getParameter("hcolor")
+							+ ";background-color:"
+							+ request.getParameter("hbcolor");
+					String framestyle = "width:"
+							+ request.getParameter("framew") + "px;height:"
+							+ request.getParameter("frameh") + "px";
+					String titlestyle = "color:"
+							+ request.getParameter("tcolor") + ";font-size:"
+							+ request.getParameter("tsize") + "px;";
+					String descriptionstyle = "color:"
+							+ request.getParameter("dcolor") + ";font-size:"
+							+ request.getParameter("dsize") + "px;";
+					String datestyle = "color:"
+							+ request.getParameter("dacolor") + ";font-size:"
+							+ request.getParameter("dasize") + "px;";
+
+					content.setProperty("framestyle", framestyle);
+					content.setProperty("titlestyle", titlestyle);
+					content.setProperty("descriptionstyle", descriptionstyle);
+					content.setProperty("datestyle", datestyle);
+					content.setProperty("headerstyle", headerstyle);
+					content.setProperty("theme",request.getParameter("theme"));
+					l = Long.valueOf(id);
+					content = content.addNode("");
+
+				} else {
+					l = content.getProperty("count").getLong();
+					content.setProperty("count", l + 1);
+					content = content.addNode(String.valueOf(l));
+					content.setProperty("id", l);
+					content.setProperty("title", placename);
+					String framestyle = "border-color:"
+							+ request.getParameter("framecolor") + ";width:"
+							+ request.getParameter("framew") + "px;height:"
+							+ request.getParameter("frameh") + "px";
+					String titlestyle = "color:"
+							+ request.getParameter("tcolor") + ";font-size:"
+							+ request.getParameter("tsize") + "px;";
+					String descriptionstyle = "color:"
+							+ request.getParameter("dcolor") + ";font-size:"
+							+ request.getParameter("dsize") + "px;";
+					String datestyle = "color:"
+							+ request.getParameter("dacolor") + ";font-size:"
+							+ request.getParameter("dasize") + "px;";
+					String headerstyle = "color:"
+							+ request.getParameter("hcolor")
+							+ ";background-color:"
+							+ request.getParameter("hbcolor");
+					content.setProperty("type", request.getParameter("fields"));
+					content.setProperty("framestyle", framestyle);
+					content.setProperty("titlestyle", titlestyle);
+					content.setProperty("descriptionstyle", descriptionstyle);
+					content.setProperty("datestyle", datestyle);
+					content.setProperty("headerstyle", headerstyle);
+					content.setProperty("theme",request.getParameter("theme"));
+				}
+				session.save();
+				response.sendRedirect("/portal/servlet/service/news.createstylemaster?state=success&id="
+						+ l);
+
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				// e.printStackTrace();
+				response.sendRedirect("/portal/servlet/service/news.createstylemaster?state=failed"
+						+ e.getMessage());
+			}
+		} else if (request.getRequestPathInfo().getExtension()
+				.equals("addsourcemaster")) {
+
+			String feedurl = request.getParameter("feedurl");
+			String metadeta = request.getParameter("metadeta");
+			String revivitetime = request.getParameter("revisitetime");
+			String id = request.getParameter("sourceid");
+			String dbresponce = "";
+			try {
+				Session session = repos.login(new SimpleCredentials("admin",
+						"admin".toCharArray()));
+				Node content = session.getRootNode().getNode("content");
+				if (content.hasNode("newsfeed")) {
+					content = content.getNode("newsfeed");
+				} else {
+					content = content.addNode("newsfeed");
+				}
+
+				if (content.hasNode("sourcemaster")) {
+					content = content.getNode("sourcemaster");
+				} else {
+					content = content.addNode("sourcemaster");
+					content.setProperty("count", Long.valueOf("0"));
+				}
+
+				if (content.hasNode(id)) {
+					content = content.getNode(id);
+					content.setProperty("feedurl", feedurl);
+					content.setProperty("metadeta", metadeta);
+					content.setProperty("revivitetime", revivitetime);
+					content.setProperty("id", id);
+					content.setProperty("title",
+							request.getParameter("sourcename"));
+					// content.setProperty("bizurl", id + ".xml");
+					l = Long.valueOf(id);
+					dbresponce = "success";
+				} else {
+					l = content.getProperty("count").getLong();
+					content.setProperty("count", l + 1);
+					content = content.addNode(String.valueOf(l));
+					content.setProperty("feedurl", feedurl);
+					content.setProperty("metadeta", metadeta);
+					content.setProperty("revivitetime", revivitetime);
+					content.setProperty("id", l);
+					content.setProperty("title",
+							request.getParameter("sourcename"));
+					content.setProperty("bizurl",
+							"/content/newsfeed/sourcemaster/" + l + "/" + l);
+					response.getWriter().print("Stage 1 clear");
+
+					InputStream streams = new ByteArrayInputStream(service
+							.callGetService(feedurl, null, null).toString()
+							.getBytes());
+
+					Node fileNode = content.addNode(String.valueOf(l),
+							"nt:file");
+
+					Node jcrNode = fileNode.addNode("jcr:content",
+							"nt:resource");
+					response.getWriter().print("Stage 2 clear");
+					jcrNode.setProperty("jcr:data", streams);
+					//
+					response.getWriter().print("Stage 3 clear");
+					jcrNode.setProperty("jcr:mimeType", "text/plain");
+					response.getWriter().print("Stage 4 clear");
+					dbresponce = service.addtoDb(request, String.valueOf(l),0);
+					SimpleTriggerExample b = new SimpleTriggerExample();
+
+					b.fireJob(String.valueOf(l),
+							b.calculateTimeInSec(revivitetime));
+				}
+				if (dbresponce.trim().equals("success")) {
+					session.save();
+					response.sendRedirect("/portal/servlet/service/news.createsourcemaster?state=success&id=new");
+				} else {
+					response.getWriter().print("not ressdd" + dbresponce);
+					// response.sendRedirect("/portal/servlet/service/news.createsourcemaster?state=failed&id=new"
+					// + dbresponce);
+				}
+
+				// response.sendRedirect("/portal/servlet/service/news.createsourcemaster?state=success&id="+l);
+			} catch (Exception e) {
+				response.getWriter().print(
+						"rrrrr" + e.getLocalizedMessage() + "-------"
+								+ e.getMessage());
+				// response.sendRedirect("/portal/servlet/service/news.createsourcemaster?state=failed"
+				// + e.getMessage());
+			}
+		} else if (request.getRequestPathInfo().getExtension()
+				.equals("addstatic")) {
+			try {
+				Session session = repos.login(new SimpleCredentials("admin",
+						"admin".toCharArray()));
+				javax.jcr.Node node = session.getRootNode().getNode("content")
+						.getNode("newsfeed").getNode("stylemaster").getNode(request.getParameter("mystyle"));
+				String url="http://35.221.160.146:8082/RssFeed/getfeed?feedurl="+request.getParameter("feedurl")+"&titlestyle="+node.getProperty("titlestyle").getString()+"&descriptionstyle="+node.getProperty("descriptionstyle").getString()+"&headerstyle="+node.getProperty("headerstyle").getString()+"datestyle="+node.getProperty("datestyle").getString()+"&headerTitle="+request.getParameter("sourcename")+"&type="+node.getProperty("type").getString()+"&theme="+node.getProperty("theme").getString();
+			//	String url="http://35.221.160.146:8082/RssFeed/getfeed?feedurl="+request.getParameter("feedurl")+"&titlestyle="+node.getProperty("titlestyle").getString()+"&descriptionstyle="+node.getProperty("descriptionstyle").getString()+"&headerstyle="+node.getProperty("headerstyle").getString()+"datestyle="+node.getProperty("datestyle").getString()+"&headerTitle="+request.getParameter("sourcename")+"&type="+node.getProperty("type").getString()+"&theme="+node.getProperty("theme").getString()+"&displayfeed="+request.getParameter("displayfeed");
+				url=url.replace(" ","%20");
+				javax.jcr.Node feed=session.getRootNode().getNode("content")
+						.getNode("newsfeed");
+				if(feed.hasNode("widget")){
+					feed=feed.getNode("widget");
+					l=feed.getProperty("count").getLong();
+					feed.setProperty("count", l+1);
+				}else{
+
+					feed=feed.addNode("widget");
+					feed.setProperty("count", 1);
+					
+					l=0;
+				}
+					
+					feed=feed.addNode(String.valueOf(l));
+					feed.setProperty("accessurl",
+							"/content/newsfeed/widget/" +l + "/" + l);
+					feed.setProperty("url",
+							url);
+					
+					feed.setProperty("revitetime", request.getParameter("revisitetime"));
+					feed.setProperty("id", "0");
+					feed.setProperty("metadeta", request.getParameter("metadeta"));
+					feed.setProperty("title",request.getParameter("sourcename"));
+					//feed.setProperty("source",request.getParameter("actsrcname"));
+					feed.setProperty("style", request.getParameter("mystyle"));
+					//feed.setProperty("displayfeed", request.getParameter("displayfeed"));
+					InputStream streams = new ByteArrayInputStream(service
+							.callGetService(url, null, null).toString()
+							.getBytes());
+					Node fileNode = feed.addNode(String.valueOf(l),	"nt:file");
+					Node jcrNode = fileNode.addNode("jcr:content",
+							"nt:resource");
+					jcrNode.setProperty("jcr:data", streams);
+					jcrNode.setProperty("jcr:mimeType", "text/html");
+					String db=service.addtoDb(request, String.valueOf(l),1);
+					if(db!=null && db.trim().equals("success")){
+						SimpleTriggerExample b = new SimpleTriggerExample();
+						b.fireJobWidget(String.valueOf(l), b.calculateTimeInSec(request.getParameter("revisitetime")));							
+						session.save();
+						response.sendRedirect("/portal/servlet/service/news.staticnew?state=true");
+											}else{
+//												response.getWriter().print(db);
+												//response.sendRedirect("/portal/servlet/service/news.staticnew?state=fail");						
+											}
+			} catch (Exception e) {
+				response.getWriter().print(""+e.getMessage());
+			}
+		}else if (request.getRequestPathInfo().getExtension()
+				.equals("adddynamicsimple")) {
+			try {
+				Session session = repos.login(new SimpleCredentials("admin",
+						"admin".toCharArray()));
+				javax.jcr.Node node = session.getRootNode().getNode("content")
+						.getNode("newsfeed").getNode("stylemaster").getNode(request.getParameter("mystyle"));
+				String da[]=request.getParameterValues("feedurl");
+				String urls="";
+				for(int i=0;i<da.length;i++){
+					urls=urls+da[i]+"@_}_}";
+				}
+				String url="http://35.221.160.146:8082/RssFeed/getfeed?feedurl="+urls+"&titlestyle="+node.getProperty("titlestyle").getString()+"&descriptionstyle="+node.getProperty("descriptionstyle").getString()+"&headerstyle="+node.getProperty("headerstyle").getString()+"datestyle="+node.getProperty("datestyle").getString()+"&headerTitle="+request.getParameter("sourcename")+"&type="+node.getProperty("type").getString()+"&theme="+node.getProperty("theme").getString();
+				url=url.replace(" ","%20");
+				javax.jcr.Node feed=session.getRootNode().getNode("content")
+						.getNode("newsfeed");
+				if(feed.hasNode("widget")){
+					feed=feed.getNode("widget");
+					l=feed.getProperty("count").getLong();
+					feed.setProperty("count", l+1);
+				}else{
+
+					feed=feed.addNode("widget");
+					feed.setProperty("count", 1);
+					
+					l=0;
+				}
+					
+					feed=feed.addNode(String.valueOf(l));
+					feed.setProperty("accessurl",
+							"/content/newsfeed/widget/" +l + "/" + l);
+					feed.setProperty("url",
+							url);
+					
+					feed.setProperty("revitetime", request.getParameter("revisitetime"));
+					feed.setProperty("id", "0");
+					feed.setProperty("metadeta", request.getParameter("metadeta"));
+					feed.setProperty("title",request.getParameter("sourcename"));
+					feed.setProperty("style", request.getParameter("mystyle"));
+					InputStream streams = new ByteArrayInputStream(service
+							.callGetService(url, null, null).toString()
+							.getBytes());
+					Node fileNode = feed.addNode(String.valueOf(l),	"nt:file");
+					Node jcrNode = fileNode.addNode("jcr:content",
+							"nt:resource");
+					jcrNode.setProperty("jcr:data", streams);
+					jcrNode.setProperty("jcr:mimeType", "text/html");
+					String db=service.addtoDb(request, String.valueOf(l),1);
+					if(db!=null && db.trim().equals("success")){
+						SimpleTriggerExample b = new SimpleTriggerExample();
+						b.fireJobWidget(String.valueOf(l), b.calculateTimeInSec(request.getParameter("revisitetime")));							
+						session.save();
+						response.sendRedirect("/portal/servlet/service/news.dynamicsimple?state=true");
+											}else{
+//												response.getWriter().print(db);
+												//response.sendRedirect("/portal/servlet/service/news.staticnew?state=fail");						
+											}
+			} catch (Exception e) {
+				response.getWriter().print(""+e.getMessage());
+			}
+		}else if (request.getRequestPathInfo().getExtension()
+				.equals("adddynamiccomposite")) {
+			try {
+				Session session = repos.login(new SimpleCredentials("admin",
+						"admin".toCharArray()));
+				javax.jcr.Node node = session.getRootNode().getNode("content")
+						.getNode("newsfeed").getNode("stylemaster").getNode(request.getParameter("mystyle"));
+				response.getWriter().print("stage1");
+				javax.jcr.Node dr= session.getRootNode().getNode("content")
+						.getNode("newsfeed").getNode("sourcemaster");
+				//
+				response.getWriter().print("stage1");
+				//calll to solr using metedeta
+				String[] para = { "process", "query" };
+				String[] paravalue = { "notstore", request.getParameter("metadeta") };
+
+				String res = service.callPostService(
+						"http://50.17.231.172/bsearch/ressfeedtoDB.php", para,
+						paravalue);
+				String urls="";
+				response.getWriter().print("stage2"+res+"res");
+				if(res!=null){
+				response.getWriter().print(res);
+				String da[]=res.split(",");
+				for(int i=0;i<da.length;i++){
+					response.getWriter().print(da[i].trim());
+					if(da[i].trim()!=null && !da[i].trim().equals("")){
+					urls="http://35.221.160.146:8082/portal"+dr.getNode(da[i].trim()).getProperty("bizurl").getString()+"@_}_}";
+					}}}
+				String url="http://35.221.160.146:8082/RssFeed/getfeed?feedurl="+urls+"&titlestyle="+node.getProperty("titlestyle").getString()+"&descriptionstyle="+node.getProperty("descriptionstyle").getString()+"&headerstyle="+node.getProperty("headerstyle").getString()+"datestyle="+node.getProperty("datestyle").getString()+"&headerTitle="+request.getParameter("sourcename")+"&type="+node.getProperty("type").getString()+"&theme="+node.getProperty("theme").getString();
+				url=url.replace(" ","%20");
+				javax.jcr.Node feed=session.getRootNode().getNode("content")
+						.getNode("newsfeed");
+				response.getWriter().print("stage3");
+				if(feed.hasNode("widget")){
+					feed=feed.getNode("widget");
+					l=feed.getProperty("count").getLong();
+					feed.setProperty("count", l+1);
+				}else{
+
+					feed=feed.addNode("widget");
+					feed.setProperty("count", 1);
+					
+					l=0;
+				}
+					
+					feed=feed.addNode(String.valueOf(l));
+					feed.setProperty("accessurl",
+							"/content/newsfeed/widget/" +l + "/" + l);
+					feed.setProperty("url",
+							url);
+					
+					feed.setProperty("revitetime", request.getParameter("revisitetime"));
+					feed.setProperty("id", "0");
+					feed.setProperty("metadeta", request.getParameter("metadeta"));
+					feed.setProperty("title",request.getParameter("sourcename"));
+					feed.setProperty("style", request.getParameter("mystyle"));
+					InputStream streams = new ByteArrayInputStream(service
+							.callGetService(url, null, null).toString()
+							.getBytes());
+					Node fileNode = feed.addNode(String.valueOf(l),	"nt:file");
+					Node jcrNode = fileNode.addNode("jcr:content",
+							"nt:resource");
+					jcrNode.setProperty("jcr:data", streams);
+					jcrNode.setProperty("jcr:mimeType", "text/html");
+					String db=service.addtoDb(request, String.valueOf(l),1);
+					if(db!=null && db.trim().equals("success")){
+						SimpleTriggerExample b = new SimpleTriggerExample();
+						b.fireJobWidget(String.valueOf(l), b.calculateTimeInSec(request.getParameter("revisitetime")));							
+						session.save();
+					//	response.sendRedirect("/portal/servlet/service/news.dynamiccomposite?state=true");
+											}else{
+//												response.getWriter().print(db);
+												//response.sendRedirect("/portal/servlet/service/news.staticnew?state=fail");						
+											}
+			} catch (Exception e) {
+				response.getWriter().print("error"+e.getMessage());
+			}
+		}
+	}
+
+}

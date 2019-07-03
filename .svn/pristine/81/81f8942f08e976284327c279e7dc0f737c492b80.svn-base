@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>News</title>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="description" content="Demo project with jQuery">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <%load("../common/links.esp");%>
+       <%load("../common/header.esp");%>
+   
+      
+    
+<section class="section">
+    <div class="container">
+        <div class="row">
+         <ol class="breadcrumb">
+     <li><a href="<%=request.getContextPath()%>/servlet/service/index.pageview">Home</a></li>
+     <li>News</a></li>
+     
+     </ol>
+            <div class="col-sm-9">
+                <div class="row">
+                    <div class="colsm-12 col-xs-12">
+                        <div class="news-list">
+                            <% var news=request.getAttribute("normal");
+				
+             for(var k=0; k<5; k++){
+                     var path=news.get(k);                
+                            
+                           %>
+                            <div class="media">
+                              <div class="media-left">
+                                <a href="#">
+                                <%if(path.getNode("images").hasNodes()){
+                                  var img=path.getNode("images").getNodes();
+                                		%>
+                                  <img class="media-object" src="<%=request.getContextPath()+"/"+img[0].imgpath%>" alt="News" style="height:142px;width:229px">
+                                <%}%>
+                               
+                                </a>
+                              </div>
+                              <div class="media-body">
+                                <h4 class="media-heading"><a href="#"><%=path.Title%></a></h4>
+                                <p><small><%=path.Auther%> - <%=path.Date%></small></p>
+                                <p><%=path.Description%></p>
+                              </div>
+                            </div>
+                            <% } %>
+                         </div>
+                    </div>
+                    <div class="colsm-12 col-xs-12">
+                        <div class="row">
+                            <div class="col-md-4 col-xs-12">
+                                <div class="news-list-thumb">
+                                    <%
+                                     for(var k=5; k<8; k++){
+                     var path=news.get(k);  %>
+                                    <div class="media">
+                                      <div class="media-left">
+                                        <a href="#">
+                                         <%if(path.getNode("images").hasNodes()){
+                                  var img=path.getNode("images").getNodes();
+                                		%>
+                                <img class="media-object" src="<%=request.getContextPath()+"/"+img[0].imgpath%>" alt="News">
+                                <%}%>
+                                        </a>
+                                      </div>
+                                      <div class="media-body">
+                                        <p><%=path.Description%></p>
+                                      </div>
+                                    </div>
+							<%}%>
+
+                                </div>
+                            </div>
+                            <div class="col-md-4 col-xs-12">
+                                <div class="news-list-thumb">
+                                    
+<%
+                                     for(var k=8; k<11; k++){
+                     var path=news.get(k);  %>
+                                    <div class="media">
+                                      <div class="media-left">
+                                        <a href="#">
+                                         <%if(path.getNode("images").hasNodes()){
+                                  var img=path.getNode("images").getNodes();
+                                		%>
+                                <img class="media-object" src="<%=request.getContextPath()+"/"+img[0].imgpath%>" alt="News">
+                                <%}%>
+                                        </a>
+                                      </div>
+                                      <div class="media-body">
+                                        <p><%=path.Description%></p>
+                                      </div>
+                                    </div>
+							<%}%>
+
+                                </div>
+                            </div>
+                            <div class="col-md-4 col-xs-12">
+                                <div class="news-list-thumb">
+                                    <%
+                                     for(var k=11; k<14; k++){
+                     var path=news.get(k);  %>
+                                    <div class="media">
+                                      <div class="media-left">
+                                        <a href="#">
+                                         <%if(path.getNode("images").hasNodes()){
+                                  var img=path.getNode("images").getNodes();
+                                		%>
+                                <img class="media-object" src="<%=request.getContextPath()+"/"+img[0].imgpath%>" alt="News">
+                                <%}%>
+                                        </a>
+                                      </div>
+                                      <div class="media-body">
+                                        <p><%=path.Description%></p>
+                                      </div>
+                                    </div>
+							<%}%>
+
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="colsm-12 col-xs-12">
+                        <div class="row">
+                            <div class="col-md-4 col-xs-12">
+                                <div class="news-slide">
+                                   <%
+                                     for(var k=14; k<19; k++){
+                     var path=news.get(k);  %>
+                                    <div class="media">
+                                      <div class="media-left">
+                                        <a href="#">
+                                         <%if(path.getNode("images").hasNodes()){
+                                  var img=path.getNode("images").getNodes();
+                                		%>
+                                <img class="media-object" src="<%=request.getContextPath()+"/"+img[0].imgpath%>" style="width:60px;height:58px;" alt="News">
+                                <%}%>
+                                        </a>
+                                      </div>
+                                      <div class="media-body">
+                                       <p><small><a href="#"><%=path.Title%></a></p></small>
+                                      </div>
+                                    </div>
+							<%}%>
+
+
+                                    
+
+                                </div>
+                            </div>
+                            <div class="col-md-4 col-xs-12">
+                            <%load("productBysolr.esp");%>
+                            </div>
+                            <div class="col-md-4 col-xs-12">
+                                <div class="news-slide">
+                                    <ul>   <%
+                                     for(var k=19; k<25; k++){
+                     var path=news.get(k); %>
+                                        <li><a href="#"><%=path.Title%>:<%=path.Auther%></a></li>
+                                        <%}%>
+                                        <p class="text-right"></p>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="colsm-12 col-xs-12">
+                        <div class="row">
+                            <div class="col-sm-6 col-xs-6 custom-width">
+                                <div class="news-panel">
+                                    <div class="panel panel-info">
+                                      <div class="panel-heading">Science <small class="pull-right"></small></div>
+                                      <div class="panel-body">
+                                      <% var science=request.getAttribute("science");
+             						
+                                     for(var k=0; k<1; k++){
+                     					var path=science.get(k);  %>
+                                    <div class="media">
+                                      <div class="media-left">
+                                        <a href="#">
+                                         <%if(path.getNode("images").hasNodes()){
+                                  var img=path.getNode("images").getNodes();
+                                		%>
+                                <img class="media-object" src="<%=request.getContextPath()+"/"+img[0].imgpath%>" alt="News">
+                                <%}%>
+                                        </a>
+                                      </div>
+                                      <div class="media-body">
+                                        <p><%=path.Description%></p>
+                                      </div>
+                                    </div>
+							<%}%>
+                                        <ul><% for(var k=0; k<4; k++){
+                     					var path=science.get(k);%>
+                                            <li><span><a href="#"><span><%=path.Title%></a></span></li>
+                                            <%}%>
+                                        </ul>
+
+                                      </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6 col-xs-6 custom-width">
+                                <div class="news-panel">
+                                    <div class="panel panel-success">
+                                      <div class="panel-heading">Environment <small class="pull-right"> </small></div>
+                                      <div class="panel-body">
+                                         <% var science=request.getAttribute("envoirment");
+             						
+                                     for(var k=0; k<1; k++){
+                     					var path=science.get(k);  %>
+                                    <div class="media">
+                                      <div class="media-left">
+                                        <a href="#">
+                                         <%if(path.getNode("images").hasNodes()){
+                                  var img=path.getNode("images").getNodes();
+                                		%>
+                                <img class="media-object" src="<%=request.getContextPath()+"/"+img[0].imgpath%>" alt="News">
+                                <%}%>
+                                        </a>
+                                      </div>
+                                      <div class="media-body">
+                                        <p><%=path.Description%></p>
+                                      </div>
+                                    </div>
+											<%}%>
+                                        <ul><% for(var k=0; k<4; k++){
+                     					var path=science.get(k);%>
+                                            <li><span><a href="#"><span><%=path.Title%></a></span></li>
+                                            <%}%>
+                                        </ul>
+
+                                      </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6 col-xs-6 custom-width">
+                                <div class="news-panel">
+                                    <div class="panel panel-warning">
+                                     <div class="panel-heading">Technology <small class="pull-right"> </small></div>
+                                     <div class="panel-body">
+                                         <% var science=request.getAttribute("technology");
+             						
+                                     for(var k=0; k<1; k++){
+                     					var path=science.get(k);  %>
+                                    <div class="media">
+                                      <div class="media-left">
+                                        <a href="#">
+                                         <%if(path.getNode("images").hasNodes()){
+                                  var img=path.getNode("images").getNodes();
+                                		%>
+                                <img class="media-object" src="<%=request.getContextPath()+"/"+img[0].imgpath%>" alt="News">
+                                <%}%>
+                                        </a>
+                                      </div>
+                                      <div class="media-body">
+                                        <p><%=path.Description%></p>
+                                      </div>
+                                    </div>
+											<%}%>
+                                        <ul><% for(var k=0; k<4; k++){
+                     					var path=science.get(k);%>
+                                            <li><span><a href="#"><span><%=path.Title%></a></span></li>
+                                            <%}%>
+                                        </ul>
+
+
+                                      </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6 col-xs-6 custom-width">
+                                <div class="news-panel">
+                                    <div class="panel panel-danger">
+                                      <div class="panel-heading">Business<small class="pull-right"></small></div>
+                                     <div class="panel-body">
+                                         <% var science=request.getAttribute("business");
+             						
+                                     for(var k=0; k<1; k++){
+                     					var path=science.get(k);  %>
+                                    <div class="media">
+                                      <div class="media-left">
+                                        <a href="#">
+                                         <%if(path.getNode("images").hasNodes()){
+                                  var img=path.getNode("images").getNodes();
+                                		%>
+                                <img class="media-object" src="<%=request.getContextPath()+"/"+img[0].imgpath%>" alt="News">
+                                <%}%>
+                                        </a>
+                                      </div>
+                                      <div class="media-body">
+                                        <p><%=path.Description%></p>
+                                      </div>
+                                    </div>
+											<%}%>
+                                        <ul><% for(var k=0; k<4; k++){
+                     					var path=science.get(k);%>
+                                            <li><a href="#"><span><%=path.Title%></a></span></li>
+                                            <%}%>
+                                        </ul>
+
+
+                                      </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            
+            <div class="col-sm-3">
+                <div class="advertise text-center">
+               <iframe id='aa5c4108' name='aa5c4108' src='http://50.17.231.172/openx/www/delivery/afr.php?zoneid=20&amp;cb=1' frameborder='0' scrolling='no' width='270' height='502'><a href='http://50.17.231.172/openx/www/delivery/ck.php?n=aa24ed49&amp;cb=1' target='_blank'><img src='http://50.17.231.172/openx/www/delivery/avw.php?zoneid=20&amp;cb=1&amp;n=aa24ed49' border='0' alt='' /></a></iframe>
+            
+<iframe id='a09766ef' name='a09766ef' src='http://50.17.231.172/openx/www/delivery/afr.php?zoneid=21&amp;cb=2' frameborder='0' scrolling='no' width='270' height='502'><a href='http://50.17.231.172/openx/www/delivery/ck.php?n=ac9d69d8&amp;cb=2' target='_blank'><img src='http://50.17.231.172/openx/www/delivery/avw.php?zoneid=21&amp;cb=2&amp;n=ac9d69d8' border='0' alt='' style="margin-top:10px;margin-bottom:10px;"/></a></iframe>
+
+
+<!--/* OpenX iFrame Tag v2.8.10 */-->
+
+<iframe id='afb3644d' name='afb3644d' src='http://50.17.231.172/openx/www/delivery/afr.php?zoneid=22&amp;cb=3' frameborder='0' scrolling='no' width='270' height='502'><a href='http://50.17.231.172/openx/www/delivery/ck.php?n=a981981a&amp;cb=3' target='_blank'><img src='http://50.17.231.172/openx/www/delivery/avw.php?zoneid=22&amp;cb=3&amp;n=a981981a' border='0' alt='' /></a></iframe>
+					</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+    <footer id="footer">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12 col-xs-12">
+                <p class="ui-footer-seo-policy text-center">
+                <a href="#" target="_blank" rel="nofollow">Alibaba  Group</a>
+                 | <a href="#" target="_blank" rel="nofollow">Taobao Marketplace</a>
+                 | <a href="#" target="_blank" rel="nofollow">Tmall.com</a>
+                 | <a href="#" target="_blank" rel="nofollow">Juhuasuan</a>
+                 | <a href="#" target="_blank" rel="nofollow">AliExpress</a>
+                 | <a href="#" target="_blank" rel="nofollow">Alibaba.com</a>
+                 | <a href="#" target="_blank" rel="nofollow">1688.com</a>
+                 | <a href="#" target="_blank" rel="nofollow">Alimama</a>
+                 | <a href="#" target="_blank" rel="nofollow">Alitrip</a>
+                 <br>
+                 <a href="#" target="_blank" rel="nofollow">Alibaba Cloud  Computing</a>
+                 | <a href="#" target="_blank" rel="nofollow">YunOS</a>
+                 | <a href="#" target="_blank" rel="nofollow">AliTelecom</a>
+                 | <a href="#" target="_blank" rel="nofollow">HiChina</a>  
+
+                 | <a href="#" target="_blank" rel="nofollow">Autonavi</a>             
+                 | <a href="#" target="_blank" rel="nofollow">UCWeb</a>
+                 | <a href="#" target="_blank" rel="nofollow">Umeng</a>
+                 | <a href="#" target="_blank" rel="nofollow">Kanbox</a>
+
+                 | <a href="#" target="_blank" rel="nofollow">Xiami</a>
+                 | <a href="#" target="_blank" rel="nofollow">TTPod</a>
+                 | <a href="#" target="_blank" rel="nofollow">Laiwang</a>
+                 | <a href="#" target="_blank" rel="nofollow">DingTalk</a>
+                 | <a href="#" target="_blank" rel="nofollow">11 Main</a>
+                 | <a href="#" target="_blank" rel="nofollow">Alipay</a>
+            </p>
+            <p class="ui-footer-seo-brand2 text-center">
+                <b>Browse Alphabetically:</b>
+                <a href="#" target="_blank">Showroom</a>
+                | <a href="#" target="_blank">Country Search</a>
+                | <a href="#" target="_blank">Manufacturers</a>
+                | <a href="#" target="_blank">Suppliers</a> 
+                | <a href="#" target="_blank">Promotion</a>
+                | <a href="#" target="_blank">Wholesale</a>
+            </p>
+            <p class="ui-footer-seo-brand text-center">
+                <a rel="nofollow" href="#">Product Listing Policy</a>
+                - <a rel="nofollow" href="#">Intellectual Property Policy and Infringement Claims</a>
+                - <a href="#">Privacy Policy</a>
+                - <a rel="nofollow" href="#">Terms of Use</a>
+            </p>
+            <p class="ui-footer-copyright text-center">
+                <small>&copy; 1999-2015 Alibaba.com. All rights reserved.</small>
+            </p>
+            </div>
+        </div>
+    </div>
+    </footer>
+
+
+<!-- Login Modal Start  -->
+<div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="loginModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+    <form class="form-horizontal">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="loginModalLabel">Login Details</h4>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+            <label class="col-sm-3 control-label">Name</label>
+            <div class="col-sm-9">
+              <input type="text" class="form-control">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-3 control-label">Password</label>
+            <div class="col-sm-9">
+              <input type="password" class="form-control">
+            </div>
+          </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary">Login</button>
+      </div>
+      </form>
+    </div>
+  </div>
+</div>
+<!-- Login Modal End  -->
+
+<!-- register Modal Start  -->
+<div class="modal fade" id="registerModal" tabindex="-1" role="dialog" aria-labelledby="registerModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+    <form class="form-horizontal">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="registerModalLabel">Registration Form</h4>
+      </div>
+      <div class="modal-body">
+          <div class="form-group">
+            <label class="col-sm-3 control-label">Full Name</label>
+            <div class="col-sm-9">
+              <input type="text" class="form-control">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-3 control-label">Full Name</label>
+            <div class="col-sm-9">
+              <input type="text" class="form-control">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-3 control-label">Password</label>
+            <div class="col-sm-9">
+              <input type="password" class="form-control">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-3 control-label">Confirm Password</label>
+            <div class="col-sm-9">
+              <input type="password" class="form-control">
+            </div>
+          </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary">Register</button>
+      </div>
+    </form>
+    </div>
+  </div>
+</div>
+<!-- register Modal End  -->
+
+
+
+
+    
+    <body>
+        
+    </body>
+</html>

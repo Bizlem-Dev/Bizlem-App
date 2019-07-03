@@ -1,0 +1,39 @@
+package biz.com.service;
+
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import jxl.*;
+import jxl.write.*;
+import jxl.write.biff.RowsExceededException;
+
+import javax.jcr.Node;
+import javax.servlet.ServletException;
+
+import org.apache.sling.api.SlingHttpServletRequest;
+import org.apache.sling.api.SlingHttpServletResponse;
+
+
+//import biz.com.service.impl.WriteException;
+
+//import biz.com.service.impl.WritableSheet;
+
+public interface ProductService{
+	public String checkModelExistence(String companyId,String ModelNo);
+	 public ArrayList<Node> getProductList(String data); 
+	 public ArrayList<Node> getProductListByCatId(String data); 
+	    public Long saveProductInfo(SlingHttpServletRequest request, SlingHttpServletResponse response)
+	            throws ServletException, IOException;
+	    public HashMap getCategoryByNode(String dNodeStr,
+	    		   String qsrchparam, SlingHttpServletRequest request,SlingHttpServletResponse response);
+	    public HashMap getCompanyByNode(String dNodeStr,
+	    		   String qsrchparam, SlingHttpServletRequest request,SlingHttpServletResponse response);
+	    public void createTemplate(SlingHttpServletRequest request, SlingHttpServletResponse response,String data)throws WriteException, RowsExceededException,IOException;
+	    public String uploadTemplateProducts(TemplateDataBean t,SlingHttpServletResponse response,Node s,String pid)throws WriteException, RowsExceededException,IOException;
+	    public ArrayList<String> readXLSTemplateFile(SlingHttpServletRequest request,SlingHttpServletResponse response,String p) throws IOException;
+	    public String uploadAttachements(SlingHttpServletRequest request,
+				SlingHttpServletResponse response, String pid) throws IOException;
+	    public String readCountryMaster(SlingHttpServletRequest request,SlingHttpServletResponse response) throws IOException;
+}

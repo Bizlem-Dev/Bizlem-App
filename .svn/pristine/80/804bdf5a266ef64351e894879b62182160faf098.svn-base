@@ -1,0 +1,6 @@
+<%
+
+var page=request.getAttribute("page").toString();
+//out.print('<div>Hi welcome to cache</div>');
+out.print(page);
+%>

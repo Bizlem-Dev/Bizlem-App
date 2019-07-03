@@ -1,0 +1,86 @@
+
+<html>
+    <head>
+        <title>Home</title> 
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="description" content="Demo project with jQuery">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+<%load("../common/links.esp");%>
+    </head>
+<body>
+<div class="pace pace-active" style="display:none;">
+<div class="pace-progress">
+<div class="pace-progress-inner"></div>
+</div>
+<div class="pace-activity"></div>
+</div>
+
+<%load("../common/header.esp");%>
+ <script>    
+
+function previewWidget(){
+var me=document.getElementById("metadeta").value;
+	
+						$.ajax({
+						url:"http://35.221.160.146:8082/portal/servlet/service/news.solrurlskeyup",
+						type: 'GET',
+						data:{"metadeta":me},
+						success: function(data2) {			
+						alert(data2);			
+						
+					
+						if(data2!=null && data2!=""){
+						 var r=data2.split("[_]");
+						 if(r[0]=="success"){
+							var j=r[1].split("%%##");
+							var w=r[2].split("%%##");
+							for(i=0;i<j.length;i++){
+							if(w[i]!=null && w[i]!="" && j[i]!=null && j[i]!=""){
+							if(w[i]=="0"){
+							$("#frameme").html("<iframe src='"+j[i]+"' frameborder='0' style='border-color:null;width:810px;height:332px'></iframe>");
+							}else if(w[i]=="1"){
+								$("#frameme1").html("<iframe src='"+j[i]+"' frameborder='0' style='border-color:null;width:600px;height:300px'></iframe>");
+							 }else if(w[i]=="2"){
+						     $("#frameme2").html("<iframe src='"+j[i]+"' frameborder='0' style='border-color:null;width:300px;height:500px'></iframe>");
+							 }
+							}
+							}					   
+						   }
+						 }
+					
+						 
+						}
+					});					
+}
+
+ 
+ </script>   
+ 
+
+<section class="new_description_page">
+		
+			<div class="container">
+				<div class="row">
+					<div class="col-sm-9 col-xs-12">
+						<div class="row">
+				
+				<input type="text" placeholder="Enter meta deta information " id="metadeta" name="metadeta" onkeyup="previewWidget()" ><hr>
+							</form>				
+						</div>
+					</div>
+					<div id="frameme">
+					</div>
+				<div id="frameme1">
+					</div>
+					
+					<div id="frameme2">
+					</div>
+						
+				</div>
+		</div>
+</section>
+
+<%load("../common/footer.esp");%>
+    </body>
+</html>

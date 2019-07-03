@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Home</title> 
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="description" content="Demo project with jQuery">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+				<%load("../common/links.esp");%>
+   
+     <%load("../common/header.esp");%>
+<body >
+<div class="pace pace-active" style="display:none;">
+<div class="pace-progress">
+<div class="pace-progress-inner"></div>
+</div>
+<div class="pace-activity"></div>
+</div>
+    
+
+    
+    
+    <%
+        		var curNode = currentNode.session.getRootNode().getNode("content").getNode("product").getNode("products");
+        		var productIdArr =  request.getParameterValues("productid");
+        		var total = "0";
+        		var iLength = productIdArr.length;
+        		%>
+    <script>
+    var length = <%=iLength%>;
+    var prodPutId = new Array();
+    function updateTableRecords(id) {
+      
+    $.ajax({
+				 	 	 type: 'GET',
+		  				 url:'<%=request.getContextPath()%>/servlet/service/productselection.removefromcart',
+						 data: 
+						 {
+						 	prdId:id
+						 },
+						 success: function(data){
+						 while(prodPutId.length > 0) {
+    									prodPutId.pop();
+									} // fastest
+							
+							console.log(data);
+							if(data.length > 0){
+							for(var i = 0;i<data.length;i++){
+					    var productid1 = "productid="+data[i];
+                		prodPutId.push(productid1);
+                		
+				}
+				var url = '<%=request.getContextPath()%>/servlet/service/productselection.viewcart?'+prodPutId.join('&');
+                		console.log(url);
+              window.open(url,"_self");
+              }else {
+              var produrl = '<%=request.getContextPath()%>/servlet/service/productselection.productslist';
+    	      window.open(produrl,"_self");
+              }
+						  }
+						});	
+
+        
+    }
+    function updateProductList(){
+    	var produrl = '<%=request.getContextPath()%>/servlet/service/productselection.productslist';
+    	      window.open(produrl,"_self");
+    }
+    
+    function continueShopping(){
+				$.ajax({
+				 	 	 type: 'GET',
+		  				 url:'<%=request.getContextPath()%>/servlet/service/productselection.checkout',
+						 data: 
+						 {
+						 
+						 },
+						 success: function(data){
+							
+							for(var i = 0;i<data.length;i++){
+					    var productid = "productid="+data[i];
+                		prodPutId.push(productid);
+                		
+				}
+				var url = '<%=request.getContextPath()%>/servlet/service/productselection.addCartInfo?'+prodPutId.join('&');
+                		console.log(url);
+                		window.open(url,"_self");
+						  }
+						});	
+				
+				}
+</script>    
+<section class="view_cart">
+		
+			<div class="container">
+				<div class="row">
+					<div class="col-md-10 col-sm-9 col-xs-12">
+						<div class="row">
+							<div class="col-xs-12 ">
+								<div class="bs-example bs-example-tabs">
+    <ul class="nav nav-tabs" id="myTab">
+    
+      <li class="active"><a data-toggle="tab" id="home-tab" href="#home" >Cart (<%=iLength%>)</a></li>
+      <li class="active"><a data-toggle="tab" style="cursor:pointer" id="" href="javascript:void(0)"  onclick="updateProductList()">View Product</a></li>
+      
+      
+    </ul>
+    <div class="tab-content" id="myTabContent">
+      <div id="home" class="tab-pane fade active in">
+        <div class="table-responsive">
+        	<table class="table table-bordered" >
+        		<thead>
+        			<tr class="active">
+        				<th>ITEM</th>
+	        			<th>QTY</th>
+	        			<th>PRICE</th>
+	        			<th>DELIVERY DETAILS</th>
+	        			<th>SUBTOTAL</th>
+        			</tr>
+        		</thead>
+        		<tbody id="idTable">
+        		
+        		<%for(i = 0 ; i < productIdArr.length ; i++){
+        		var productNode =  curNode.getNode(productIdArr[i]);
+        		var hsSpecNode = productNode.hasNode("spec");
+        		var specNode = productNode.getNode("spec");
+        		if(specNode.price != null){
+        		var strPrice = specNode.price;
+        		
+var priceNum = strPrice.match(/\d/g);
+priceNum = priceNum.join("");
+        		
+        	total = parseInt(total) + parseInt(priceNum); 
+        		}
+        		%>
+        			<tr id="<%=productNode.prd_code%>">
+        				<td>
+        					<div class="row">
+        						<div class="col-sm-3">
+        												                          <% if(productNode.hasNode("media") && 
+            productNode.getNode("media").hasNodes()){
+            if(productNode.getNode("media").hasNode("images") && 
+            productNode.getNode("media").getNode("images").hasNodes()){
+            if(productNode.getNode("media").getNode("images").hasNode(productIdArr[i])){
+			var imgNode2 = productNode.getNode("media").getNode("images").getNode(productIdArr[i]);
+			if(imgNode2.hasProperty("imgpath")){%>
+			<img src="<%=request.getContextPath()%>/<%=imgNode2.imgpath%>" alt="">                        
+			<%}
+			}
+			}
+					}
+			%>                       
+        							
+        						</div>
+        						<div class="col-sm-9">
+        							<h3><%=productNode.name?productNode.name:""%></h3>
+        							<p><small>Orange</small></p>
+        							<p>Saller: <b>WS Retail</b> |
+        	
+        							<img src="<%=request.getContextPath()%>/apps/images/advanteg.jpg" alt="">
+        							</p>
+        						</div>
+        						<div class="col-xs-12">
+        							<p class="text-gray"><i class="fa fa-check-circle"></i> 30 Days Replacement ?   <a href="javascript:void(0)" class="pull-right" onclick="updateTableRecords('<%=productNode.prd_code?productNode.prd_code:""%>')"> Remove</a></p>
+        						</div>
+        					</div>
+        				</td>
+        				<td>
+        					<input type="text" class="form-control" value="1">
+        				</td>
+        				<td>
+        					<%=strPrice%>
+        				</td>
+        				<td>
+        					<p class="text-green">Free</p>
+        					<p>Delivery in 6-7 business days.<br> Faster option may be available during chekout ?</p>
+        				</td>
+        				<td id="<%=productNode.prd_code%>td">
+        					<b><%=strPrice%></b>
+        				</td>
+        			</tr>
+        		<%}%>
+        			<tr class="active">
+        				<td colspan="5" ><h2 class="total text-right"><span class="text-gray">Estimated Total:</span> <b id="total"><%=total%></b></h2></td>
+        			</tr>
+        		</tbody>
+
+        	</table>
+        </div>
+		<div class="row12">
+			<div class="col-sm-4">
+				<div class="input-group">
+		          <input type="text" placeholder="Enter Your Pincode" class="form-control">
+		          <span class="input-group-btn">
+		            <button type="button" class="btn btn-primary">CHECK</button>
+		          </span>
+		        </div>
+			</div>
+			<div class="col-sm-8 text-right">
+				<a href="javascript:void(0)" class="btn btn-lg btn-default" onclick="continueShopping()">CONTINUE Shopping</a>
+				<a href="#" class="btn btn-lg btn-warning">PLACE ORDER</a>
+			</div>
+
+			<div class="col-xs-12 secure">
+				<div class="row">
+					<div class="col-sm-8">
+						<ul class="payment">
+							<li><a href="#">
+								<span class="span-first"><i class="fa fa-unlock-alt"></i></span>
+								<span class="span-last">SECURE<br><small>PAYMENT</small></span></a>
+							</li>
+							<li><a href="#">
+								<span class="span-first"><i class="fa fa-unlock-alt"></i></span>
+								<span class="span-last">Original<br><small>Product</small></span></a>
+							</li>
+							<li><a href="#">
+								<span class="span-first"><i class="fa fa-unlock-alt"></i></span>
+								<span class="span-last">Free & Easy<br><small>Returns</small></span></a>
+							</li>
+							<li><a href="#">
+								<span class="span-first"><i class="fa fa-unlock-alt"></i></span>
+								<span class="span-last">100% Buyer<br><small>Protection</small></span></a>
+							</li>
+						</ul>
+					</div>
+					<div class="col-sm-4 text-right">
+						<b>Need Help to Buy?</b><br>
+						1800 1080 1800 or <a href="">Contact Us</a>
+					</div>
+				</div>
+			</div>
+		</div>
+
+      </div>
+      <div id="profile" class="tab-pane fade">
+        <p>Food truck fixie locavore, accusamus mcsweeney's marfa nulla 
+single-origin coffee squid. Exercitation +1 labore velit, blog sartorial
+ PBR leggings next level wes anderson artisan four loko farm-to-table 
+craft beer twee. Qui photo booth letterpress, commodo enim craft beer 
+mlkshk aliquip jean shorts ullamco ad vinyl cillum PBR. Homo nostrud 
+organic, assumenda labore aesthetic magna delectus mollit. Keytar 
+helvetica VHS salvia yr, vero magna velit sapiente labore stumptown. 
+Vegan fanny pack odio cillum wes anderson 8-bit, sustainable jean shorts
+ beard ut DIY ethical culpa terry richardson biodiesel. Art party 
+scenester stumptown, tumblr butcher vero sint qui sapiente accusamus 
+tattooed echo park.</p>
+      </div>
+
+    </div>
+  </div>
+
+
+							</div>
+							<div class="col-xs-12"></div>
+							<div class="col-xs-12"></div>
+						</div>
+					</div>
+
+
+
+					<div class="col-md-2 col-sm-3 col-xs-12">
+						<div class="advertise">
+				          <img alt="advertise" src="<%=request.getContextPath()%>/apps/images/advertise2.jpg">
+				      </div>
+				      <div class="tab-three">
+              <div class="recommeded-conection">
+                <div class="panel panel-default">
+                <div class="panel-heading">
+                  <h3 class="panel-title">Recommended Connection</h3>
+                </div>
+                <div class="panel-body">
+                  <div>
+                    <div class="recommended-body">
+                      <div class="recommended-img">
+                        <img src="<%=request.getContextPath()%>/apps/images/facebook2.png" alt="Add Friend" />
+                      </div>
+                      <div class="recommended-text">
+                        <h5>Testing Name</h5>
+                        <p><a href="#" class="btn btn-default btn-xs"><i class="fa fa-user"></i> Add Friend</a></p>
+                      </div>
+                    </div>
+
+                    <div class="recommended-body">
+                      <div class="recommended-img">
+                        <img src="<%=request.getContextPath()%>/apps/images/facebook2.png" alt="Add Friend" />
+                      </div>
+                      <div class="recommended-text">
+                        <h5>Testing Name</h5>
+                        <p><a href="#" class="btn btn-default btn-xs"><i class="fa fa-user"></i> Add Friend</a></p>
+                      </div>
+                    </div>
+
+                    <div class="recommended-body">
+                      <div class="recommended-img">
+                        <img src="<%=request.getContextPath()%>/apps/images/facebook2.png" alt="Add Friend" />
+                      </div>
+                      <div class="recommended-text">
+                        <h5>Testing Name</h5>
+                        <p><a href="#" class="btn btn-default btn-xs"><i class="fa fa-user"></i> Add Friend</a></p>
+                      </div>
+                    </div>
+
+                    <div class="recommended-body">
+                      <div class="recommended-img">
+                        <img src="<%=request.getContextPath()%>/apps/images/facebook2.png" alt="Add Friend" />
+                      </div>
+                      <div class="recommended-text">
+                        <h5>Testing Name</h5>
+                        <p><a href="#" class="btn btn-default btn-xs"><i class="fa fa-user"></i> Add Friend</a></p>
+                      </div>
+                    </div>
+
+                    <div class="recommended-body">
+                      <div class="recommended-img">
+                        <img src="<%=request.getContextPath()%>/apps/images/facebook2.png" alt="Add Friend" />
+                      </div>
+                      <div class="recommended-text">
+                        <h5>Testing Name</h5>
+                        <p><a href="#" class="btn btn-default btn-xs"><i class="fa fa-user"></i> Add Friend</a></p>
+                      </div>
+                    </div>
+
+                  </div>
+                </div>
+              </div>
+              </div>
+              </div>
+
+
+					</div>
+				</div>
+			</div>
+
+</section>
+
+<%load("../common/footer.esp");%>    
+
+
+<!-- Login Modal Start  -->
+<div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="loginModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+    <form class="form-horizontal">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="loginModalLabel">Login Details</h4>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+            <label class="col-sm-3 control-label">Name</label>
+            <div class="col-sm-9">
+              <input type="text" class="form-control">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-3 control-label">Password</label>
+            <div class="col-sm-9">
+              <input type="password" class="form-control">
+            </div>
+          </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary">Login</button>
+      </div>
+      </form>
+    </div>
+  </div>
+</div>
+<!-- Login Modal End  -->
+
+<!-- register Modal Start  -->
+<div class="modal fade" id="registerModal" tabindex="-1" role="dialog" aria-labelledby="registerModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+    <form class="form-horizontal">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="registerModalLabel">Registration Form</h4>
+      </div>
+      <div class="modal-body">
+          <div class="form-group">
+            <label class="col-sm-3 control-label">Full Name</label>
+            <div class="col-sm-9">
+              <input type="text" class="form-control">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-3 control-label">Full Name</label>
+            <div class="col-sm-9">
+              <input type="text" class="form-control">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-3 control-label">Password</label>
+            <div class="col-sm-9">
+              <input type="password" class="form-control">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-3 control-label">Confirm Password</label>
+            <div class="col-sm-9">
+              <input type="password" class="form-control">
+            </div>
+          </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary">Register</button>
+      </div>
+    </form>
+    </div>
+  </div>
+</div>
+<!-- register Modal End  -->
+
+
+<!-- contactsupplier Modal Start  -->
+<div class="modal fade contactsupplier" tabindex="-1" role="dialog" aria-labelledby="registerModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+    <form class="form-horizontal">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="registerModalLabel">Contact Supplier</h4>
+      </div>
+      <div class="modal-body">
+          <div class="form-group">
+            <label class="col-sm-3 control-label">Full Name</label>
+            <div class="col-sm-9">
+              <input type="text" class="form-control">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-3 control-label">Full Name</label>
+            <div class="col-sm-9">
+              <input type="text" class="form-control">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-3 control-label">Password</label>
+            <div class="col-sm-9">
+              <input type="password" class="form-control">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-3 control-label">Confirm Password</label>
+            <div class="col-sm-9">
+              <input type="password" class="form-control">
+            </div>
+          </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary">Register</button>
+      </div>
+    </form>
+    </div>
+  </div>
+</div>
+<!-- register Modal End  -->
+    
+  
+        
+    </body>
+</html>

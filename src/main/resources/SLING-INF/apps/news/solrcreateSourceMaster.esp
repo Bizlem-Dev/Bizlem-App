@@ -1,0 +1,61 @@
+
+<html>
+    <head>
+        <title>Home</title> 
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="description" content="Demo project with jQuery">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+<%load("../common/links.esp");%>
+    </head>
+<body>
+<div class="pace pace-active" style="display:none;">
+<div class="pace-progress">
+<div class="pace-progress-inner"></div>
+</div>
+<div class="pace-activity"></div>
+</div>
+<script>
+function previewWidget(){
+
+var url=document.getElementById("metadeta").value;
+
+ 					$.ajax({
+						url:"http://prod.bizlem.io:8082/portal/servlet/service/news.searchinsolr",
+						type: 'GET',
+						data:{"query":url},
+						success: function(data1) {
+						alert(data1);
+						
+						$("#frameme").html(data1);
+						}
+					});
+
+
+}
+</script>
+<%load("../common/header.esp");%>
+
+
+<section class="new_description_page">
+		
+			<div class="container">
+				<div class="row">
+					<div class="col-sm-9 col-xs-12">
+						<div class="row">
+				<form action="<%=request.getContextPath()%>/servlet/service/news.addsourcemaster" method="POST">
+				
+						<input type="text" placeholder="Enter meta deta" id="metadeta"><hr> 
+						<input type="button" value="Get Urls" onclick="previewWidget()">
+					</form>				
+						</div>
+					</div>
+					<div id="frameme">
+					</div>
+				</div>
+		</div>
+</section>
+
+<%load("../common/footer.esp");%>
+    </body>
+</html>

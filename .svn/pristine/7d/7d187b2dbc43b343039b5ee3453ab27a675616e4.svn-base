@@ -1,0 +1,122 @@
+<div id="reviewproduct" class="tab-pane fade">
+                                    <h3>Review</h3>
+                                    <div class="row">                  	
+                                        <div class="col-sm-10">
+                                            <div class="row">
+                                                <div class="col-xs-12">
+
+                                                    <div class="col-sm-2">
+                                                        <figure class="image">
+                                                            <% if (currentNode.hasNode("media") && currentNode.getNode("media").hasNode("images") && currentNode.getNode("media").getNode("images").hasNodes()) {
+
+                                                                    var itr = currentNode.getNode("media").getNode("images").getNodes();
+                                                                    for (k in  itr) {
+                                                            %>			
+                                                            <img id="pdShImg" src="<%=request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath() + itr[k].imgpath%>" />
+
+                                                            <%}
+                                            } else {%>
+                                                            <img id="pdShImg" src="<%=request.getContextPath()%>/apps/user/css/images/photo.gif" /> 
+                                                            <%}%>      </figure>          				
+
+                                                        <input class="form-control" type="file" class="btn btn-info" id="pdUpImg" name="upimg" />
+                                                        <!--<a data-target="#userPic" data-toggle="modal" href="#" class="btn btn-info"> Change Picture</a>
+                                                        <div class="modal fade" id="userPic" tabindex="-1" role="dialog" aria-labelledby="loginModalLabel" aria-hidden="true">
+                                                            <div class="modal-dialog modal-xs">
+                                                                <div class="modal-content">
+                                                                    <form class="form-horizontal" method="POST" id="save" action="<%=request.getContextPath()%>/content/user/save.up" enctype="multipart/form-data">
+                                                                        <div class="modal-header">
+                                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                                                            <h4 class="modal-title" id="loginModalLabel">Change Profile picture</h4>
+                                                                        </div>
+                                                                        <div class="modal-body" style="height:50px;">
+                                                                            <input type="hidden" name="userId" id="userId" value="<%=request.getRemoteUser().replace("@", "_")%>" />
+                                                                            <div class="form-group">
+                                                                                <label class="col-sm-3 control-label">File</label>
+                                                                                <div class="col-sm-9">
+                                                                                    <input class="form-control" type="file" name="myFile" />
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="modal-footer">
+                                                                            <button type="submit" class="btn btn-primary">Post</button>
+                                                                        </div>
+                                                                    </form>
+                                                                </div>
+                                                            </div>
+                                                        </div>-->
+
+                                                    </div>
+                                                    <!-- Display user info-->
+
+                                                    <div class="col-sm-10">
+                                                        <form  method="POST" action="<%=request.getContextPath()%>/content/user/save.pro" id="myfoem">
+                                                            <div class="row">
+                                                                <div class="col-xs-12">
+                                                                    <div class="form-group">
+
+                                                                        <div class="col-sm-12">
+                                                                            <div class="category-list">
+                                                                                <!-- content -->
+                                                                                <div class="content mCustomScrollbar" style="height:134px">
+                                                                                    <h2><%=getCurrentNodeValue("name")%></h2>
+                                                                                    <h5><%=getCurrentNodeValue("modelno")%>  </h5>
+                                                                                    <hr />
+
+
+                                                                                    <p>
+                                                                                        <%=getCurrentNodeValue("description")%>
+                                                                                    </p> 
+
+                                                                                </div>
+
+                                                                                <script>
+                                                                                    (function($) {
+                                                                                        $(window).load(function() {
+
+                                                                                            $("a[rel='load-content']").click(function(e) {
+                                                                                                e.preventDefault();
+                                                                                                var url = $(this).attr("href");
+                                                                                                $.get(url, function(data) {
+                                                                                                    $(".content .mCSB_container").append(data); //load new content inside .mCSB_container
+                                                                                                    //scroll-to appended content 
+                                                                                                    $(".content").mCustomScrollbar("scrollTo", "h2:last");
+                                                                                                });
+                                                                                            });
+
+                                                                                            $(".content").delegate("a[href='top']", "click", function(e) {
+                                                                                                e.preventDefault();
+                                                                                                $(".content").mCustomScrollbar("scrollTo", $(this).attr("href"));
+                                                                                            });
+
+                                                                                        });
+                                                                                    })(jQuery);
+                                                                                </script>
+                                                                            </div>
+
+                                                                        </div>
+                                                                    </div>
+
+
+
+                                                                    <div class="col-xs-12">
+
+                                                                        <input type="button" onclick="subForm()" class="btn btn-primary"
+                                                                               value="Save" />
+
+
+                                                                    </div>         
+                                                                    </form>
+
+
+                                                                </div>
+                                                            </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+
+                                        </div>
+
+                                    </div>
+                                </div>

@@ -1,0 +1,15 @@
+
+      
+
+        
+                                      <div class="input-group">
+                                        <form action="<%=request.getContextPath()%>/servlet/service/globalsearch.process" type="POST" id="searchForm">
+                                          <input type="text" class="form-control" placeholder="I m looking for..."  name="search"  id="search" style="margin-top: 0px">
+                                       			 <span class="input-group-btn">
+                                        
+                                            <button class="btn btn-primary" type="button" onclick="validateSearch()"  >Search</button>
+                                        </span>
+                                        </form>
+                                    </div>
+                                    
+                       

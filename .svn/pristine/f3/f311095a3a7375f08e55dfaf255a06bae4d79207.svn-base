@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Home</title> 
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="description" content="Demo project with jQuery">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+				<%load("../common/links.esp");%>
+				
+				<script>
+
+				var prodPutId = new Array();
+				function addToCart(id,price){
+				$.ajax({
+				 	 	 type: 'GET',
+		  				 url:'<%=request.getContextPath()%>/servlet/service/productselection.addcart',
+						 data: 
+						 {
+						 productid:id
+						 },
+						 success: function(data){
+							if(data == "false"){
+							alert("Already added to your Cart");
+							}if(data == "true"){
+							location.reload();
+							}
+						  }
+						});	
+				}
+				function checkOutCart(){
+				$.ajax({
+				 	 	 type: 'GET',
+		  				 url:'<%=request.getContextPath()%>/servlet/service/productselection.checkout',
+						 data: 
+						 {
+						 
+						 },
+						 success: function(data){
+							
+							for(var i = 0;i<data.length;i++){
+					    var productid = "productid="+data[i];
+                		prodPutId.push(productid);
+                		
+				}
+				var url = '<%=request.getContextPath()%>/servlet/service/productselection.viewcart?'+prodPutId.join('&');
+                		console.log(url);
+                		window.open(url,"_self");
+						  }
+						});	
+				
+				}
+				</script>
+				       <%load("../common/header.esp");%>
+<div class="pace pace-active" style="display:none;">
+<div class="pace-progress">
+<div class="pace-progress-inner"></div>
+</div>
+<div class="pace-activity"></div>
+</div>
+    
+
+    
+    <section class="section">
+    <div class="container">
+
+        <div class="row">
+            <div class="col-sm-3 col-xs-12">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <h4>Categoary</h4>
+                        <div class="panel-group categoary" id="accordion" role="tablist" aria-multiselectable="true">
+                            <div class="panel panel-default">
+                                <div class="panel-heading" role="tab" id="headingOne">
+                                    <h4 class="panel-title">
+                                    <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                    Energy
+                                    </a>
+                                    </h4>
+                                </div>
+                                <div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
+                                    <div class="panel-body">
+                                        <ul class="list-inline">
+                                            <li><a href="product-list.php">Search list mobile</a></li>
+                                            <li><a href="product-person.php">Search list Person</a></li>
+                                            <li><a href="product-company.php">Search list Company</a></li>
+                                            <li><a href="#">Lorem ipsum dolor (4)</a></li>
+                                            <li><a href="#">Lorem ipsum dolor (4)</a></li>
+                                            <li><a href="#">Lorem ipsum dolor (4)</a></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="panel panel-default">
+                                <div class="panel-heading" role="tab" id="headingTwo">
+                                    <h4 class="panel-title">
+                                    <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                                    Machinery
+                                    </a>
+                                    </h4>
+                                </div>
+                                <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
+                                    <div class="panel-body">
+                                        <ul class="list-inline">
+                                            <li><a href="#">Lorem ipsum dolor (4)</a></li>
+                                            <li><a href="#">Lorem ipsum dolor (4)</a></li>
+                                            <li><a href="#">Lorem ipsum dolor (4)</a></li>
+                                            <li><a href="#">Lorem ipsum dolor (4)</a></li>
+                                            <li><a href="#">Lorem ipsum dolor (4)</a></li>
+                                            <li><a href="#">Lorem ipsum dolor (4)</a></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="panel panel-default">
+                                <div class="panel-heading" role="tab" id="headingThree">
+                                    <h4 class="panel-title">
+                                    <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                                    Energy
+                                    </a>
+                                    </h4>
+                                </div>
+                                <div id="collapseThree" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree">
+                                    <div class="panel-body">
+                                        <ul class="list-inline">
+                                            <li><a href="#">Lorem ipsum dolor (4)</a></li>
+                                            <li><a href="#">Lorem ipsum dolor (4)</a></li>
+                                            <li><a href="#">Lorem ipsum dolor (4)</a></li>
+                                            <li><a href="#">Lorem ipsum dolor (4)</a></li>
+                                            <li><a href="#">Lorem ipsum dolor (4)</a></li>
+                                            <li><a href="#">Lorem ipsum dolor (4)</a></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-12">
+                        <h4>You may also be interested in</h4>
+                        <div class="panel panel-info top-conferences">
+                            <div class="panel-heading">
+                                <h3 class="panel-title" id="panel-title">Top Conferences</h3>
+                            </div>
+                            <div class="panel-body">
+                                <div class="scroll-text">
+                                    <div class="flexslider top-conferences-slide" id="top-conferences">
+                                        <ul class="slides">
+                                            <li>
+                                                <img src="images/top-conferences.jpg" />
+                                                <div class="text">
+                                                    <a href="#">Agritech Israel</a>
+                                                </div>
+                                                <p><small>28-30 Apr 2015 Tel Aviv, Lsreal</small></p>
+                                            </li>
+                                            <li>
+                                                <img src="images/top-conferences2.jpg" />
+                                                <div class="text">
+                                                    <a href="#">Agritech Israel</a>
+                                                </div>
+                                                <p><small>28-30 Apr 2015 Tel Aviv, Lsreal</small></p>
+                                            </li>
+                                            <li>
+                                                <img src="images/top-conferences3.jpg" />
+                                                <div class="text">
+                                                    <a href="#">Agritech Israel</a>
+                                                </div>
+                                                <p><small>28-30 Apr 2015 Tel Aviv, Lsreal</small></p>
+                                            </li>
+                                            <li>
+                                                <img src="images/top-conferences.jpg" />
+                                                <div class="text">
+                                                    <a href="#">Agritech Israel</a>
+                                                </div>
+                                                <p><small>28-30 Apr 2015 Tel Aviv, Lsreal</small></p>
+                                            </li>
+                                            <li>
+                                                <img src="images/top-conferences2.jpg" />
+                                                <div class="text">
+                                                    <a href="#">Agritech Israel</a>
+                                                </div>
+                                                <p><small>28-30 Apr 2015 Tel Aviv, Lsreal</small></p>
+                                            </li>
+                                            <li>
+                                                <img src="images/top-conferences3.jpg" />
+                                                <div class="text">
+                                                    <a href="#">Agritech Israel</a>
+                                                </div>
+                                                <p><small>28-30 Apr 2015 Tel Aviv, Lsreal</small></p>
+                                            </li>
+                                            <li>
+                                                <img src="images/top-conferences.jpg" />
+                                                <div class="text">
+                                                    <a href="#">Agritech Israel</a>
+                                                </div>
+                                                <p><small>28-30 Apr 2015 Tel Aviv, Lsreal</small></p>
+                                            </li>
+                                            <li>
+                                                <img src="images/top-conferences2.jpg" />
+                                                <div class="text">
+                                                    <a href="#">Agritech Israel</a>
+                                                </div>
+                                                <p><small>28-30 Apr 2015 Tel Aviv, Lsreal</small></p>
+                                            </li>
+                                            <li>
+                                                <img src="images/top-conferences3.jpg" />
+                                                <div class="text">
+                                                    <a href="#">Agritech Israel</a>
+                                                </div>
+                                                <p><small>28-30 Apr 2015 Tel Aviv, Lsreal</small></p>
+                                            </li>
+                                            <!-- items mirrored twice, total of 12 -->
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <script type="text/javascript">
+                                                $(window).load(function() {
+                                                $('#top-conferences').flexslider({
+                                                    animation: "slide",
+                                                    direction: "vertical",
+                                                    minItems: 4,
+                                                    maxItems: 4,
+                                                    slideshowSpeed: 2000,
+                                                    animationLoop: true
+                                                });
+                                                });
+                        </script>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="col-sm-6 col-xs-12">
+                <div class="row">
+                    <div class="demo content4">
+
+									            		<%
+            		var count=request.getAttribute("total");
+
+ var result = (count/8);
+var integerPart = Math.floor(result);
+if(count-(integerPart*10)!=0){
+integerPart=integerPart+1;
+}
+
+			var	prodNode=request.getAttribute("productslist");
+			
+		
+			
+%>
+<%
+for(i = 0;i<prodNode.size();i++){
+
+var pdNode=prodNode.get(i);
+%>
+                        <div class="search-list-mobile">
+                            <div class="thumbnail">
+                              <div class="thumb">
+                                  <img src="images/category-list.jpg" alt="thumbnail">
+                              </div>
+                            <div class="caption">
+                              <h3><a href="#"><%=pdNode.name?pdNode.name:""%></a></h3>
+                              <h3><a href="#">Product Code [<%=pdNode.prd_code?pdNode.prd_code:""%>]</a></h3>
+                              <p class="foo1">
+                                  <%=pdNode.discription?pdNode.discription:""%>
+                              </p>
+                            </div>
+                            <div class="all-btn">
+                              <div class="list-check"><input type="checkbox"></div>
+                              <div class="compare"><a data-target=".contactsupplier" data-toggle="modal" class="btn btn-danger" href="#">Compare Now</a></div>
+                              <%if(pdNode.hasNode("spec")){
+                              var pdSpec = pdNode.getNode("spec"); 
+                              %>
+                              <div class="price">Moq: <%=pdSpec.moq%> &nbsp;&nbsp; Price: <%=pdSpec.price%></div>
+                              <input type="hidden" id="<%=pdNode.prd_code?pdNode.prd_code:""%>" value="<%=pdSpec.price%>"/>
+                              <%}%>
+                              <div class="enquery">
+                                <a href="javascript:void(0)" class="btn btn-default" onclick="addToCart('<%=pdNode.prd_code?pdNode.prd_code:""%>','<%=pdSpec.price%>')">Add to Cart</a>
+                        
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
+<%}%>
+                        
+
+
+                    </div>
+                    <div class="demo demo4_bottom"></div>
+                    <script type="text/javascript">
+                                            $('.demo4_bottom,.demo4_top').bootpag({
+                                                total: 10,
+                                                page: 1,
+                                                maxVisible: 5,
+                                                
+                                            }).on("page", function(event, num){
+                                                //show
+                                                $(".pace-active").show();
+                                                $(".content4").load("pagina/search-list-mobile-" + num + ".html", function(){
+                                                $(".pace-active").hide();
+                                                //hide
+                                                });
+                                                // or some ajax content loading...
+                                            }).find('.pagination');
+                                            
+                    </script>
+                </div>
+            </div>
+
+
+
+            <div class="col-sm-3">
+            <%
+            
+				var prodIdLis = request.getSession().getAttribute("productIdList");
+			//	out.print(prodIdLis.size());
+				//for(var i =0;i<prodIdLis.size();i++){
+				//	out.print(prodIdLis.get(i));
+				//	var curNode = currentNode.session.getRootNode().getNode("content").getNode("product").getNode("products");
+				//	var pdSpec = curNode.getNode(prodIdLis.get(i)).getNode("spec");
+				//	out.print(pdSpec.price);
+					
+			//	}
+				%>
+            <div class="panel panel-default top-conferences">
+			<div class="panel-heading">
+                        <h3 class="panel-title" id="cartinfo"><%=prodIdLis.size()%> items in Cart</h3>
+						<input type="button" value="Checkout" onclick="checkOutCart()"/>
+                    </div>
+					</div>
+                <div class="advertise">
+                    <img src="images/advertise2.jpg" alt="advertise" />
+                </div>
+                <div class="panel panel-default top-conferences">
+                    <div class="panel-heading">
+                        <h3 class="panel-title" id="panel-title">Related</h3>
+                    </div>
+                    <div class="panel-body">
+                        <div class="scroll-text">
+                            <div class="flexslider top-conferences-slide" id="related">
+                                <ul class="slides">
+                                    <li>
+                                        <img src="images/top-conferences.jpg" />
+                                        <div class="text">
+                                            <a href="#">Agritech Israel</a>
+                                        </div>
+                                        <p><small>28-30 Apr 2015 Tel Aviv, Lsreal</small></p>
+                                    </li>
+                                    <li>
+                                        <img src="images/top-conferences2.jpg" />
+                                        <div class="text">
+                                            <a href="#">Agritech Israel</a>
+                                        </div>
+                                        <p><small>28-30 Apr 2015 Tel Aviv, Lsreal</small></p>
+                                    </li>
+                                    <li>
+                                        <img src="images/top-conferences3.jpg" />
+                                        <div class="text">
+                                            <a href="#">Agritech Israel</a>
+                                        </div>
+                                        <p><small>28-30 Apr 2015 Tel Aviv, Lsreal</small></p>
+                                    </li>
+                                    <li>
+                                        <img src="images/top-conferences.jpg" />
+                                        <div class="text">
+                                            <a href="#">Agritech Israel</a>
+                                        </div>
+                                        <p><small>28-30 Apr 2015 Tel Aviv, Lsreal</small></p>
+                                    </li>
+                                    <li>
+                                        <img src="images/top-conferences2.jpg" />
+                                        <div class="text">
+                                            <a href="#">Agritech Israel</a>
+                                        </div>
+                                        <p><small>28-30 Apr 2015 Tel Aviv, Lsreal</small></p>
+                                    </li>
+                                    <li>
+                                        <img src="images/top-conferences3.jpg" />
+                                        <div class="text">
+                                            <a href="#">Agritech Israel</a>
+                                        </div>
+                                        <p><small>28-30 Apr 2015 Tel Aviv, Lsreal</small></p>
+                                    </li>
+                                    <li>
+                                        <img src="images/top-conferences.jpg" />
+                                        <div class="text">
+                                            <a href="#">Agritech Israel</a>
+                                        </div>
+                                        <p><small>28-30 Apr 2015 Tel Aviv, Lsreal</small></p>
+                                    </li>
+                                    <li>
+                                        <img src="images/top-conferences2.jpg" />
+                                        <div class="text">
+                                            <a href="#">Agritech Israel</a>
+                                        </div>
+                                        <p><small>28-30 Apr 2015 Tel Aviv, Lsreal</small></p>
+                                    </li>
+                                    <li>
+                                        <img src="images/top-conferences3.jpg" />
+                                        <div class="text">
+                                            <a href="#">Agritech Israel</a>
+                                        </div>
+                                        <p><small>28-30 Apr 2015 Tel Aviv, Lsreal</small></p>
+                                    </li>
+                                    <!-- items mirrored twice, total of 12 -->
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <script type="text/javascript">
+                                        $(window).load(function() {
+                                        $('#related').flexslider({
+                                            animation: "slide",
+                                            direction: "vertical",
+                                            minItems: 4,
+                                            maxItems: 4,
+                                            slideshowSpeed: 2000,
+                                            animationLoop: true
+                                        });
+                                        });
+                </script>
+            </div>
+        </div>
+        <div class="col-sm-12 col-xs-12">
+            <h2>Hot Products</h2>
+            <div class="flexslider hot-product" id="hot-product3">
+                <ul class="slides">
+                    <li>
+                        <img src="images/Hinged-manhole-cover-D400-bs.jpg" />
+                        <div class="text">
+                            <a href="#">Hinged manhole cover D400 bs</a>
+                            <a class="btn btn-danger btn-block" href="#"><i class="glyphicon glyphicon-envelope"></i> Contact</a>
+                        </div>
+                    </li>
+                    <li>
+                        <img src="images/YKX_01_New_Design_Small_Carton_Box.jpg_220x220.jpg" />
+                        <div class="text">
+                            <a href="#">YKX-01 New Design Small</a>
+                            <a class="btn btn-danger btn-block" href="#"><i class="glyphicon glyphicon-envelope"></i> Contact</a>
+                        </div>
+                    </li>
+                    <li>
+                        <img src="images/Screen-printing-drying-rack.gif" />
+                        <div class="text">
+                            <a href="#">Screen printing drying rack</a>
+                            <a class="btn btn-danger btn-block" href="#"><i class="glyphicon glyphicon-envelope"></i> Contact</a>
+                        </div>
+                    </li>
+                    <li>
+                        <img src="images/Black_sandal_wood_surface_and_brushed_stainless.jpg" />
+                        <div class="text">
+                            <a href="#">Black sandal wood surface</a>
+                            <a class="btn btn-danger btn-block" href="#"><i class="glyphicon glyphicon-envelope"></i> Contact</a>
+                        </div>
+                    </li>
+                    <li>
+                        <img src="images/Product-Antique.jpg" />
+                        <div class="text">
+                            <a href="#">2015 Popular Product Antique </a>
+                            <a class="btn btn-danger btn-block" href="#"><i class="glyphicon glyphicon-envelope"></i> Contact</a>
+                        </div>
+                    </li>
+                    <li>
+                        <img src="images/Screen-printing-drying-rack.gif" />
+                        <div class="text">
+                            <a href="#">Screen printing drying rack</a>
+                            <a class="btn btn-danger btn-block" href="#"><i class="glyphicon glyphicon-envelope"></i> Contact</a>
+                        </div>
+                    </li>
+                    <li>
+                        <img src="images/Black_sandal_wood_surface_and_brushed_stainless.jpg" />
+                        <div class="text">
+                            <a href="#">Black sandal wood surface</a>
+                            <a class="btn btn-danger btn-block" href="#"><i class="glyphicon glyphicon-envelope"></i> Contact</a>
+                        </div>
+                    </li>
+                    <li>
+                        <img src="images/Hinged-manhole-cover-D400-bs.jpg" />
+                        <div class="text">
+                            <a href="#">Hinged manhole cover D400 bs</a>
+                            <a class="btn btn-danger btn-block" href="#"><i class="glyphicon glyphicon-envelope"></i> Contact</a>
+                        </div>
+                    </li>
+                    <li>
+                        <img src="images/YKX_01_New_Design_Small_Carton_Box.jpg_220x220.jpg" />
+                        <div class="text">
+                            <a href="#">YKX-01 New Design Small</a>
+                            <a class="btn btn-danger btn-block" href="#"><i class="glyphicon glyphicon-envelope"></i> Contact</a>
+                        </div>
+                    </li>
+                    <li>
+                        <img src="images/Screen-printing-drying-rack.gif" />
+                        <div class="text">
+                            <a href="#">Screen printing drying rack</a>
+                            <a class="btn btn-danger btn-block" href="#"><i class="glyphicon glyphicon-envelope"></i> Contact</a>
+                        </div>
+                    </li>
+                    <li>
+                        <img src="images/Black_sandal_wood_surface_and_brushed_stainless.jpg" />
+                        <div class="text">
+                            <a href="#">Black sandal wood surface</a>
+                            <a class="btn btn-danger btn-block" href="#"><i class="glyphicon glyphicon-envelope"></i> Contact</a>
+                        </div>
+                    </li>
+                    <li>
+                        <img src="images/Product-Antique.jpg" />
+                        <div class="text">
+                            <a href="#">2015 Popular Product Antique </a>
+                            <a class="btn btn-danger btn-block" href="#"><i class="glyphicon glyphicon-envelope"></i> Contact</a>
+                        </div>
+                    </li>
+                    <li>
+                        <img src="images/Screen-printing-drying-rack.gif" />
+                        <div class="text">
+                            <a href="#">Screen printing drying rack</a>
+                            <a class="btn btn-danger btn-block" href="#"><i class="glyphicon glyphicon-envelope"></i> Contact</a>
+                        </div>
+                    </li>
+                    <li>
+                        <img src="images/Black_sandal_wood_surface_and_brushed_stainless.jpg" />
+                        <div class="text">
+                            <a href="#">Black sandal wood surface</a>
+                            <a class="btn btn-danger btn-block" href="#"><i class="glyphicon glyphicon-envelope"></i> Contact</a>
+                        </div>
+                    </li>
+                    <!-- items mirrored twice, total of 12 -->
+                </ul>
+            </div>
+            <script type="text/javascript">
+                        $(window).load(function() {
+                            $('#hot-product3').flexslider({
+                                animation: "slide",
+                                animationLoop: false,
+                                itemWidth: 120,
+                                itemMargin: 25
+                            });
+                            });
+            </script>
+        </div>
+    </div>
+
+</div>
+</div>
+</section>
+<script src="js/ellipsis/jquery.ellipsis.min.js"></script>
+<script type="text/javascript">
+    $('.foo1').ellipsis({
+      lines: 3,             // force ellipsis after a certain number of lines. Default is 'auto'
+      ellipClass: 'ellip',  // class used for ellipsis wrapper and to namespace ellip line
+      responsive: true      // set to true if you want ellipsis to update on window resize. Default is false
+    });
+</script>
+
+<%load("../common/footer.esp");%>
+
+
+<!-- Login Modal Start  -->
+<div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="loginModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+    <form class="form-horizontal">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="loginModalLabel">Login Details</h4>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+            <label class="col-sm-3 control-label">Name</label>
+            <div class="col-sm-9">
+              <input type="text" class="form-control">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-3 control-label">Password</label>
+            <div class="col-sm-9">
+              <input type="password" class="form-control">
+            </div>
+          </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary">Login</button>
+      </div>
+      </form>
+    </div>
+  </div>
+</div>
+<!-- Login Modal End  -->
+
+<!-- register Modal Start  -->
+<div class="modal fade" id="registerModal" tabindex="-1" role="dialog" aria-labelledby="registerModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+    <form class="form-horizontal">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="registerModalLabel">Registration Form</h4>
+      </div>
+      <div class="modal-body">
+          <div class="form-group">
+            <label class="col-sm-3 control-label">Full Name</label>
+            <div class="col-sm-9">
+              <input type="text" class="form-control">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-3 control-label">Full Name</label>
+            <div class="col-sm-9">
+              <input type="text" class="form-control">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-3 control-label">Password</label>
+            <div class="col-sm-9">
+              <input type="password" class="form-control">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-3 control-label">Confirm Password</label>
+            <div class="col-sm-9">
+              <input type="password" class="form-control">
+            </div>
+          </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary">Register</button>
+      </div>
+    </form>
+    </div>
+  </div>
+</div>
+<!-- register Modal End  -->
+
+
+<!-- contactsupplier Modal Start  -->
+<div class="modal fade contactsupplier" tabindex="-1" role="dialog" aria-labelledby="registerModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+    <form class="form-horizontal">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="registerModalLabel">Contact Supplier</h4>
+      </div>
+      <div class="modal-body">
+          <div class="form-group">
+            <label class="col-sm-3 control-label">Full Name</label>
+            <div class="col-sm-9">
+              <input type="text" class="form-control">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-3 control-label">Full Name</label>
+            <div class="col-sm-9">
+              <input type="text" class="form-control">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-3 control-label">Password</label>
+            <div class="col-sm-9">
+              <input type="password" class="form-control">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-3 control-label">Confirm Password</label>
+            <div class="col-sm-9">
+              <input type="password" class="form-control">
+            </div>
+          </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary">Register</button>
+      </div>
+    </form>
+    </div>
+  </div>
+</div>
+<!-- register Modal End  -->
+    
+  
+        
+    </body>
+</html>

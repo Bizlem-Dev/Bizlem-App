@@ -1,0 +1,686 @@
+package biz.com.service.impl;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+
+import jxl.*;
+import jxl.write.*;
+import jxl.write.biff.RowsExceededException;
+import javax.jcr.LoginException;
+import javax.jcr.Node;
+import javax.jcr.NodeIterator;
+import javax.jcr.PathNotFoundException;
+import javax.jcr.RepositoryException;
+import javax.jcr.Session;
+import javax.jcr.SimpleCredentials;
+import javax.jcr.Workspace;
+import javax.jcr.query.Query;
+import javax.jcr.query.QueryResult;
+
+import org.apache.felix.scr.annotations.Component;
+import org.apache.felix.scr.annotations.Properties;
+import org.apache.felix.scr.annotations.Property;
+import org.apache.felix.scr.annotations.Reference;
+import org.apache.felix.scr.annotations.Service;
+import javax.servlet.ServletException;
+import org.apache.sling.api.SlingHttpServletRequest;
+import org.apache.sling.api.SlingHttpServletResponse;
+import org.apache.sling.jcr.api.SlingRepository;
+import org.apache.sling.api.request.RequestParameter;
+import biz.com.service.ProductService;
+//import biz.com.service.WriteException;
+
+/**
+ * 
+ * @author atul
+ */
+@SuppressWarnings("unused")
+@Component(configurationFactory = true)
+@Service(ProductService.class)
+@Properties({ @Property(name = "com", value = "com") })
+public class ProductServiceImpl implements ProductService {
+
+	/** The repo variable is an object of SlingRepository interface. */
+
+	@Reference
+	private SlingRepository repo;
+
+	Session session = null;
+
+	public ArrayList<Node> getProductList(String searchText) {
+		ArrayList<Node> pb = null;
+		
+		Node tempPrdNode, childNode;
+		
+		if (!searchText.trim().equals("")) {
+			try {
+
+				pb = new ArrayList<Node>();
+				session = repo.login(new SimpleCredentials("admin", "admin"
+						.toCharArray()));
+
+				String querryStr = "select * from [nt:unstructured] where  ISDESCENDANTNODE('/content/product/products/') and name  like '"
+						+ searchText+ "%'";
+				Workspace workspace = session.getWorkspace();
+				Query query = workspace.getQueryManager().createQuery(
+						querryStr, Query.JCR_SQL2);
+				QueryResult result = query.execute();
+				NodeIterator iterator = result.getNodes();
+				
+				while (iterator.hasNext()) {
+					
+					tempPrdNode = iterator.nextNode();
+							pb.add(tempPrdNode);
+						
+							
+				}
+
+			} catch (LoginException e) {
+
+			} catch (RepositoryException e) {
+				// TODO Auto-generated catch block
+
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+
+			}
+		}
+		return pb;
+	}
+
+	public ArrayList<Node> getProductListByCatId(String searchText) {
+		ArrayList<Node>  pb = null;
+		
+		Node tempPrdNode, childNode;
+		
+		if (!searchText.trim().equals("")) {
+			try {
+
+				pb = new ArrayList<Node> ();
+				session = repo.login(new SimpleCredentials("admin", "admin"
+						.toCharArray()));
+
+				String querryStr = "select * from [nt:unstructured] where  ISDESCENDANTNODE('/content/product/products/') and catid  like '"
+						+ searchText+ "%'";
+				Workspace workspace = session.getWorkspace();
+				Query query = workspace.getQueryManager().createQuery(
+						querryStr, Query.JCR_SQL2);
+				QueryResult result = query.execute();
+				NodeIterator iterator = result.getNodes();
+				
+				while (iterator.hasNext()) {
+					
+					tempPrdNode = iterator.nextNode();
+					pb.add(tempPrdNode.getParent().getParent().getParent());
+
+				}
+
+			} catch (LoginException e) {
+
+			} catch (RepositoryException e) {
+				// TODO Auto-generated catch block
+
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+
+			}
+		}
+		return pb;
+	}
+	
+//	public void addLabel(WritableSheet sheet, int column, int row, String s)
+//		       {
+//		    Label label;
+//		    label = new Label(column, row, s);
+//		    sheet.addCell(label);
+//		  }
+//	public void createTemplate(SlingHttpServletRequest request, SlingHttpServletResponse response,Long n)throws WriteException, RowsExceededException,IOException{
+//		try{
+//		File exlFile = new File(request.getContextPath()+"/template.xls");
+//		Node prodNode = null;
+//        WritableWorkbook writableWorkbook = Workbook
+//                .createWorkbook(exlFile);
+//
+//        WritableSheet writableSheet = writableWorkbook.createSheet(
+//                "Sheet1", 0);
+//        session = repo.login(new SimpleCredentials("admin", "admin"
+//                .toCharArray()));
+//
+//        if (session.getRootNode().getNode("content").getNode("product").hasNode("products")) {
+//            prodNode = session.getRootNode().getNode("content").getNode("product").getNode("products").getNode(Long.toString(n));
+//            this.addLabel(writableSheet,0,0,"productname");
+//            this.addLabel(writableSheet,1,0,prodNode.getProperty("name").getString());
+//            this.addLabel(writableSheet,0,1,"productshortdescription");
+//            this.addLabel(writableSheet,1,1,prodNode.getProperty("shortdescription").getString());
+//            this.addLabel(writableSheet,0,2,"productlongdescription");
+//            this.addLabel(writableSheet,1,2,prodNode.getProperty("description").getString());
+//            this.addLabel(writableSheet,0,3,"keyword");
+//            this.addLabel(writableSheet,1,3,prodNode.getProperty("keyword").getString());
+//            this.addLabel(writableSheet,0,4,"price");
+//            this.addLabel(writableSheet,1,4,prodNode.getProperty("price").getString());
+//            this.addLabel(writableSheet,0,5,"minorder");
+//            this.addLabel(writableSheet,1,5,prodNode.getProperty("minorder").getString());
+//            this.addLabel(writableSheet,0,6,"sellbylot");
+//            this.addLabel(writableSheet,1,6,prodNode.getProperty("sbl").getString());
+//            if(prodNode.hasNode("media") && prodNode.getNode("media").hasNode("images")){
+//            this.addLabel(writableSheet,0,7,"imgpath");
+//            if(prodNode.hasNode("media") && prodNode.getNode("media").getNode("images").hasNodes()){
+//			this.addLabel(writableSheet,1,7,request.getContextPath()+"/"+prodNode.getNode("media").getNode("images").getNodes());
+//            }
+//            }
+//            if(prodNode.hasNode("media") && prodNode.getNode("media").hasNode("videoes")){
+//			this.addLabel(writableSheet,0,8,"videopath");
+//			if(prodNode.hasNode("media") && prodNode.getNode("media").getNode("videoes").hasNodes()){
+//				this.addLabel(writableSheet,1,8,request.getContextPath()+"/"+prodNode.getNode("media").getNode("videoes").getNodes());
+//			}
+//            }
+//            if(prodNode.hasNode("media") && prodNode.getNode("media").hasNode("attachments")){
+//			this.addLabel(writableSheet,0,9,"docpath");
+//			if(prodNode.hasNode("media") && prodNode.getNode("media").getNode("attachments").hasNodes()){
+//				this.addLabel(writableSheet,1,9,request.getContextPath()+"/"+prodNode.getNode("media").getNode("attachments").getNodes());
+//			}
+//            }
+//            if(prodNode.hasNode("cat") && prodNode.getNode("cat").hasNode("unspsc")){
+//			this.addLabel(writableSheet,0,10,"category");
+//			if(prodNode.getNode("cat").getNode("unspsc").hasNodes()){
+//				this.addLabel(writableSheet,1,10,request.getContextPath()+"/"+prodNode.getNode("cat").getNode("unspsc").getNodes());
+//			}
+//            }
+//            
+//            if(prodNode.hasNode("spec")){
+//	this.addLabel(writableSheet,0,11,"label");
+//	this.addLabel(writableSheet,0,12,"type");
+//	this.addLabel(writableSheet,0,13,"min");
+//	this.addLabel(writableSheet,0,14,"max");
+//	this.addLabel(writableSheet,0,15,"uom");
+//	
+////	this.addLabel(writableSheet,j,11,attrLabel[i]);
+////		this.addLabel(writableSheet,j,12,attrType[i]);
+////		this.addLabel(writableSheet,j,13,attrMin[i]);
+////		this.addLabel(writableSheet,j,14,attrMax[i]);
+////		this.addLabel(writableSheet,j,15,attrUom[i]);
+//	this.addLabel(writableSheet,0,16,"heading");
+//	this.addLabel(writableSheet,0,17,"value");
+////	this.addLabel(writableSheet,k,16,freeattrHeading[i]);
+//	//this.addLabel(writableSheet,k,17,freeattrValue[i]);
+//            }
+////        //Write and close the workbook
+//        writableWorkbook.write();
+//        writableWorkbook.close();
+//
+//        
+//        }
+//		}catch (PathNotFoundException e) {
+//        	response.getWriter().print("Path----)))-"+e.getMessage());
+//            e.printStackTrace();
+//        } catch (RepositoryException e) {
+//        	response.getWriter().print("Rrespo----)))-"+e.getMessage());
+//            e.printStackTrace();
+//        }catch (Exception e) {
+//        	response.getWriter().print("Rrespo----)))-"+e.getMessage());
+//            e.printStackTrace();
+//        }
+//
+//	}
+	 public Long saveProductInfo(SlingHttpServletRequest request, SlingHttpServletResponse response)
+	            throws ServletException, IOException {
+
+	        String prod = request.getParameter("id");
+	        String id="";
+	        Node node=null,catUnspscNode=null,catNode=null,specNode=null,prodNode=null,mediaNode=null,docNode=null,dcNode=null,videoNode=null,vidNode=null,imgNode=null,picNode=null,jcrNode=null;
+	      //  Session session;
+	        long a=0;
+	        DateFormat dateFormat = new SimpleDateFormat("MMM d,yyyy");
+	        Date date = new Date();
+
+	          try {
+
+	            session = repo.login(new SimpleCredentials("admin", "admin"
+	                    .toCharArray()));
+
+	            if (session.getRootNode().getNode("content").getNode("product").hasNode("products")) {
+	                prodNode = session.getRootNode().getNode("content").getNode("product").getNode("products");
+	            } else {
+	                prodNode = session.getRootNode().getNode("content").getNode("product")
+	                        .addNode("products");
+	                prodNode.setProperty("prodCount", 0);
+	            }
+	           
+		if(prod!=null &&  !prod.equals("new")){
+			node = prodNode.getNode(prod);
+	                a=Long.parseLong(prod);
+	           }else{
+	        	   //response.getWriter().print("Enter--");
+	        	Long s=prodNode.getProperty("prodCount").getLong();
+	        	String f=Long.toString(s+1);
+	            	node = prodNode.addNode(f);
+	                //node.setProperty("prodDate", dateFormat.format(date)); 
+	                a=s+1;
+	                node.setProperty("prodid", s+1);
+	                node.setProperty("prd_code",s+1);
+	                prodNode.setProperty("prodCount", s+1);
+	               // response.getWriter().print("Exit----))-"+s);
+	            }
+	    
+			   //  a=prodNode.getProperty("prodCount").getLong();
+	            node.setProperty("name", request.getParameter("proname"));
+	            node.setProperty("shortdescription", request.getParameter("proshortdesc"));
+	            node.setProperty("description",
+	                    request.getParameter("prolongdesc"));
+	            node.setProperty("keyword",
+	                    request.getParameter("keyword"));
+	            node.setProperty("price",
+	                    request.getParameter("whprice"));
+	            node.setProperty("minorder",
+	                    request.getParameter("minorder"));
+	            node.setProperty("sbl",
+	                    request.getParameter("sellbylot"));
+	            
+	            
+	            if(node.hasNode("media")){
+	            	if(node.getNode("media").hasNode("images")){
+	            		picNode = node.getNode("media").getNode("images");
+	            		if(request.getParameter("upimg") != null
+		    					&& !request.getParameter("upimg").equals("")){
+		    				RequestParameter[] ap = request.getRequestParameterMap()
+		    						.get("upimg");
+		    				for (int i = 0; i < ap.length; i++) {
+		    					
+		    					String imgfilenam = ap[i].getFileName();
+		    					//response.getWriter().print("inside file----)))-"+group);
+		    					if(imgfilenam !=null && !imgfilenam.equals("")){
+		    						
+		    						//picNode = picNode.addNode(imgfilenam);
+		    						imgNode = picNode.addNode(imgfilenam, "nt:file");
+		    						jcrNode = imgNode.addNode("jcr:content",
+		    								"nt:resource");
+
+		    						jcrNode.setProperty("jcr:data",
+		    								ap[i].getInputStream());
+
+		    						jcrNode.setProperty("jcr:mimeType",
+		    								"image/jpeg");
+		    					
+		    					}
+		    				}
+		            	}
+
+	            	}else{
+	            		picNode = mediaNode.addNode("images");
+		            	if(request.getParameter("upimg") != null
+		    					&& !request.getParameter("upimg").equals("")){
+		    				RequestParameter[] ap = request.getRequestParameterMap()
+		    						.get("upimg");
+		    				for (int i = 0; i < ap.length; i++) {
+		    					
+		    					String imgfilenam = ap[i].getFileName();
+		    					//response.getWriter().print("inside file----)))-"+group);
+		    					if(imgfilenam !=null && !imgfilenam.equals("")){
+		    						
+		    						//picNode = picNode.addNode(imgfilenam);
+		    						imgNode = picNode.addNode(imgfilenam, "nt:file");
+		    						jcrNode = imgNode.addNode("jcr:content",
+		    								"nt:resource");
+
+		    						jcrNode.setProperty("jcr:data",
+		    								ap[i].getInputStream());
+
+		    						jcrNode.setProperty("jcr:mimeType",
+		    								"image/jpeg");
+		    					
+		    					}
+		    				}
+		            	}
+
+	            	}
+	            	if(node.getNode("media").hasNode("videoes")){
+	            		videoNode = node.getNode("media").getNode("videoes");
+	            		if(request.getParameter("upvid") != null
+		    					&& !request.getParameter("upvid").equals("")){
+		    				RequestParameter[] apVid = request.getRequestParameterMap()
+		    						.get("upvid");
+		    				for (int i = 0; i < apVid.length; i++) {
+		    					
+		    					String vidfilenam = apVid[i].getFileName();
+		    					//response.getWriter().print("inside file----)))-"+group);
+		    					if(vidfilenam !=null && !vidfilenam.equals("")){
+
+		    						//picNode = picNode.addNode(imgfilenam);
+		    						vidNode = videoNode.addNode(vidfilenam, "nt:file");
+		    						jcrNode = vidNode.addNode("jcr:content",
+		    								"nt:resource");
+
+		    						jcrNode.setProperty("jcr:data",
+		    								apVid[i].getInputStream());
+
+		    						//jcrNode.setProperty("jcr:mimeType",
+		    							//	"image/jpeg");
+		    					
+		    					}
+		    				}
+		            	}
+
+
+	            	}else{
+						videoNode = mediaNode.addNode("videoes");
+	            		if(request.getParameter("upvid") != null
+		    					&& !request.getParameter("upvid").equals("")){
+		    				RequestParameter[] apVid = request.getRequestParameterMap()
+		    						.get("upvid");
+		    				for (int i = 0; i < apVid.length; i++) {
+		    					
+		    					String vidfilenam = apVid[i].getFileName();
+		    					//response.getWriter().print("inside file----)))-"+group);
+		    					if(vidfilenam !=null && !vidfilenam.equals("")){
+
+		    						//picNode = picNode.addNode(imgfilenam);
+		    						vidNode = videoNode.addNode(vidfilenam, "nt:file");
+		    						jcrNode = vidNode.addNode("jcr:content",
+		    								"nt:resource");
+
+		    						jcrNode.setProperty("jcr:data",
+		    								apVid[i].getInputStream());
+
+		    						//jcrNode.setProperty("jcr:mimeType",
+		    							//	"image/jpeg");
+		    					
+		    					}
+		    				}
+		            	}
+
+	            	}
+	            	if(node.getNode("media").hasNode("attachments")){
+	            		docNode = node.getNode("media").getNode("attachments");
+		            	if(request.getParameter("updoc") != null
+		    					&& !request.getParameter("updoc").equals("")){
+		            		RequestParameter[] apDoc = request.getRequestParameterMap()
+		    						.get("updoc");
+		    				for (int i = 0; i < apDoc.length; i++) {
+		    					
+		    					String docfilenam = apDoc[i].getFileName();
+		    					//response.getWriter().print("inside file----)))-"+group);
+		    					if(docfilenam !=null && !docfilenam.equals("")){
+		    					
+		    						//picNode = picNode.addNode(imgfilenam);
+		    						dcNode = docNode.addNode(docfilenam, "nt:file");
+		    						jcrNode = dcNode.addNode("jcr:content",
+		    								"nt:resource");
+
+		    						jcrNode.setProperty("jcr:data",
+		    								apDoc[i].getInputStream());
+
+		    						//jcrNode.setProperty("jcr:mimeType",
+		    							//	"image/jpeg");
+		    					
+		    					}
+		    				}
+
+		            	}
+	            	}else{
+	            		docNode = mediaNode.addNode("attachments");
+		            	if(request.getParameter("updoc") != null
+		    					&& !request.getParameter("updoc").equals("")){
+		            		RequestParameter[] apDoc = request.getRequestParameterMap()
+		    						.get("updoc");
+		    				for (int i = 0; i < apDoc.length; i++) {
+		    					
+		    					String docfilenam = apDoc[i].getFileName();
+		    					//response.getWriter().print("inside file----)))-"+group);
+		    					if(docfilenam !=null && !docfilenam.equals("")){
+		    					
+		    						//picNode = picNode.addNode(imgfilenam);
+		    						dcNode = docNode.addNode(docfilenam, "nt:file");
+		    						jcrNode = dcNode.addNode("jcr:content",
+		    								"nt:resource");
+
+		    						jcrNode.setProperty("jcr:data",
+		    								apDoc[i].getInputStream());
+
+		    						//jcrNode.setProperty("jcr:mimeType",
+		    							//	"image/jpeg");
+		    					
+		    					}
+		    				}
+
+		            	}
+	            	}
+	            }else{
+	            	mediaNode = node.addNode("media");
+	            	if(request.getParameter("upimg") != null
+	    					&& !request.getParameter("upimg").equals("")){
+	    				RequestParameter[] ap = request.getRequestParameterMap()
+	    						.get("upimg");
+	    				for (int i = 0; i < ap.length; i++) {
+	    					
+	    					String imgfilenam = ap[i].getFileName();
+	    					//response.getWriter().print("inside file----)))-"+group);
+	    					if(imgfilenam !=null && !imgfilenam.equals("")){
+	    						picNode = mediaNode.addNode("images");
+	    						//picNode = picNode.addNode(imgfilenam);
+	    						imgNode = picNode.addNode(imgfilenam, "nt:file");
+	    						jcrNode = imgNode.addNode("jcr:content",
+	    								"nt:resource");
+
+	    						jcrNode.setProperty("jcr:data",
+	    								ap[i].getInputStream());
+
+	    						jcrNode.setProperty("jcr:mimeType",
+	    								"image/jpeg");
+	    						
+	    					
+	    					}
+	    				}
+	            	}
+	            	if(request.getParameter("upvid") != null
+	    					&& !request.getParameter("upvid").equals("")){
+	    				RequestParameter[] apVid = request.getRequestParameterMap()
+	    						.get("upvid");
+	    				for (int i = 0; i < apVid.length; i++) {
+	    					
+	    					String vidfilenam = apVid[i].getFileName();
+	    					//response.getWriter().print("inside file----)))-"+group);
+	    					if(vidfilenam !=null && !vidfilenam.equals("")){
+	    						videoNode = mediaNode.addNode("videoes");
+	    						//picNode = picNode.addNode(imgfilenam);
+	    						vidNode = videoNode.addNode(vidfilenam, "nt:file");
+	    						jcrNode = vidNode.addNode("jcr:content",
+	    								"nt:resource");
+
+	    						jcrNode.setProperty("jcr:data",
+	    								apVid[i].getInputStream());
+	    						//jcrNode.setProperty("jcr:mimeType",
+	    							//	"image/jpeg");
+	    					
+	    					}
+	    				}
+	            	}
+	            	if(request.getParameter("updoc") != null
+	    					&& !request.getParameter("updoc").equals("")){
+	            		RequestParameter[] apDoc = request.getRequestParameterMap()
+	    						.get("updoc");
+	    				for (int i = 0; i < apDoc.length; i++) {
+	    					
+	    					String docfilenam = apDoc[i].getFileName();
+	    					//response.getWriter().print("inside file----)))-"+group);
+	    					if(docfilenam !=null && !docfilenam.equals("")){
+	    						docNode = mediaNode.addNode("attachments");
+	    						//picNode = picNode.addNode(imgfilenam);
+	    						dcNode = docNode.addNode(docfilenam, "nt:file");
+	    						jcrNode = dcNode.addNode("jcr:content",
+	    								"nt:resource");
+
+	    						jcrNode.setProperty("jcr:data",
+	    								apDoc[i].getInputStream());
+	    						
+	    						//jcrNode.setProperty("jcr:mimeType",
+	    							//	"image/jpeg");
+	    					
+	    					}
+	    				}
+
+	            	}
+	            }
+	            
+	            if(node.hasNode("cat")){
+	            	catNode = node.getNode("cat");
+	            	if(node.getNode("cat").hasNode("eclass")){
+	            		
+	            	}else{
+	            		catNode.addNode("eclass");
+	            	}
+	            	if(node.getNode("cat").hasNode("unspsc")){
+	            		if(request.getParameter("selprdcat1") != null
+		    					&& !request.getParameter("selprdcat1").equals("")){
+		            		catUnspscNode = node.getNode("cat").getNode("unspsc").addNode(request.getParameter("selprdcat1"));
+	 	            		catUnspscNode.setProperty("catid",
+	 	            				request.getParameter("selprdcat1"));
+		            		
+		            	}
+
+	            	}else{
+	            		catUnspscNode = catNode.addNode("unspsc");
+	            		if(request.getParameter("selprdcat1") != null
+		    					&& !request.getParameter("selprdcat1").equals("")){
+		            		catUnspscNode = catUnspscNode.addNode(request.getParameter("selprdcat1"));
+	 	            		catUnspscNode.setProperty("catid",
+	 	            				request.getParameter("selprdcat1"));
+		            		
+		            	}
+
+	            	}
+	            }else{
+	            	catNode = node.addNode("cat");
+	            	catNode.addNode("eclass");
+	            	catUnspscNode = catNode.addNode("unspsc");
+	            	if(request.getParameter("selprdcat1") != null
+	    					&& !request.getParameter("selprdcat1").equals("")){
+	            		catUnspscNode = catUnspscNode.addNode(request.getParameter("selprdcat1"));
+ 	            		catUnspscNode.setProperty("catid",
+ 	            				request.getParameter("selprdcat1"));
+ 	            		
+	            	}
+	            }
+	            
+	            if(node.hasNode("spec")){
+	            	specNode = node.getNode("spec");
+	            	String value = "";
+	            if(request.getParameterValues("label") != null
+    					&& !request.getParameterValues("label").equals("")){
+	       			String[] attrLabel = request.getParameterValues("label");
+	       			String[] attrType = request.getParameterValues("type");
+	       			String[] attrMin = request.getParameterValues("min");
+	       			String[] attrMax = request.getParameterValues("max");
+	       			String[] attrUom = request.getParameterValues("uom");
+	       			for(int i=0;i<attrLabel.length;i++){
+	       				value = attrType[i]+"@_#"+attrMin[i]+"@_#"+attrMax[i]+"@_#"+attrUom[i];
+	       				specNode.setProperty(attrLabel[i],
+	       						value);
+	       			}
+            	}
+	       		if(request.getParameterValues("txtheading") != null
+    					&& !request.getParameterValues("txtheading").equals("")){
+	       			String[] freeattrHeading = request.getParameterValues("txtheading");
+	       			String[] freeattrValue = request.getParameterValues("txtvalue");
+	       			for(int i=0;i<freeattrHeading.length;i++){
+	       				specNode.setProperty(freeattrHeading[i],
+	       						freeattrValue[i]);
+	       			}
+            	}
+	       			
+	            }else{
+	            	specNode = node.addNode("spec");
+	            	String value = "";
+	            if(request.getParameterValues("label") != null
+    					&& !request.getParameterValues("label").equals("")){
+	       			String[] attrLabel = request.getParameterValues("label");
+	       			String[] attrType = request.getParameterValues("type");
+	       			String[] attrMin = request.getParameterValues("min");
+	       			String[] attrMax = request.getParameterValues("max");
+	       			String[] attrUom = request.getParameterValues("uom");
+	       			
+	       			for(int i=0;i<attrLabel.length;i++){
+	       				//j++;
+	       				value = attrType[i]+"@_#"+attrMin[i]+"@_#"+attrMax[i]+"@_#"+attrUom[i];
+	       				specNode.setProperty(attrLabel[i],
+	       						value);
+	       				
+	       			}
+            	}
+	       		if(request.getParameterValues("txtheading") != null
+    					&& !request.getParameterValues("txtheading").equals("")){
+	       			String[] freeattrHeading = request.getParameterValues("txtheading");
+	       			String[] freeattrValue = request.getParameterValues("txtvalue");
+	       			int k = 1;
+	       			
+	       			for(int i=0;i<freeattrHeading.length;i++){
+	       				specNode.setProperty(freeattrHeading[i],
+	       						freeattrValue[i]);
+	       			//	k++;
+	       			
+	       			}
+            	}
+	       		 
+	       		 
+	            }
+	
+	            				//response.getWriter().print("----))))-"+prod);
+	            session.save();
+
+	        } catch (PathNotFoundException e) {
+	        	response.getWriter().print("Path----)))-"+e.getMessage());
+	            e.printStackTrace();
+	        } catch (RepositoryException e) {
+	        	response.getWriter().print("Rrespo----)))-"+e.getMessage());
+	            e.printStackTrace();
+	        }catch (Exception e) {
+	        	response.getWriter().print("Rrespo----)))-"+e.getMessage());
+	            e.printStackTrace();
+	        }
+	    return a;
+	    }
+public HashMap  getCategoryByNode(String dNodeStr,
+		   String qsrchparam, SlingHttpServletRequest request,SlingHttpServletResponse response) {
+	  
+	  HashMap resultList=new HashMap();
+	  String querryStr="";
+	  Session session =null;
+	  Node tempPrdNode,childNode;
+	  
+	  qsrchparam=qsrchparam.toLowerCase();
+	  querryStr="select * from [nt:unstructured] where  ISDESCENDANTNODE('"+dNodeStr+"') and lower(name)  like '"+qsrchparam+"%'";
+	  try {
+	   session=repo.login(new SimpleCredentials("admin", "admin".toCharArray()));
+	   Workspace workspace = session.getWorkspace();  
+	   Query query = workspace.getQueryManager().createQuery(querryStr, Query.JCR_SQL2);
+	   QueryResult result = query.execute();
+	   NodeIterator iterator=result.getNodes();
+	   while(iterator.hasNext())
+	   { 
+	     tempPrdNode=iterator.nextNode();
+	      resultList.put(tempPrdNode.getProperty("id").getString(),tempPrdNode.getProperty("name").getString());
+		  
+	    }
+	    
+	   }
+	   
+	   catch (PathNotFoundException e) {
+	   e.printStackTrace();
+	  } catch (RepositoryException e) {
+	   e.printStackTrace();
+	  }
+	  finally{
+	   session.logout();
+	   
+	  }
+	  return resultList;
+	 }
+	 
+
+}

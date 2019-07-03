@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html>
+<% var currentNodeProvided = ((typeof currentNode != "undefined"));
+currentNode=currentNode.session.getRootNode().getNode("content").getNode("product").getNode("products").getNode(request.getParameter("pid"));
+  %>
+
+    <head>
+        <title>Product Brief Page</title>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="description" content="Demo project with jQuery">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="<%=request.getContextPath()%>/apps/css/bootstrap.css"> 
+        <link rel="stylesheet" href="<%=request.getContextPath()%>/apps/css/font-awesome.min.css"> 
+        <link rel="stylesheet" href="<%=request.getContextPath()%>/apps/js/FlexSlider/flexslider.css" type="text/css" media="screen" /> 
+        <link rel="stylesheet" href="<%=request.getContextPath()%>/apps/css/color.css">
+        <link rel="stylesheet" href="<%=request.getContextPath()%>/apps/css/loader.css">
+        <link rel="stylesheet" href="<%=request.getContextPath()%>/apps/css/custom.css">
+
+        <script src="<%=request.getContextPath()%>/apps/js/jquery.min.js"></script>
+        <script src="<%=request.getContextPath()%>/apps/js/bootstrap.min.js"></script>
+        <script src="<%=request.getContextPath()%>/apps/js/FlexSlider/jquery.flexslider.js"></script>
+        <script src="<%=request.getContextPath()%>/apps/js/tabdrop/js/bootstrap-tabdrop.js"></script>
+        <script src="<%=request.getContextPath()%>/apps/js/jquery.bootpag.min.js"></script>
+        <link rel="stylesheet" href="<%=request.getContextPath()%>/apps/js/tabdrop/css/tabdrop.css">
+        <script type="text/javascript">
+          $(document).ready(function(){
+            $('.nav-pills, .nav-tabs').tabdrop()
+        }); 
+          </script>
+
+<script src="<%=request.getContextPath()%>/apps/js/chosen/chosen.jquery.js"></script>
+<link href="<%=request.getContextPath()%>/apps/js/chosen/chosen.min.css" rel="stylesheet">
+<script>
+    $(function() {
+        $('.chosen-select').chosen();
+        $('.chosen-select-deselect').chosen({ allow_single_deselect: true });
+    });
+</script>
+
+<!-- custom scrollbar plugin -->
+<script src="<%=request.getContextPath()%>/apps/js/scrollbar/jquery.mCustomScrollbar.concat.min.js"></script>
+<link rel="stylesheet" href="<%=request.getContextPath()%>/apps/js/scrollbar/jquery.mCustomScrollbar.css">
+<link rel="stylesheet" href="<%=request.getContextPath()%>/apps/js/scrollbar/style.css">
+    
+    </head>
+        
+<%load("../common/header.esp");%>
+<!-- The JavaScript -->
+    <section class="section">
+        <div class="container">
+            
+    <div class="row">
+  <ol class="breadcrumb">
+     <li><a href="<%=request.getContextPath()%>/servlet/service/index.pageview">Home</a></li>
+  <% var cnode=currentNode.getNode("cat").getNode("unspsc").getNodes();
+ 	var cat=cnode[0].getProperty("catid").getString();
+  		if(cat.length()==2){
+    cNode=currentNode.session.getRootNode().getNode("content").getNode("unspsc").getNode(cat).getNodes();
+    out.print("<li class='active'>"+currentNode.session.getRootNode().getNode("content").getNode("unspsc").getNode(cat).name+"</li> Category");
+  		}else if(cat.length()==4){
+  		var s=cat.split("");
+  		 out.print("<li><a href='"+request.getContextPath()+"/servlet/service/index.catlist?catid="+s[1]+""+s[2]+"&search="+currentNode.session.getRootNode().getNode("content").getNode("unspsc").getNode(s[1]+""+s[2]).name+"'>"+currentNode.session.getRootNode().getNode("content").getNode("unspsc").getNode(s[1]+""+s[2]).name+"</a></li>");
+  out.print("<li class='active'>"+currentNode.session.getRootNode().getNode("content").getNode("unspsc").getNode(s[1]+""+s[2]).getNode(s[3]+""+s[4]).name+"</li> Category");
+ 			
+ 			}else if(cat.length()==6){
+  		var s=cat.split("");
+  			out.print("<li><a href='"+request.getContextPath()+"/servlet/service/index.catlist?catid="+s[1]+""+s[2]+"&search="+currentNode.session.getRootNode().getNode("content").getNode("unspsc").getNode(s[1]+""+s[2]).name+"'>"+currentNode.session.getRootNode().getNode("content").getNode("unspsc").getNode(s[1]+""+s[2]).name+"</a></li>");
+	out.print("<li><a href='"+request.getContextPath()+"/servlet/service/index.catlist?catid="+s[1]+""+s[2]+s[3]+""+s[4]+"&search="+currentNode.session.getRootNode().getNode("content").getNode("unspsc").getNode(s[1]+""+s[2]).getNode(s[3]+""+s[4]).name+"'>"+currentNode.session.getRootNode().getNode("content").getNode("unspsc").getNode(s[1]+""+s[2]).getNode(s[3]+""+s[4]).name+"</a></li>");
+  out.print("<li class='active'>"+currentNode.session.getRootNode().getNode("content").getNode("unspsc").getNode(s[1]+""+s[2]).getNode(s[3]+""+s[4]).getNode(s[5]+s[6]).name+"</li> Category");
+ 
+ }else if(cat.length()==8){
+ var s=cat.split("");
+  			out.print("<li><a href='"+request.getContextPath()+"/servlet/service/index.catlist?catid="+s[1]+""+s[2]+"&search="+currentNode.session.getRootNode().getNode("content").getNode("unspsc").getNode(s[1]+""+s[2]).name+"'>"+currentNode.session.getRootNode().getNode("content").getNode("unspsc").getNode(s[1]+""+s[2]).name+"</a></li>");
+			out.print("<li><a href='"+request.getContextPath()+"/servlet/service/index.catlist?catid="+s[1]+""+s[2]+s[3]+""+s[4]+"&search="+currentNode.session.getRootNode().getNode("content").getNode("unspsc").getNode(s[1]+""+s[2]).getNode(s[3]+""+s[4]).name+"'>"+currentNode.session.getRootNode().getNode("content").getNode("unspsc").getNode(s[1]+""+s[2]).getNode(s[3]+""+s[4]).name+"</a></li>");
+ 			out.print("<li><a href='"+request.getContextPath()+"/servlet/service/index.catlist?catid="+s[1]+""+s[2]+s[3]+""+s[4]+s[5]+""+s[6]+"&search="+currentNode.session.getRootNode().getNode("content").getNode("unspsc").getNode(s[1]+""+s[2]).getNode(s[3]+""+s[4]).getNode(s[5]+""+s[6]).name+"'>"+currentNode.session.getRootNode().getNode("content").getNode("unspsc").getNode(s[1]+""+s[2]).getNode(s[3]+""+s[4]).getNode(s[5]+""+s[6]).name+"</a></li>");
+  			out.print("<li class='active'>"+currentNode.session.getRootNode().getNode("content").getNode("unspsc").getNode(s[1]+""+s[2]).getNode(s[3]+""+s[4]).getNode(s[5]+s[6]).getNode(s[7]+s[8]).name+"-"+currentNode.name+"</li>");
+ 
+  			}	%>
+  </ol>   
+     
+    <div class="col-sm-9">
+        <div class="row">
+           <div class="col-sm-4">
+
+       <h4 class="text-center product-logo">   <% var supNode;
+if(currentNode.hasNode("sup") && currentNode.getNode("sup").hasNodes()){
+ var sup=currentNode.getNode("sup").getNodes();
+ supNode=currentNode.session.getRootNode().getNode("content").getNode("company").getNode(sup[0].supid);
+ if(supNode.hasNode("picture") && supNode.getNode("picture").hasNodes()){
+	out.print("<img src='"+request.getContextPath()+"/content/company/"+supNode.companyId+"/picture/companyLogo' alt='' style='height:28px'/>");	
+	}
+}
+     %></h4>
+ <div id="content" class="content2">
+    <div class="item">
+        <div class="thumb_wrapper">
+            <div class="thumb">
+                <ul>
+                      <%
+      if(currentNode.hasNode("media") && currentNode.getNode("media").hasNode("images") && currentNode.getNode("media").getNode("images").hasNodes()){
+    
+  var itr  =currentNode.getNode("media").getNode("images").getNodes();
+  for(k in itr){ 
+	  %>
+   <li><img style="margin-left:-15px" width="270px" height="300px" src="<%=request.getScheme()+"://"+request.getServerName()+":"+ request.getServerPort()+request.getContextPath()+itr[k].imgpath%>" alt="Formstack 1"/></li>
+  	
+  	<% }
+	  }else{%>
+		    <li><img style="margin-left:-15px" width="270px" height="300px" src="<%=request.getContextPath()%>/apps/images/nmg.jpg" alt="Formstack 1"/></li>
+            
+ <%  }
+  %>
+                    </ul>
+            </div>
+            <a class="prev" href="#"></a>
+            <a class="next" href="#"></a>
+        </div>
+    </div>
+</div>
+        <% var supemail="";
+    if(currentNode.hasNode("sup") && currentNode.getNode("sup").hasNodes()){
+					var sup=currentNode.getNode("sup").getNodes();					
+					%>
+				 <div style="width:100%; float:left; text-align:center; padding:12px 0px;">
+   <a href="#" onclick="globalSupplierSetter('<%=sup[0].supid%>')" class="btn btn-danger" data-toggle="modal" ><i class="glyphicon glyphicon-envelope"></i> Send Enquiry</a>
+    <a  data-toggle="modal" class="btn btn-success" href="#" onclick="globalSupplierSetter('<%=sup[0].supid%>')">Get Quote</a>
+</div>
+         
+					<%
+
+}%>
+           
+       </div>
+       
+<link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/apps/js/PortfolioZoomSlider/cloud-zoom/cloud-zoom.css" />
+<link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/apps/js/PortfolioZoomSlider/css/style2.css" />
+<link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/apps/js/PortfolioZoomSlider/fancybox/jquery.fancybox-1.3.4.css" />
+
+<script type="text/javascript" src="<%=request.getContextPath()%>/apps/js/PortfolioZoomSlider/fancybox/jquery.fancybox-1.3.4.js"></script>
+<script type="text/javascript" src="<%=request.getContextPath()%>/apps/js/PortfolioZoomSlider/cloud-zoom/cloud-zoom.1.0.2.js"></script>
+<script type="text/javascript">
+    $(function() {
+        /*
+        fancybox init on each cloud-zoom element
+         */
+        $("#content .cloud-zoom").fancybox({
+            'transitionIn'  :   'elastic',
+            'transitionOut' :   'none',
+            'speedIn'       :   600,
+            'speedOut'      :   200,
+            'overlayShow'   :   true,
+            'overlayColor'  :   '#000',
+            'cyclic'        :   true,
+            'easingIn'      :   'easeInOutExpo'
+        });
+
+        /*
+        because the cloud zoom plugin draws a mousetrap
+        div on top of the image, the fancybox click needs
+        to be changed. What we do here is to trigger the click
+        the fancybox expects, when we click the mousetrap div.
+        We know the mousetrap div is inserted after
+        the <a> we want to click:
+         */
+        $("#content .mousetrap").on('click',function(){
+            $(this).prev().trigger('click');
+        });
+
+        /*
+        the content element;
+        each list item / group with several images
+         */
+        var $content    = $('#content'),
+        $thumb_list = $content.find('.thumb > ul');
+        /*
+        we need to set the width of each ul (sum of the children width);
+        we are also defining the click events on the right and left arrows
+        of each item.
+         */
+        $thumb_list.each(function(){
+            var $this_list  = $(this),
+            total_w     = 0,
+            loaded      = 0,
+            //preload all the images first
+            $images     = $this_list.find('img'),
+            total_images= $images.length;
+            $images.each(function(){
+                var $img    = $(this);
+                $('<img/>').load(function(){
+                    ++loaded;
+                    if (loaded == total_images){
+                        $this_list.data('current',0).children().each(function(){
+                            total_w += $(this).width();
+                        });
+                        $this_list.css('width', total_w + 'px');
+
+                        //next / prev events
+
+                        $this_list.parent()
+                        .siblings('.next')
+                        .bind('click',function(e){
+                            var current = $this_list.data('current');
+                            if(current == $this_list.children().length -1) return false;
+                            var next    = ++current,
+                            ml      = -next * $this_list.children(':first').width();
+
+                            $this_list.data('current',next)
+                            .stop()
+                            .animate({
+                                'marginLeft'    : ml + 'px'
+                            },400);
+                            e.preventDefault();
+                        })
+                        .end()
+                        .siblings('.prev')
+                        .bind('click',function(e){
+                            var current = $this_list.data('current');
+                            if(current == 0) return false;
+                            var prev    = --current,
+                            ml      = -prev * $this_list.children(':first').width();
+
+                            $this_list.data('current',prev)
+                            .stop()
+                            .animate({
+                                'marginLeft'    : ml + 'px'
+                            },400);
+                            e.preventDefault();
+                        });
+                    }
+                }).attr('src',$img.attr('src'));
+            });
+        });
+    });
+</script>
+
+        <div class="col-sm-8">
+            <div class="row">
+
+            <div class="category-list">
+             
+            <div class="content mCustomScrollbar">
+              <h2><% 
+				if(currentNode.hasNode("sup") && currentNode.getNode("sup").hasNodes()){
+					var sup=currentNode.getNode("sup").getNodes();
+					if(currentNode.session.getRootNode().getNode("content").getNode("company").getNode(sup[0].supid).hasNode("BasicInfo")){
+					out.print(currentNode.session.getRootNode().getNode("content").getNode("company").getNode(sup[0].supid).getNode("BasicInfo").companyName);
+					}
+			}
+     %></h2> <hr /><br>
+                     
+                <h2><%=currentNode.name%> Description</h2>           
+                
+				<% if(currentNode.hasProperty("description")){
+				
+			out.print(currentNode.description);
+								
+}%>
+
+            </div>
+    <script>
+        (function($){
+            $(window).load(function(){
+                
+                $("a[rel='load-content']").click(function(e){
+                    e.preventDefault();
+                    var url=$(this).attr("href");
+                    $.get(url,function(data){
+                        $(".content .mCSB_container").append(data); //load new content inside .mCSB_container
+                        //scroll-to appended content 
+                        $(".content").mCustomScrollbar("scrollTo","h2:last");
+                    });
+                });
+                
+                $(".content").delegate("a[href='top']","click",function(e){
+                    e.preventDefault();
+                    $(".content").mCustomScrollbar("scrollTo",$(this).attr("href"));
+                });
+                
+            });
+        })(jQuery);
+    </script>
+           </div>
+
+
+            </div>
+        </div> 
+
+
+      
+
+<div class="col-sm-12">
+    <div data-example-id="togglable-tabs" role="tabpanel" class="bs-example bs-example-tabs">
+    <ul id="myTab" class="nav nav-tabs">
+      <li class="active"><a data-toggle="tab" href="#product-details">Specification</a></li>
+        <li><a data-toggle="tab" href="#company-details">Attachment Tab</a></li>
+      <li><a data-toggle="tab" href="#company-gallery">Gallery</a></li>
+    </ul>
+    <div class="tab-content" id="myTabContent">
+    
+      <div id="product-details" class="tab-pane fade in active">
+        <h4>Quick Details</h4>
+        <div class="table-responsive">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Parameter Name</th>
+                        <th>Value</th>
+                        <th>min</th>
+                        <th>max</th>
+                        <th>uom</th>
+                    </tr>
+              </thead>
+                <tbody>
+                
+                 <tr class="tr">
+                 <td>Minimum order quantity</td>
+                 <td><%=currentNode.moq%></td><td>NA </td>
+                        <td>NA</td>
+                        <td>NA</td>
+                </tr>
+                 <tr class="tr">
+                 <td>Price</td>
+                 <td><%=currentNode.price%></td><td>NA </td>
+                        <td>NA</td>
+                        <td>NA</td>
+                </tr>
+                
+                 <tr class="tr">
+                 <td>Sale By lot</td>
+                 <td><%=currentNode.sbl%></td><td>NA </td>
+                        <td>NA</td>
+                        <td>NA</td>
+                </tr>
+                             
+                
+               <% if(currentNode.hasNode("spec") && currentNode.getNode("spec").getNode("attr").hasNodes()){
+                var attrNode=currentNode.getNode("spec").getNode("attr").getNodes();
+                            
+                for(i=0;i<attrNode.length;i++){          
+                var imgRemoteUser =attrNode[i].attrname;
+                %>
+                 <tr class="tr">
+                      <td><%=imgRemoteUser%></td>
+                        
+                        <td><%=attrNode[i].value%></td>
+                        <td><%=attrNode[i].min%> </td>
+                        <td><%=attrNode[i].max %></td>
+                        <td><%=attrNode[i].uom %></td>
+                         </tr>
+                        <%}
+                        %>
+                       
+                    </tr>
+                   <%}%>
+                   <% if(currentNode.hasNode("spec") && currentNode.getNode("spec").getNode("fattr").hasNodes()){
+                var attrNode=currentNode.getNode("spec").getNode("fattr").getNodes();
+                            
+                for(i=0;i<attrNode.length;i++){
+                
+               
+                
+                var imgRemoteUser =attrNode[i].attrname;
+                %>
+                
+                    <tr class="tr">
+                    
+                        <td><%=imgRemoteUser%></td>
+                        
+                        <td><%=attrNode[i].value%></td>
+                        <td>NA </td>
+                        <td>NA</td>
+                        <td>NA</td>
+                         </tr>
+                        <%}
+                        %>
+                       
+                    </tr>
+                   <%}%>
+                   
+                   
+                </tbody>
+            </table>
+        </div>
+      </div>
+                  
+                
+      <div id="company-details" class="tab-pane fade">
+      <div class="table-responsive">
+            <table class="table table-bordered">
+             <thead>
+                    <tr>
+                        <th>Sr</th>
+                        <th>Name</th>
+                      
+                    </tr>
+              </thead>
+                <% var cp=0;
+                 if(currentNode.hasNode("media") && currentNode.getNode("media").hasNode("attachments")){
+                	var attach=currentNode.getNode("media").getNode("attachments").getNodes();
+ 					for(h=0;h<attach.length;h++){ %>
+                <tr>
+                    <td><%=h%></td>
+                  
+                    <td>  <a href="<%=request.getContextPath()%><%=attach[h].imgpath%>" target="_blank">
+                    
+                          <%=attach[h].getName()%></a></td>
+                </tr>
+               <% }} %>
+            </table>
+        </div>  
+    </div>
+   <div id="company-gallery" class="tab-pane fade">
+          <h3>Video</h3>
+          <div class="row">
+             <% if(currentNode.hasNode("media") && currentNode.getNode("media").hasNode("videoes")){ 
+            	 var videoes=currentNode.getNode("media").getNode("videoes").getNodes();
+            	 for(f=0;f<videoes.length;f++){
+				%>             
+              <div class="col-sm-4">
+                  <div class="thumbnail">
+                      <div class="image">
+                          <video width="200" controls>
+                              <source src="<%=request.getContextPath()%><%=videoes[f].imgpath%>" type="video/mp4">
+                              <source src="<%=request.getContextPath()%><%=videoes[f].imgpath%>" type="video/ogg">
+                              Your browser does not support HTML5 video.
+                          </video>
+                      </div>
+                      <div class="caption">
+                        <h4><a href="#"><%=videoes[f].getName()%></a></h4>
+                      </div>
+                 </div>
+              </div>
+             <%} }%>
+          </div> 
+
+          <h3>Image</h3>
+          <div class="row">
+              <% if(currentNode.hasNode("media") && currentNode.getNode("media").hasNode("images")){ 
+            	 var images=currentNode.getNode("media").getNode("images").getNodes();
+				 for(d=0;d<images.length;d++){%>  
+              <div class="col-sm-4">
+                  <div class="thumbnail">
+                      <div class="image">
+                          <img src="<%=request.getContextPath()%><%=images[d].imgpath%>">
+                      </div>
+                      <div class="caption">
+                        <h4></h4>
+                      </div>
+                 </div>
+              </div>
+               
+               <% } }%>
+     
+		</div>
+ </div>
+      
+     </div>          
+				
+   	</div>
+    </div>
+  </div>
+</div>
+        
+        <div class="col-sm-3 product-brief-right">
+            <div class="advertise">
+               <!--/* OpenX iFrame Tag v2.8.10 */-->
+
+<iframe id='a74904f2' name='a74904f2' src='http://50.17.231.172/openx/www/delivery/afr.php?zoneid=17&amp;cb=1' frameborder='0' scrolling='no' width='268' height='411'><a href='http://50.17.231.172/openx/www/delivery/ck.php?n=af834ddf&amp;cb=1' target='_blank'><img src='http://50.17.231.172/openx/www/delivery/avw.php?zoneid=17&amp;cb=1&amp;n=af834ddf' border='0' alt='' /></a></iframe>
+
+            </div>
+
+            
+                    <iframe src="<%=request.getContextPath()%>/servlet/service/page.topnews?actionType=product&pid=<%=request.getParameter("pid")%>" scrolling="no"  style="height:500px" frameborder='0' scrolling='no' width="268">    
+                </iframe>
+   
+    </div>
+   </div>
+
+    
+
+ <%load("hotseller.esp");%>
+
+    <%load("hotproducts.esp");%>
+    </div>
+
+        
+            </div>
+        </div>
+    </section>
+
+      <%load("../common/footer.esp");%>
+    </body>
+</html>

@@ -1,0 +1,240 @@
+<%
+
+if(request.getParameter("id") != null && request.getParameter("id") != "new"){
+
+var inValue = "";
+var inId = "";
+if(proNode.hasNode("industry") && proNode.getNode("industry").hasNodes()){
+var inNodes = proNode.getNode("industry").getNodes();
+for(var n=0;n<inNodes.length;n++){
+var resIn = inNodes[n].industryid;
+var industryRes = currentNode.session.getRootNode().getNode("content/industry").getNode(resIn);
+if(n == 0){
+inValue = industryRes.name;
+inId = industryRes.id;
+}else{
+inValue = inValue+","+industryRes.name;
+inId = inId+","+industryRes.id;
+}
+}
+}
+
+var tgValue = "";
+var tgId = "";
+if(proNode.hasNode("targetgeo") && proNode.getNode("targetgeo").hasNodes()){
+var tgNodes = proNode.getNode("targetgeo").getNodes();
+for(var t=0;t<tgNodes.length;t++){
+var resTg = tgNodes[t].targetgeoid;
+var targetgeoRes = currentNode.session.getRootNode().getNode("content/targetgeo").getNode(resTg);
+if(t == 0){
+tgValue = targetgeoRes.name;
+tgId = targetgeoRes.id;
+}else{
+tgValue = tgValue+","+targetgeoRes.name;
+tgId = tgId+","+targetgeoRes.id;
+}
+}
+}
+
+
+}
+%>
+
+<div id="otherinfo" class="tab-pane fade">
+                                    <h3>Basic Info</h3>
+                                    <div class="row">                  	
+                                        <div class="col-sm-10">
+                                            <div class="row">
+                                                <div class="col-xs-12">
+
+                                                    <!-- Display user info-->
+
+                                                    <div class="col-sm-10">
+                                                        <form method="post" id="fileupload1"  action="<%=request.getContextPath()%>/servlet/service/productselection.saveother" enctype="multipart/form-data"  class="form-horizontal">
+                                                            <div class="row">
+                                                                <div class="col-xs-12">
+                                                                    <div class="form-group">
+                                                                        <label for="" class="col-sm-4 control-label">End Use</label>
+                                                                        <div class="col-sm-6">
+                                                                            <!--<input type="text" class="form-control" name="prdcat" id="category1"  placeholder="Enter minimum 4 character and press enter to search category" onkeypress="categoryDetails(event);" data-required="true" >-->
+                                                                            <input type="text" class="form-control" name="industry" id="industry"  placeholder="Enter Industry" onkeypress="industryDetailsDWR();" data-required="true" >
+                                                                            <input type="hidden" class="form-control" name="industryId" id="industryId" data-required="false" >
+                                                                            <!--<div id="attCat"></div>-->
+                                                                            <div id="suggestionIndustry"  style="z-index:1;position:absolute;background:white">
+                                                                                <div class="searchterm" id="searchIndustry"></div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class='col-sm-2'><span id="addIndustry" class="glyphicon glyphicon-plus btn btn-default"></span></span></div>
+                                                                    </div>
+                                                                    <div class="form-group">
+                                                                        <label for="" class="col-sm-4 control-label">Selected Industry</label>
+                                                                        <div class="col-sm-8">
+                                                                        	<%if(request.getParameter("id") != null && request.getParameter("id") != "new"){%>
+                                                                            <input type="text" class="form-control" id="selIndustry" name="selIndustry" placeholder="Industry" value="<%=inValue%>" data-required="true" onblur="checkSCategory()" readOnly />
+                                                                            <input type="hidden" class="form-control" id="selIndustryId" name="selIndustryId" placeholder="Category" value="<%=inId%>">
+                                                                            <%}else {%>
+                                                                            <input type="text" class="form-control" id="selIndustry" name="selIndustry" placeholder="Industry" data-required="true" onblur="checkSCategory()" readOnly />
+                                                                            <input type="hidden" class="form-control" id="selIndustryId" name="selIndustryId" placeholder="Category">
+                                                                            <%}%>
+                                                                            <label  style="display:none;" class="error" id="p_industry"></label>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="form-group">
+                                                                        <label for="" class="col-sm-4 control-label">Target Geography</label>
+                                                                        <div class="col-sm-6">
+                                                                            <!--<input type="text" class="form-control" name="tgeo" id="tgeo"  placeholder="Enter minimum 4 character and press enter to search category" onkeypress="categoryDetails(event);" data-required="true" >-->
+                                                                            <input type="text" class="form-control" name="tgeo" id="tgeo"  placeholder="Enter location" onkeypress="tgeoDetailsDWR();" data-required="true" >
+                                                                            <input type="hidden" class="form-control" name="tgeoId" id="tgeoId" data-required="false" >
+                                                                            <!--<div id="attCat"></div>-->
+                                                                            <div id="suggestionTarget"  style="z-index:1;position:absolute;background:white">
+                                                                                <div class="searchterm" id="searchTarget"></div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class='col-sm-2'><span id="addTGeo" class="glyphicon glyphicon-plus btn btn-default"></span></span></div>
+                                                                    </div>
+                                                                    <div class="form-group">
+                                                                        <label for="" class="col-sm-4 control-label">Selected Geography</label>
+                                                                        <div class="col-sm-8">
+                                                                        <%if(request.getParameter("id") != null && request.getParameter("id") != "new"){%>
+                                                                            <input type="text" class="form-control" id="seltgeo" name="seltgeo" placeholder="Geography" value="<%=tgValue%>" data-required="true" onblur="checkSCategory()" readOnly />
+                                                                            <input type="hidden" class="form-control" id="seltgeoId" name="seltgeoId" value="<%=tgId%>" placeholder="Category">
+                                                                            <%}else {%>
+                                                                            <input type="text" class="form-control" id="seltgeo" name="seltgeo" placeholder="Geography" data-required="true" onblur="checkSCategory()" readOnly />
+                                                                            <input type="hidden" class="form-control" id="seltgeoId" name="seltgeoId" placeholder="Category">
+                                                                            <%}%>
+                                                                            <label  style="display:none;" class="error" id="p_target"></label>
+                                                                        </div>
+                                                                    </div>
+                                                                    
+                                                                        <div class="form-group" >
+                                                                            <label for="" class="col-sm-4 control-label">Upload Image</label>
+                                                                            
+                                                                            <div class="col-sm-6" >
+                    														 
+                    														<table role="presentation" class="table table-striped" id="attachmentbyid"><tbody class="files">
+                    														<tr><td><input type="file" name="upimg" class="form-control">  </td></tr></tbody></table>
+                                                                            </div>
+                                                                            
+                                                                            <div class="col-sm-2"><span onclick="addImageFile()" class="glyphicon glyphicon-plus btn btn-default">
+                                                                            </span><span onclick="deleteImageRow()" class="glyphicon glyphicon-minus btn btn-default"></span>
+                                                                            </div>
+                                                                            
+                                                                        </div>
+                                                                    
+                                                                 
+                                                                    <input type="hidden" value="<%=request.getParameter("param")%>" name="param">
+                                                                    <input type="hidden" value="<%=request.getParameter("id")%>" name="id">
+                                                                    <div class="col-xs-12">
+
+                                                                        <input type="submit" class="btn btn-primary"
+                                                                               value="Save Details" />
+
+                                                                    </div>         
+                                                                    </form>
+
+
+                                                                </div>
+                                                            </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+
+                                        </div>
+
+                                    </div>
+
+
+
+                                </div>
+                                                                                                             <div class="modal fade" id="keyPic" tabindex="-1" role="dialog" aria-labelledby="loginModalLabel" aria-hidden="true">
+            				 <div class="modal-dialog modal-xs">
+    <div class="modal-content">
+    
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="loginModalLabel">Keyword</h4>
+      </div>
+      <div class="modal-body" style="height: 500px;overflow-y: auto;">
+        
+        <div class="form-group">
+            <div class="col-sm-9">
+              Keyword is 
+            </div>
+          </div>
+      </div>
+    </div>
+  </div>
+            				</div>
+                                
+                                <script>
+                                    $(document).ready(function(e) {
+
+                                        $("#pdUpImg").change(function() {
+                                            readURL(this);
+                                        });
+                                        $("#pdUpImg1").change(function() {
+                                            readURL1(this);
+                                        });
+
+                                        function readURL(input) {
+                                            if (input.files && input.files[0]) {
+                                                var reader = new FileReader();
+
+                                                reader.onload = function(e) {
+                                                    $('#pdShImg').attr('src', e.target.result);
+                                                }
+
+                                                reader.readAsDataURL(input.files[0]);
+                                            }
+                                        }
+
+                                        function readURL1(input) {
+                                            if (input.files && input.files[0]) {
+                                                var reader = new FileReader();
+
+                                                reader.onload = function(e) {
+                                                    $('#pdShImg1').attr('src', e.target.result);
+                                                }
+
+                                                reader.readAsDataURL(input.files[0]);
+                                            }
+                                        }
+                                    });
+                                    
+                                    
+                                    function addImageFile(){
+                                    
+                                    var table = document.getElementById("attachmentbyid");
+                                    var rowCount = table.rows.length;
+		var row = table.insertRow(rowCount);
+		counts = rowCount - 1;		
+		var sRes;
+		var cell2 = row.insertCell(0);
+		
+		var rate = document.createElement("input");
+		rate.type = "file";
+		rate.name = "upimg";
+		rate.setAttribute("class", "form-control");		
+		
+		cell2.appendChild(rate);
+		
+                                    
+                                    }
+                                   
+       function deleteImageRow(){
+                                    try {
+			var table = document.getElementById("attachmentbyid");
+			var rowCount = table.rows.length;
+			if (rowCount > 1) {
+				table.deleteRow(rowCount - 1);
+			}
+			
+		} catch (e) {
+			alert(e);
+		}
+		}
+                                </script>
+                                
+
+                                

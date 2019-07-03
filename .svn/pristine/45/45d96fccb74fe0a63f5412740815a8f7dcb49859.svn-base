@@ -1,0 +1,178 @@
+
+          <div id="slider2" class="flexslider photo-story">
+                  <ul class="slides">
+                    
+                    <li>
+                      <div class="photo-cotent">
+                          <div class="photo-content-left">
+                              <img src="<%=request.getContextPath()%>/apps/images/slide42.jpg" />
+                          </div>
+                          <div class="photo-content-right">
+                              <h3>Diaphragm 6 </h3>
+                              <p class="sub-title"><small>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nostrum debitis iste, id voluptates expedita neque, inventore dolore,  <a href="#">read more</a></small></p>
+                          </div>
+                      </div>
+                    </li>
+                    <!-- items mirrored twice, total of 12 -->
+                  </ul>
+                </div>
+                <div id="carousel2" class="flexslider photo-story-thumb">
+                  <ul class="slides">
+                   
+                    <li>
+                      <figure>
+                          <img src="<%=request.getContextPath()%>/apps/images/slide3.jpg" />
+                          <figcaption>
+                              <small>This is story 6</small>
+                          </figcaption>
+                      </figure>
+                    </li>
+                    <!-- items mirrored twice, total of 12 -->
+                  </ul>
+                </div>
+
+        <script type="text/javascript">
+             // The slider being synced must be initialized first
+              $('#carousel2').flexslider({
+                animation: "slide",
+                controlNav: false,
+                animationLoop: false,
+                slideshow: false,
+                itemWidth: 109,
+                itemMargin: 15,
+                asNavFor: '#slider2'
+              });
+             
+              /*$('#slider2').flexslider({
+                animation: "slide",
+                controlNav: false,
+                animationLoop: false,
+                slideshow: false,
+                sync: "#carousel2"
+              });*/
+
+            $(function ($) {
+                var flex = $("#slider2").flexslider({
+                    animation: "fade",
+                    animationLoop: false,
+                    keyboard: true,
+                    slideshow: false,
+                    sync: "#carousel2"
+                });
+                $('#carousel2 li').on('mouseover',function(){
+                    $(this).trigger('click');
+                });
+            });
+        </script>
+        </div>
+        
+        
+        
+        
+        
+        
+        
+        <div class="col-sm-12 col-xs-12">
+            <h2>Hot Seller</h2>
+            
+           
+            <div class="flexslider hot-product" id="hot-seller">
+              
+              
+                <!-- items mirrored twice, total of 12 -->
+             
+            </div>
+            
+            <script type="text/javascript">
+              $(window).load(function() {
+               AjaxFunction2(2,'cycle',0);
+                 
+     
+                });
+                
+                
+function productGallery(u_id,searchval,srt)
+   {
+    
+ var httpxml;
+ try
+   {
+   // Firefox, Opera 8.0+, Safari
+   httpxml=new XMLHttpRequest();
+   }
+ catch (e)
+   {
+   // Internet Explorer
+     try
+      {
+      httpxml=new ActiveXObject("Msxml2.XMLHTTP");
+      }
+    catch (e)
+      {
+     try
+    {
+    httpxml=new ActiveXObject("Microsoft.XMLHTTP");
+     }
+     catch (e)
+    {
+    alert("Your browser does not support AJAX!");
+    return false;
+    }
+    }
+   }
+ function stateck()
+  {
+  if(httpxml.readyState==3)
+    {
+   //setTimeout(function() {alert("aaaaa")}, 1000);
+    }
+  if(httpxml.readyState==4)
+    {
+  
+   var resultVal = httpxml.responseText;
+   
+   var value = resultVal.split("#####");
+  
+   hotseller(value[0]);
+  
+    }    
+  }
+  //var url="solrsearch_action.php";
+  var url="http://23.20.72.220/product/solrsearch_action_javascript.php";
+  if(searchval=='*')
+   {
+    url=url+"?u_id="+u_id+"&total="+searchval;
+   }
+   else
+   {    
+    url=url+"?u_id="+u_id+"&search="+searchval+"&start="+srt+"&limit=20";
+   }
+         httpxml.onreadystatechange=stateck;
+         httpxml.open("GET",url,true);
+         httpxml.send(null);
+
+   } 
+    function productGalleryView(rsound) 
+ {
+  var divIn = "<ul class='slides'>";
+  var n=rsound.split(",");
+  for(var i = 0;i < n.length;i++)
+  {
+  
+   divIn =divIn+"<li><iframe id='a0a7528c' name='a0a7528c' src='http://23.20.72.220/openx/www/delivery/afr.php?zoneid=19&amp;source="+n[i]+"&amp;cb=3' frameborder='0' scrolling='no' width='185' height='291'><a href='http://23.20.72.220/openx/www/delivery/ck.php?n=aeb4b0d3&amp;cb=3' target='_blank'><img src='http://23.20.72.220/openx/www/delivery/avw.php?zoneid=19&amp;source="+n[i]+"&amp;cb=3&amp;n=aeb4b0d3' border='0' alt='' /></a></iframe></li>";
+  }
+ document.getElementById("hot-seller").innerHTML=divIn+"</ul>";
+  $('#hot-seller').flexslider({
+                    animation: "slide",
+                    animationLoop: false,
+                    itemWidth: 185,
+                    itemMargin: 10
+                  });
+ } 
+ 
+
+     </script>
+        </div>
+    
+    
+    

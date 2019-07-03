@@ -1,0 +1,162 @@
+
+<%resource = Packages.java.util.ResourceBundle.getBundle("server");%>
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Expand Network</title>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="description" content="Demo project with jQuery">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+         <%load("../common/links.esp");%>
+        
+<script src="<%=request.getScheme()+"://"+request.getServerName()+":"+ request.getServerPort()+request.getContextPath()%>/apps/js/datetimepicker/bootstrap-datetimepicker.min.js"></script>
+<link href="<%=request.getScheme()+"://"+request.getServerName()+":"+ request.getServerPort()+request.getContextPath()%>/apps/js/datetimepicker/bootstrap-datetimepicker.min.css" rel="stylesheet">
+<script type="text/javascript" src="<%=request.getScheme()+"://"+request.getServerName()+":"+ request.getServerPort()+request.getContextPath()%>/apps/js/suggest/jquery-1.9.1.min.js"></script>
+      <script src="<%=request.getContextPath()%>/apps/js/step-form.js"></script>
+  <%load("../common/header.esp");%>
+      <script src="<%=request.getContextPath()%>/apps/js/step-form.js"></script>
+<link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/apps/css/step-form.css">
+ <script>    
+
+   
+ function addContact(){
+ document.getElementById("respo").style.display='none';
+var a=document.getElementById("fname").value;
+var b=document.getElementById("lname").value;
+var c=document.getElementById("email").value;
+
+if(a.length>0 && b.length>0 && b.length>0 ){
+  var param=["fname","lname","email","user"];
+  var paramValue=[a,b,c,"<%=request.getRemoteUser()%>"];
+   UserDWRService.callPostService("http://35.221.160.146:8082/portal/servlet/service/invite.addContact",param,paramValue,function(data) {
+         
+	    console.log(data);
+	    if(data=="success"){
+	    document.getElementById("respo").style.display='';
+	    }
+	     
+	 
+	 });
+ }else{
+ alert("Please enter fill all details to add contact !");
+ }
+ }
+ 
+ </script>   
+ 
+  </head> 
+
+
+
+<body>
+ 
+<section class="Profile_page">
+
+    <div class="container">
+        <div class="row">
+        <div class="col-sm-10 col-xs-12">
+                                        <h2>Expand your network</h2>   
+                                                <div class="row">
+                                                <div class="col-xs-12">
+                                                   <div class=" sf-radius"> 
+                    
+                    <ul class="sf-content"> <!-- form step one --> 
+			
+                     
+                            <div class="sf_columns column_6">
+                                                	<div class="form-group">
+                                                	 
+                                                                            <label for="" class="col-sm-4 control-label">Import contacts from social platform:</label>
+                                                                            <div class="col-sm-6">
+                                                                         <a target="_blank" href="<%=resource.getString("rave.portal")%>/portal/socialauthContact.html?id=googleplus"><img src="<%=request.getContextPath()%>/apps/images/gmail-icon.jpg" height="12" alt="Google" title="Google" border="0"></img></a>
+	<a target="_blank" href="<%=resource.getString("rave.portal")%>/portal/socialauthContact.html?id=yahoo"><img src="<%=request.getContextPath()%>/apps/images/yahoomail_icon.jpg" height="16" alt="YahooMail" title="YahooMail" border="0"></img></a>
+	<!--a href="<%=resource.getString("rave.portal")%>/portal/socialauthContact.html?id=hotmail"><img src="<%=request.getContextPath()%>/apps/images/hotmail.jpeg" height="16" alt="HotMail" title="HotMail" border="0"></img></a-->
+	  <a rel="facebox" href="<%=request.getContextPath()%>/content/user/*.uploadContacts?userId=<%=request.getParameter("id")%>"><img src="<%=request.getContextPath()%>/apps/images/linkedin.gif" height="16" alt="Linked In" title="Linked In" border="0"></img></a></p>
+                        </div>
+                                                                    </div>
+
+																	  <div class="form-group" style="margin-top:25px">
+                                                                      
+                                                                            <label for="" class="col-sm-10 control-label">Upload Contacts:</label>
+                                                                           
+                                                                      
+                                                                    </div>
+
+                                                                    <div class="form-group" style="margin-top:25px">
+                                                                      
+                                                                           <div class="col-sm-3">
+                                                                           <form id="save" method="POST" action="<%=request.getContextPath() %>/servlet/service/invite.uploadFile" enctype="multipart/form-data">
+                                                                            <input type="file" name="myFile" />            
+                  <input type="hidden" name="userId" value="<%=request.getParameter("userId")%>" />           
+             
+               
+               
+            
+                                                                        </div>
+                                                                       <div class="col-sm-5">
+                                                                          <input type="submit" value="Upload" class="button">
+                                                                           <%if(request.getAttribute("response")!=null){%>
+                <p style="color:green;">Your Contact addedd successfully !</p>
+                <%}%>
+                                                                         </div>
+                                                                         </form>
+                                                                    </div>
+                                                                    
+                                                                     <div class="form-group">
+                                                                      
+                                                                            <label for="" class="col-sm-12 control-label">Add Contacts :</label>
+                                                                           
+                                                                      
+                                                                    </div>
+                                                                    
+                                                                      <div class="form-group">
+                                                                        <label for="" class="col-sm-2 control-label">Firstname:</label>
+                                                                           <div class="col-sm-10">
+                                                                         <input type="text" id="fname" name="fname">
+                                                                        </div>
+                                                                      
+                                                                    </div>
+                                                                    
+                                                                     <div class="form-group">
+                                                                        <label for="" class="col-sm-2 control-label">Lastname:</label>
+                                                                           <div class="col-sm-10">
+                                                                      <input type="text" id="lname" name="lname">
+                                                                        </div>
+                                                                      
+                                                                    </div>
+
+                                                                        <div class="form-group">
+                                                                        <label for="" class="col-sm-2 control-label">EmailId:</label>
+                                                                           <div class="col-sm-10">
+                                                                     <input type="text" id="email" name="email">
+                                                                        </div>
+                                                                      
+                                                                    </div>
+                                                                     <div class="form-group">
+                                                                        <label for="" class="col-sm-2 control-label"></label>
+                                                                           <div class="col-sm-10">
+                                                                 <input type="button" value="Add contact" onclick="addContact()"><br>
+           <p id="respo" style="color:green;display:none">Your Contact addedd successfully !</p>
+                                                                        </div>
+                                                                      
+                                                                    </div>
+                                                                   </div>
+                                                                   </ul>
+                                                                   </div> 
+                                                	
+                                                </div>
+                                                </div>
+                                             
+                                          </div>   
+          
+        </div>
+    </div>
+</section>
+
+  <%load("../common/footer.esp");%>
+
+        
+    </body>
+</html>
+

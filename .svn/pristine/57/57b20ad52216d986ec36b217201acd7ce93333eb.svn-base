@@ -1,0 +1,76 @@
+<% 
+ 
+var data=request.getAttribute("product");
+
+for(var k=0; k<data.size(); k++) { 
+          var path=data.get(k);
+                     
+            %>
+       <div class="search-list-mobile">
+                            <div class="thumbnail">
+                              <div class="thumb">
+                <% if(path.hasNode("media")){
+                	if(path.getNode("media").hasNode("images")){
+                		if(path.getNode("media").getNode("images").hasNode()){
+                			var o=path.getNode("media").getNode("images").getNodes();
+                		
+                			out.print("<img alt="+"64x64"+" class="+"media-object"+" src='"+request.getScheme()+"://"+request.getServerName()+":"+ request.getServerPort()+request.getContextPath()+o[0].imgpath+"'>");
+                		
+ 						
+                		}else{
+                			//String img="<img alt="+"64x64"+" class="+"media-object"+" src="+request.getScheme()+"://"+request.getServerName()+":"+ request.getServerPort()+request.getContextPath()+"/apps/images/nmg.jpg>";
+                			out.print("<img alt="+"64x64"+" class="+"media-object"+" src='"+request.getScheme()+"://"+request.getServerName()+":"+ request.getServerPort()+request.getContextPath()+"/apps/images/nmg.jpg'>");
+                		}
+                	}else{
+                		//String img="<img alt="+"64x64"+" class="+"media-object"+" src="+request.getScheme()+"://"+request.getServerName()+":"+ request.getServerPort()+request.getContextPath()+"/apps/images/nmg.jpg>";
+            			out.print("<img alt="+"64x64"+" class="+"media-object"+" src='"+request.getScheme()+"://"+request.getServerName()+":"+ request.getServerPort()+request.getContextPath()+"/apps/images/nmg.jpg'>");  	
+                	}
+                	
+                }else{
+                	//String img="<img alt="+"64x64"+" class="+"media-object"+" src="+request.getScheme()+"://"+request.getServerName()+":"+ request.getServerPort()+request.getContextPath()+"/apps/images/nmg.jpg>";
+    			out.print("<img alt="+"64x64"+" class="+"media-object"+" src='"+request.getScheme()+"://"+request.getServerName()+":"+ request.getServerPort()+request.getContextPath()+"/apps/images/nmg.jpg'>");  	
+        	} %>
+                  
+              
+              </div>
+            
+            <div class="caption">
+            				<%if(path.hasProperty("redirecturl")){%>
+            				<h3><a href="<%=path.redirecturl%>" target="_blank"><%=path.name%></a></h3>
+            				<%}else{%>
+            					<h3><a href="<%=request.getContextPath()%>/servlet/service/productselection.brief?pid=<%=path.getName()%>" target="_blank"><%=path.name%></a></h3>
+                              <%}%>
+                              
+                              <%if(path.description!="" && path.description!=null && path.description!="undefind"){%>
+            			<p class="ellipsis" style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;"><%=path.description%></p>
+            				<%}%>
+                              
+                     
+                   </div>
+                  
+                   
+                   
+                   <div class="all-btn">
+                              <div class="list-check"><input type="checkbox" id="<%=path.getName()%>" onclick="handleChClick(this)"></div>
+                              <div class="compare"><a data-target="" data-toggle="modal" class="btn btn-danger" onclick="handleCompProduct()" href="#">Compare Now</a></div>
+                             <div class="price">Moq: <%=path.moq?path.moq:"NA"%> &nbsp;&nbsp; Price:  <%=path.price?path.price:"NA"%></div>
+                               <%
+                  if(path.hasNode("sup") &&  path.getNode("sup").hasNodes()){
+                   var supNode=path.getNode("sup").getNodes();%>
+                   
+                   
+                              <div class="enquery">
+                                <a href="#" class="btn btn-default"  onclick="globalSupplierSetter('<%=supNode[0].supid%>')">Send Enquiry</a>
+                                <a href="#" class="btn btn-default"  onclick="globalSupplierSetter('<%=supNode[0].supid%>')">Get Quote</a>
+                              </div>
+                   <%  }%>
+                            </div>      
+                 
+                   
+                </div>
+               
+               
+            </div>
+        <%} %>
+        
+        

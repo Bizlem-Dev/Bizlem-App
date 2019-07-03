@@ -1,0 +1,198 @@
+<%-- 
+    Document   : index
+    Created on : Jun 18, 2015, 12:41:05 PM
+    Author     : Atulanand Mishra
+--%>
+<!DOCTYPE html>
+<% var currentNodeProvided = ((typeof currentNode != "undefined"));  %>
+
+<html>
+    <head>
+        <title>Search Results</title>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="description" content="Demo project with jQuery">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+     <%load("../common/links.esp");%>
+ 
+    <%load("../common/header.esp");%>
+<div class="pace pace-active" style="display:none;">
+<div class="pace-progress">
+<div class="pace-progress-inner"></div>
+</div>
+<div class="pace-activity"></div>
+</div>
+      
+    
+    <section class="section">
+        <div class="container">
+            <ol class="breadcrumb">
+  <li><a href="<%=request.getContextPath()%>/servlet/service/index.pageview">Home</a></li>
+  <li class="active">Product Search List</li>
+</ol>
+    <div class="row">
+
+    <div class="col-sm-3 search-list-left"><div class="narrow-result">
+            <p><a href="#" class="btn btn-success btn-block">Search Results for other categary</a></p>
+           
+
+            <div class="margin">
+                <p class="text-danger"><a href="<%=request.getContextPath()%>/servlet/service/globalsearch.process?core=company&search=<%=request.getParameter("search")%>">Companies -<%=request.getAttribute("com")%></a></p>
+                <p class="text-danger"><a href="<%=request.getContextPath()%>/servlet/service/globalsearch.process?core=person&search=<%=request.getParameter("search")%>">Person -<%=request.getAttribute("per")%></a></p>
+             	<p class="text-danger"><a href="<%=request.getContextPath()%>/servlet/service/globalsearch.process?core=product&search=<%=request.getParameter("search")%>">Products -<%=request.getAttribute("pro")%></a></p>
+				
+            </div>
+        </div>
+        
+         
+
+         
+
+    </div>
+
+    <div class="col-sm-6" col-xs-12>
+    <div class="row">
+    <%var count=request.getAttribute("totalperson");
+out.print(count+" "+"records found");	%>
+   <table border="0" width="100%" cellpadding="0" id="table1" cellspacing="0" align="left"><tbody><tr><td>
+     
+   <table cellpadding="0" align="left" cellspacing="0" width="100%"><tbody><tr><td align="left" class="ntext" style="background:#FFF7EC;">
+     <p style="font-size: medium;margin: 0 0 5px 0;padding:0px;"><span style="color: #666666;">Ads related to </span><b id="valueId"></b><span title="These ads are based on your current search terms."> <img src="images/tooltip.png" width="12px" /></span></p>
+     </td></tr><tr><td align="left" class="ntext" style="background:#FFF7EC;" id="adbody">
+     
+     </td></tr></tbody></table>
+  </td></tr></tbody></table>
+        
+   <%
+ var result = (count/10);
+var integerPart = Math.floor(result);
+if(count-(integerPart*10)!=0){
+integerPart=integerPart+1;
+}
+if(count==0){
+	out.print("Sorry no product found for this search text !");
+	
+}%>	
+    <div class="demo content4">
+<% 
+ 
+var data=request.getAttribute("product");
+//out.print(data);
+for(var k=0; k<data.size(); k++) { 
+          var path=data.get(k);
+                     
+            %>
+        <div class="search-list-mobile">
+                            <div class="thumbnail">
+                              <div class="thumb">
+                <% if(path.hasNode("media")){
+                	if(path.getNode("media").hasNode("images")){
+                		if(path.getNode("media").getNode("images").hasNode()){
+                			var o=path.getNode("media").getNode("images").getNodes();
+                		
+                			out.print("<img alt="+"64x64"+" class="+"media-object"+" src='"+request.getScheme()+"://"+request.getServerName()+":"+ request.getServerPort()+request.getContextPath()+o[0].imgpath+"'>");
+                		
+ 						
+                		}else{
+                			//String img="<img alt="+"64x64"+" class="+"media-object"+" src="+request.getScheme()+"://"+request.getServerName()+":"+ request.getServerPort()+request.getContextPath()+"/apps/images/nmg.jpg>";
+                			out.print("<img alt="+"64x64"+" class="+"media-object"+" src='"+request.getScheme()+"://"+request.getServerName()+":"+ request.getServerPort()+request.getContextPath()+"/apps/images/nmg.jpg'>");
+                		}
+                	}else{
+                		//String img="<img alt="+"64x64"+" class="+"media-object"+" src="+request.getScheme()+"://"+request.getServerName()+":"+ request.getServerPort()+request.getContextPath()+"/apps/images/nmg.jpg>";
+            			out.print("<img alt="+"64x64"+" class="+"media-object"+" src='"+request.getScheme()+"://"+request.getServerName()+":"+ request.getServerPort()+request.getContextPath()+"/apps/images/nmg.jpg'>");  	
+                	}
+                	
+                }else{
+                	//String img="<img alt="+"64x64"+" class="+"media-object"+" src="+request.getScheme()+"://"+request.getServerName()+":"+ request.getServerPort()+request.getContextPath()+"/apps/images/nmg.jpg>";
+    			out.print("<img alt="+"64x64"+" class="+"media-object"+" src='"+request.getScheme()+"://"+request.getServerName()+":"+ request.getServerPort()+request.getContextPath()+"/apps/images/nmg.jpg'>");  	
+        	} %>
+                  
+              
+              </div>
+             <%
+                   if(path.hasNode("sup") && path.getNode("sup").hasNodes()){
+                   var supNode=path.getNode("sup").getNodes();
+                    }%>
+            <div class="caption">
+              	<%if(path.hasProperty("redirecturl")){%>
+            				<h3><a href="<%=path.redirecturl%>" target="_blank"><%=path.name%></a></h3>
+            				<%}else{%>
+            					<h3><a href="<%=request.getContextPath()%>/servlet/service/productselection.brief?pid=<%=path.getName()%>" target="_blank"><%=path.name%></a></h3>
+                              <%}%>
+                              
+                              <%if(path.description!="" && path.description!=null && path.description!="undefind"){%>
+            			<p class="ellipsis" style="white-space: nowrap;overflow: hidden; text-overflow: ellipsis;"><%=path.description%></p>
+            				<%}%>
+                              
+                     
+                   </div>
+                  
+                   <div class="all-btn">
+                             <div class="list-check"><input type="checkbox" id="<%=path.getName()%>" onclick="handleChClick(this)"></div>
+                              <div class="compare"><a  class="btn btn-danger" onclick="handleCompProduct()" href="#">Compare Now</a></div>
+                              <div class="price">Moq: <%=path.moq?path.moq:"NA"%> &nbsp;&nbsp; Price:  <%=path.price?path.price:"NA"%></div>
+                              <%
+                   if(path.hasNode("sup") &&  path.getNode("sup").hasNodes()){
+                                   var supNode=path.getNode("sup").getNodes();%>                   
+                   
+                              <div class="enquery">
+                                <a href="#" class="btn btn-default"  onclick="globalSupplierSetter('<%=supNode[0].supid%>')">Send Enquiry</a>
+                                <a href="#" class="btn btn-default"  onclick="globalSupplierSetter('<%=supNode[0].supid%>')">Get Quote</a>
+                              </div>
+                   <%  }%>
+                   
+                            </div>      
+                                      
+                </div>
+               
+            </div>
+        <%} %>
+        </div>
+        
+        <div class="demo demo4_bottom"></div>
+      <script type="text/javascript">
+           
+                        $('.demo4_bottom,.demo4_top').bootpag({
+                            total: <%=integerPart%>,
+                            page: 1,
+                            maxVisible: 5,
+                            
+                        }).on("page", function(event, num){
+                            //show
+                            $(".pace-active").show();
+                            adglobalcountfront=num;
+                  AjaxFunction('2',0);
+                           $(".content4").load("http://35.221.160.146:8082/portal/servlet/service/globalsearch.process?search=<%=request.getParameter('search')%>&core=product&from=" + num + "&to=10", function(){
+                                 $(".pace-active").hide();
+                              //hide
+                            });
+                            // or some ajax content loading...
+                        }).find('.pagination');
+                        
+                    </script>
+    </div>
+ </div>
+
+    
+        
+    <div class="col-sm-3 search-right">
+        <div class="search-right-list">
+           <div class="oxad160">
+   
+   <p align="left" style="font-size: 20px;margin: 0 0px;padding:0px;"> Ads <a href="http://www.visioninfocon.com" target="_blank"><span title="These ads are based on your current search terms."><img src="tooltip.png" width="12px" /></span></a></p>
+ <div id="adbody1">
+ </div>
+
+   </div>
+        </div>
+        
+    </div>        
+            </div>
+        </div>
+    </section>
+
+      <%load("../common/footer.esp");%>
+<!-- register Modal End  -->
+
+    </body>
+    </html>

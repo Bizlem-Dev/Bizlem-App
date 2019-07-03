@@ -1,0 +1,35 @@
+* {
+	font-family: "PT Sans", Arial, Helvetica, sans-serif !important;
+}
+
+#resume .name {
+	margin: 0 0 0 0px; ! important;
+	color: #555555;
+	font-weight: bold;
+}
+
+#resume .contact {
+	margin: 0 0px 0 0;
+	padding: 0;
+	text-align: left !important;
+}
+
+h2.section-header {
+	text-align: center !important;
+	width: 100% !important;
+	color: #fff !important;
+	font-weight: bold;
+	float: none !important;
+	background: #555555;
+	padding: 5px 0;
+	margin: 0 0 10px 0 !important;
+}
+
+#resume .summary .content,#resume .specialties .content,#resume .skills .content,#resume .positions .content,#resume .educations .content,#resume .honors .content,#resume .interests .content,#resume .associations .content,#resume .certifications .content,#resume .languages .content,#resume .patents .content,#resume .publications .content,#resume .error-section .content
+	{
+	color: #555555;
+	font-size: 13px;
+	text-align: left;
+	width: 90%;
+	padding: 5px 10px !important;
+}

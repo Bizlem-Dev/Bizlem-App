@@ -1,0 +1,125 @@
+package biz.com.service.impl;
+
+import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.jcr.LoginException;
+import javax.jcr.Node;
+import javax.jcr.NodeIterator;
+import javax.jcr.RepositoryException;
+import javax.jcr.Session;
+import javax.jcr.SimpleCredentials;
+import javax.jcr.Workspace;
+import javax.jcr.query.Query;
+import javax.jcr.query.QueryResult;
+
+import org.apache.felix.scr.annotations.Component;
+import org.apache.felix.scr.annotations.Properties;
+import org.apache.felix.scr.annotations.Property;
+import org.apache.felix.scr.annotations.Reference;
+import org.apache.felix.scr.annotations.Service;
+import org.apache.sling.api.SlingHttpServletRequest;
+import org.apache.sling.jcr.api.SlingRepository;
+
+import biz.com.service.ProductService;
+
+/**
+ * 
+ * @author atul
+ */
+@SuppressWarnings("unused")
+@Component(configurationFactory = true)
+@Service(ProductService.class)
+@Properties({ @Property(name = "com", value = "com") })
+public class ProductServiceImpl implements ProductService {
+
+	/** The repo variable is an object of SlingRepository interface. */
+
+	@Reference
+	private SlingRepository repo;
+
+	Session session = null;
+
+	public ArrayList<Node> getProductList(String searchText) {
+		ArrayList<Node> pb = null;
+		
+		Node tempPrdNode, childNode;
+		
+		if (!searchText.trim().equals("")) {
+			try {
+
+				pb = new ArrayList<Node>();
+				session = repo.login(new SimpleCredentials("admin", "admin"
+						.toCharArray()));
+
+				String querryStr = "select * from [nt:unstructured] where  ISDESCENDANTNODE('/content/product/products/') and name  like '"
+						+ searchText+ "%'";
+				Workspace workspace = session.getWorkspace();
+				Query query = workspace.getQueryManager().createQuery(
+						querryStr, Query.JCR_SQL2);
+				QueryResult result = query.execute();
+				NodeIterator iterator = result.getNodes();
+				
+				while (iterator.hasNext()) {
+					
+					tempPrdNode = iterator.nextNode();
+							pb.add(tempPrdNode);
+						
+							
+				}
+
+			} catch (LoginException e) {
+
+			} catch (RepositoryException e) {
+				// TODO Auto-generated catch block
+
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+
+			}
+		}
+		return pb;
+	}
+
+	public ArrayList<Node> getProductListByCatId(String searchText) {
+		ArrayList<Node>  pb = null;
+		
+		Node tempPrdNode, childNode;
+		
+		if (!searchText.trim().equals("")) {
+			try {
+
+				pb = new ArrayList<Node> ();
+				session = repo.login(new SimpleCredentials("admin", "admin"
+						.toCharArray()));
+
+				String querryStr = "select * from [nt:unstructured] where  ISDESCENDANTNODE('/content/product/products/') and catid  like '"
+						+ searchText+ "%'";
+				Workspace workspace = session.getWorkspace();
+				Query query = workspace.getQueryManager().createQuery(
+						querryStr, Query.JCR_SQL2);
+				QueryResult result = query.execute();
+				NodeIterator iterator = result.getNodes();
+				
+				while (iterator.hasNext()) {
+					
+					tempPrdNode = iterator.nextNode();
+					pb.add(tempPrdNode.getParent().getParent().getParent());
+
+				}
+
+			} catch (LoginException e) {
+
+			} catch (RepositoryException e) {
+				// TODO Auto-generated catch block
+
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+
+			}
+		}
+		return pb;
+	}
+
+}

@@ -1,0 +1,1106 @@
+<script>
+
+function typeDetailsDWRCom1(count) {
+        		document.getElementById("uomIdCom"+count).value = "";
+                var a = document.getElementById("uomCom"+count).value;
+                //if (a.length > 3) {
+                    var value = document.getElementById("uomCom"+count).value;
+                    while (value.indexOf(" ") > -1) {
+                        value = value.replace(" ", "+");
+                    }
+                    var param = ["paravalue", "paraname", "path", "isparent"];
+                    var isparent = "0,0";
+                    var paramValue = [value, "description,id", "/content/uom/", isparent];
+                    UserDWRService.callGetService("http://35.221.160.146:8082/portal/servlet/exhibition/flash.eventNameSuggetion", param, paramValue, function(data) {
+
+                        console.log(data);
+                        var parsed = JSON.parse(data);
+                        console.log(parsed);
+                        var sugData = "";
+                        for (var i = 0; i < parsed.length; i++) {
+                            sugData = sugData + "<a href='javascript:void(0)' id='sugIdTypeNCom" + i + "' style='color:black' onclick='selectValTypeCom1(this.id," + parsed[i].id + "," + count + ")' >" + parsed[i].description + "</a></br>";
+                        }
+						sugData = sugData + "<input type='button' value='Add New' onclick='addNewUomCom(" + count + ")' /></br>";	
+                        $("#suggestionTypeCom"+count).css('visibility', 'visible');
+                        $("#suggestionTypeCom"+count).css('border-style', 'outset');
+
+
+                        $("#suggestionTypeCom"+count).hide();
+                        $("#suggestionTypeCom"+count).fadeIn('slow');
+                        $("#searchTypeCom"+count).html(sugData);
+                        var offsetHeight = document.getElementById('suggestionTypeCom'+count).offsetHeight;
+                        //alert("after---"+offsetHeight);
+                        if (offsetHeight > 80)
+                        {
+                            $("#suggestionTypeCom"+count).css('overflow-y', 'auto');
+                            $("#suggestionTypeCom"+count).css('height', '80px');
+                        }
+                    });
+
+                //}
+            }
+        	
+        	function selectValTypeCom1(id, value1,count) {
+                document.getElementById("uomCom"+count).value = document.getElementById(id).innerHTML;
+                document.getElementById("uomIdCom"+count).value = value1;
+                $("#suggestionTypeCom"+count).hide();
+            }
+
+
+function typeDetailsDWRCom() {
+                document.getElementById("uomIdCom").value = "";
+                var a = document.getElementById("uomCom").value;
+                //if (a.length > 3) {
+                    var value = document.getElementById("uomCom").value;
+                    while (value.indexOf(" ") > -1) {
+                        value = value.replace(" ", "+");
+                    }
+                    var param = ["paravalue", "paraname", "path", "isparent"];
+                    var isparent = "0,0";
+                    var paramValue = [value,  "description,id", "/content/uom/", isparent];
+                    UserDWRService.callGetService("http://35.221.160.146:8082/portal/servlet/exhibition/flash.eventNameSuggetion", param, paramValue, function(data) {
+
+                        console.log(data);
+                        var parsed = JSON.parse(data);
+                        console.log(parsed);
+                        var sugData = "";
+                        for (var i = 0; i < parsed.length; i++) {
+                            sugData = sugData + "<a href='javascript:void(0)' id='sugIdTypeCom" + i + "' style='color:black' onclick='selectValTypeCom(this.id," + parsed[i].id + ")' >" + parsed[i].description + "</a></br>";
+                        }
+						sugData = sugData + "<input type='button' id='new' value='Add New' onclick='addNewUomCom(this.id)' /></br>";
+                        $("#suggestionTypeCom").css('visibility', 'visible');
+                        $("#suggestionTypeCom").css('border-style', 'outset');
+
+
+                        $("#suggestionTypeCom").hide();
+                        $("#suggestionTypeCom").fadeIn('slow');
+                        $("#searchTypeCom").html(sugData);
+                        var offsetHeight = document.getElementById('suggestionTypeCom').offsetHeight;
+                        //alert("after---"+offsetHeight);
+                        if (offsetHeight > 80)
+                        {
+                            $("#suggestionTypeCom").css('overflow-y', 'auto');
+                            $("#suggestionTypeCom").css('height', '80px');
+                        }
+                    });
+
+                //}
+            }
+        	
+        	function selectValTypeCom(id, value1) {
+                document.getElementById("uomCom").value = document.getElementById(id).innerHTML;
+                document.getElementById("uomIdCom").value = value1;
+                $("#suggestionTypeCom").hide();
+            }
+
+
+function addNewMaster(count){
+				if(count != "new" && <%=currentNode.hasNode("template")%>){
+				var strLabelId = document.getElementById("labelId"+count).value;
+                var strLabelValue = document.getElementById("label"+count).value;
+                }else{
+                var strLabelId = document.getElementById("labelId").value;
+                var strLabelValue = document.getElementById("label").value;
+                }
+                //alert("strLabelId------"+strLabelId);
+                //alert("strLabelValue------"+strLabelValue);
+                if(strLabelValue != ""){
+				if(strLabelId == ""){
+					var param = ["propertyvalue", "propertyname", "path", "isparent","searchTextvalue","isExist"];
+                    					var isparent = "0,0";
+										var valueRes = strLabelValue+","+"0";
+										var paramValue = [valueRes, "name,id", "/content/attribute/label/", isparent,strLabelValue,"0"];
+					UserDWRService.callGetService("http://35.221.160.146:8082/portal/servlet/common/search.inrichme", param, paramValue, function(data) {
+
+                        					console.log(data);
+                        					if(data.indexOf("~") != "-1"){
+                        						var dataRes = data.split("~");
+                        						if(dataRes[0] == "exist"){
+                        						var existParsed = JSON.parse(dataRes[1]);
+                        						console.log("exists==="+existParsed[0].id);
+                        						if(count != "new" && <%=currentNode.hasNode("template")%>){
+                        						document.getElementById("labelId"+count).value = existParsed[0].id; 
+                        						document.getElementById("label"+count).value = existParsed[0].name;
+                        						$("#suggestionLabel"+count).hide();
+                        						}else{
+                        						document.getElementById("labelId").value = existParsed[0].id; 
+                        						document.getElementById("label").value = existParsed[0].name;
+                        						$("#suggestionLabel").hide();
+                        						}
+                        						}else if(dataRes[0] == "success"){
+                        						var successParsed = JSON.parse(dataRes[1]);
+                        						console.log("success==="+successParsed[0].id);
+                        						if(count != "new" && <%=currentNode.hasNode("template")%>){
+                        						document.getElementById("labelId"+count).value = successParsed[0].id;
+                        						document.getElementById("label"+count).value = successParsed[0].name;
+                        						$("#suggestionLabel"+count).hide();
+                        						}else{
+                        						document.getElementById("labelId").value = successParsed[0].id;
+                        						document.getElementById("label").value = successParsed[0].name;
+                        						$("#suggestionLabel").hide();
+                        						}
+                        						}else{
+                        						console.log("facing some issue");
+                        						}
+												}
+                        					
+                        				});				
+				}
+				}
+                
+}
+
+
+function addNewUom(count){
+				if(count != "new" && <%=currentNode.hasNode("template")%>){
+				var strUomId = document.getElementById("uomId"+count).value;
+                var strUomValue = document.getElementById("uom"+count).value;
+                }else{
+                var strUomId = document.getElementById("uomId").value;
+                var strUomValue = document.getElementById("uom").value;
+                }
+                //alert("strLabelId------"+strLabelId);
+                //alert("strLabelValue------"+strLabelValue);
+                if(strUomValue != ""){
+				if(strUomId == ""){
+					var param = ["propertyvalue", "propertyname", "path", "isparent","searchTextvalue","isExist"];
+                    					var isparent = "0,0";
+										var valueRes = strUomValue+","+"0";
+										var paramValue = [valueRes, "description,id", "/content/uom/", isparent,strUomValue,"0"];
+					UserDWRService.callGetService("http://35.221.160.146:8082/portal/servlet/common/search.inrichme", param, paramValue, function(data) {
+
+                        					console.log(data);
+                        					if(data.indexOf("~") != "-1"){
+                        						var dataRes = data.split("~");
+                        						if(dataRes[0] == "exist"){
+                        						var existParsed = JSON.parse(dataRes[1]);
+                        						console.log("exists==="+existParsed[0].id);
+                        						if(count != "new" && <%=currentNode.hasNode("template")%>){
+                        						document.getElementById("uomId"+count).value = existParsed[0].id; 
+                        						document.getElementById("uom"+count).value = existParsed[0].description;
+                        						$("#suggestionType"+count).hide();
+                        						}else{
+                        						document.getElementById("uomId").value = existParsed[0].id; 
+                        						document.getElementById("uom").value = existParsed[0].description;
+                        						$("#suggestionType").hide();
+                        						}
+                        						
+                        						}else if(dataRes[0] == "success"){
+                        						var successParsed = JSON.parse(dataRes[1]);
+                        						console.log("success==="+successParsed[0].id);
+                        						if(count != "new" && <%=currentNode.hasNode("template")%>){
+                        						document.getElementById("uomId"+count).value = successParsed[0].id; 
+                        						document.getElementById("uom"+count).value = successParsed[0].description;
+                        						$("#suggestionType"+count).hide();
+                        						}else{
+                        						document.getElementById("uomId").value = successParsed[0].id; 
+                        						document.getElementById("uom").value = successParsed[0].description;
+                        						$("#suggestionType").hide();
+                        						}
+                        						
+                        						}else{
+                        						console.log("facing some issue");
+                        						}
+												}
+                        					
+                        				});				
+				}
+				}
+                
+}
+
+function addNewUomCom(count){
+				if(count != "new" && <%=currentNode.hasNode("template")%>){
+				var strUomId = document.getElementById("uomIdCom"+count).value;
+                var strUomValue = document.getElementById("uomCom"+count).value;
+                }else{
+                var strUomId = document.getElementById("uomIdCom").value;
+                var strUomValue = document.getElementById("uomCom").value;
+                }
+                //alert("strLabelId------"+strLabelId);
+                //alert("strLabelValue------"+strLabelValue);
+                if(strUomValue != ""){
+				if(strUomId == ""){
+					var param = ["propertyvalue", "propertyname", "path", "isparent","searchTextvalue","isExist"];
+                    					var isparent = "0,0";
+										var valueRes = strUomValue+","+"0";
+										var paramValue = [valueRes, "description,id", "/content/uom/", isparent,strUomValue,"0"];
+					UserDWRService.callGetService("http://35.221.160.146:8082/portal/servlet/common/search.inrichme", param, paramValue, function(data) {
+
+                        					console.log(data);
+                        					if(data.indexOf("~") != "-1"){
+                        						var dataRes = data.split("~");
+                        						if(dataRes[0] == "exist"){
+                        						var existParsed = JSON.parse(dataRes[1]);
+                        						console.log("exists==="+existParsed[0].id);
+                        						if(count != "new" && <%=currentNode.hasNode("template")%>){
+                        						document.getElementById("uomIdCom"+count).value = existParsed[0].id; 
+                        						document.getElementById("uomCom"+count).value = existParsed[0].description;
+                        						$("#suggestionTypeCom"+count).hide();
+                        						}else{
+                        						document.getElementById("uomIdCom").value = existParsed[0].id; 
+                        						document.getElementById("uomCom").value = existParsed[0].description;
+                        						$("#suggestionTypeCom").hide();
+                        						}
+                        						
+                        						}else if(dataRes[0] == "success"){
+                        						var successParsed = JSON.parse(dataRes[1]);
+                        						console.log("success==="+successParsed[0].id);
+                        						if(count != "new" && <%=currentNode.hasNode("template")%>){
+                        						document.getElementById("uomIdCom"+count).value = successParsed[0].id; 
+                        						document.getElementById("uomCom"+count).value = successParsed[0].description;
+                        						$("#suggestionTypeCom"+count).hide();
+                        						}else{
+                        						document.getElementById("uomIdCom").value = successParsed[0].id; 
+                        						document.getElementById("uomCom").value = successParsed[0].description;
+                        						$("#suggestionTypeCom").hide();
+                        						}
+                        						
+                        						}else{
+                        						console.log("facing some issue");
+                        						}
+												}
+                        					
+                        				});				
+				}
+				}
+                
+}
+
+
+
+function subCatalogForm(){
+var strLabelId = document.getElementsByName("labelId").length;
+var strLabel = document.getElementsByName("label").length;
+//alert("out of if--------"+strLabelId+"----------"+strLabel);
+if(strLabelId == strLabel){
+//alert("if--------"+strLabelId+"----------"+strLabel);
+for(var i = 0;i<strLabelId;i++){
+var strLabelIdVal = document.getElementsByName("labelId")[i].value;
+var strLabelVal = document.getElementsByName("label")[i].value;
+//alert("for--------"+strLabelIdVal+"----------"+strLabelVal);
+if(strLabelVal != ""){
+
+if(strLabelIdVal == ""){
+
+    var value = document.getElementsByName("label")[i].value;
+                    				//	while (value.indexOf(" ") > -1) {
+                        			//			value = value.replace(" ", "+");
+                    				//	}
+                    					var param = ["propertyvalue", "propertyname", "path", "isparent","searchTextvalue","isExist"];
+                    					var isparent = "0,0";
+										var valueRes = value+","+"0";
+										//alert(valueRes);
+                    					var paramValue = [valueRes, "name,id", "/content/attribute/label/", isparent,value,"0"];
+										//alert(paramValue);
+										$.ajax({
+                            url: 'http://35.221.160.146:8082/portal/servlet/common/search.inrichme',
+                            data: {
+                            path:"/content/attribute/label/",
+                            propertyvalue:valueRes,
+                            propertyname:"name,id",
+                            isparent:"0,0",
+                            searchTextvalue:value,
+                            isExist:"0"
+                            },
+                            async:false,
+                            success: function(data) {
+                            				
+                                			console.log(data);
+                        					if(data.indexOf("~") != "-1"){
+                        						var dataRes = data.split("~");
+                        						if(dataRes[0] == "exist"){
+                        						var existParsed = JSON.parse(dataRes[1]);
+                        						console.log("exists==="+existParsed[0].id);
+                        						document.getElementsByName("labelId")[i].value = existParsed[0].id; 
+                        						document.getElementsByName("label")[i].value = existParsed[0].name;
+                        						}else if(dataRes[0] == "success"){
+                        						var successParsed = JSON.parse(dataRes[1]);
+                        						console.log("success==="+successParsed[0].id);
+                        						document.getElementsByName("labelId")[i].value = successParsed[0].id;
+                        						document.getElementsByName("label")[i].value = successParsed[0].name;
+                        						}else{
+                        						console.log("facing some issue");
+                        						}
+												}
+                                
+                            }
+                        });
+										
+}
+}
+
+}
+}
+
+
+
+var strUomId = document.getElementsByName("uomId").length;
+var strUom = document.getElementsByName("uom").length;
+if(strUomId == strUom){
+for(var j = 0;j<strUomId;j++){
+var strUomIdVal = document.getElementsByName("uomId")[j].value;
+var strUomVal = document.getElementsByName("uom")[j].value;
+if(strUomVal != ""){
+if(strUomIdVal == ""){
+										var value1 = document.getElementsByName("uom")[j].value;
+                    					//while (value1.indexOf(" ") > -1) {
+                        					//	value1 = value1.replace(" ", "+");
+                    					//}
+                    					var param = ["propertyvalue", "propertyname", "path", "isparent","searchTextvalue","isExist"];
+                    					var isparent = "0,0";
+										var valueRes1 = value1+","+"0";
+										//alert(valueRes);
+                    					var paramValue = [valueRes1, "description,id", "/content/uom/", isparent,value1,"0"];
+										$.ajax({
+												url: 'http://35.221.160.146:8082/portal/servlet/common/search.inrichme',
+												data: {
+													path:"/content/uom/",
+													propertyvalue:valueRes1,	
+													propertyname:"description,id",
+													isparent:"0,0",
+													searchTextvalue:value1,
+													isExist:"0"
+														},
+												async:false,
+												success: function(data) {
+															console.log(data);
+															//alert(data);
+															if(data.indexOf("~") != "-1"){
+															var dataRes = data.split("~");
+															if(dataRes[0] == "exist"){
+																var existParsed = JSON.parse(dataRes[1]);
+                        						console.log("exists==="+existParsed[0].id);
+                        						document.getElementsByName("uomId")[j].value = existParsed[0].id; 
+                        						document.getElementsByName("uom")[j].value = existParsed[0].description;
+                        						
+                        						}else if(dataRes[0] == "success"){
+                        						var successParsed = JSON.parse(dataRes[1]);
+                        						console.log("success==="+successParsed[0].id);
+                        						document.getElementsByName("uomId")[j].value = successParsed[0].id;
+                        						document.getElementsByName("uom")[j].value = successParsed[0].description;
+                        						}else{
+                        						console.log("facing some issue");
+                        						}
+												}
+									
+                                
+                            }
+                        });
+    
+										
+										
+
+	
+}
+}
+
+}
+}
+
+
+
+
+var strUomIdCom = document.getElementsByName("uomIdCom").length;
+var strUomCom = document.getElementsByName("uomCom").length;
+if(strUomIdCom == strUomCom){
+for(var j = 0;j<strUomIdCom;j++){
+var strUomIdValCom = document.getElementsByName("uomIdCom")[j].value;
+var strUomValCom = document.getElementsByName("uomCom")[j].value;
+if(strUomValCom != ""){
+if(strUomIdValCom == ""){
+										var value1 = document.getElementsByName("uomCom")[j].value;
+                    					//while (value1.indexOf(" ") > -1) {
+                        					//	value1 = value1.replace(" ", "+");
+                    					//}
+                    					var param = ["propertyvalue", "propertyname", "path", "isparent","searchTextvalue","isExist"];
+                    					var isparent = "0,0";
+										var valueRes1 = value1+","+"0";
+										//alert(valueRes);
+                    					var paramValue = [valueRes1, "description,id", "/content/uom/", isparent,value1,"0"];
+										$.ajax({
+												url: 'http://35.221.160.146:8082/portal/servlet/common/search.inrichme',
+												data: {
+													path:"/content/uom/",
+													propertyvalue:valueRes1,	
+													propertyname:"description,id",
+													isparent:"0,0",
+													searchTextvalue:value1,
+													isExist:"0"
+														},
+												async:false,
+												success: function(data) {
+															console.log(data);
+															//alert(data);
+															if(data.indexOf("~") != "-1"){
+															var dataRes = data.split("~");
+															if(dataRes[0] == "exist"){
+																var existParsed = JSON.parse(dataRes[1]);
+                        						console.log("exists==="+existParsed[0].id);
+                        						document.getElementsByName("uomIdCom")[j].value = existParsed[0].id; 
+                        						document.getElementsByName("uomCom")[j].value = existParsed[0].description;
+                        						
+                        						}else if(dataRes[0] == "success"){
+                        						var successParsed = JSON.parse(dataRes[1]);
+                        						console.log("success==="+successParsed[0].id);
+                        						document.getElementsByName("uomIdCom")[j].value = successParsed[0].id;
+                        						document.getElementsByName("uomCom")[j].value = successParsed[0].description;
+                        						}else{
+                        						console.log("facing some issue");
+                        						}
+												}
+									
+                                
+                            }
+                        });
+    
+										
+										
+
+	
+}
+}
+
+}
+}
+
+
+
+
+//alert("reutrn");
+//document.getElementById('prodCatalog').submit();
+return "true";
+}
+
+</script>
+
+<div id="catalog" class="tab-pane fade">
+                                    <h3>Short Catalog</h3>
+                                    <div class="row">                  	
+                                        <div class="col-sm-10">
+                                            <form  method="POST" id="prodCatalog" onsubmit="return subCatalogForm()"  action="<%=request.getContextPath()%>/servlet/service/productselection.saveCatalog" enctype="multipart/form-data"  class="form-horizontal">
+                                                <div class="row">
+                                                    <div class="col-xs-12">
+     <input type="hidden" value="<%=request.getAttribute("catalogpath")%>" name="catalogpath">
+                                                       
+                                                       <%
+                                                       var newpath=request.getAttribute("catalogpath").split("/");
+                                                      var mainnode= currentNode.session.getRootNode().getNode("content").getNode("product").getNode("products");
+                                                       for(var p=0;p<newpath.length;p++){
+                                                       mainnode=mainnode.getNode(newpath[p]);
+                                                       }
+                                                       currentNode=mainnode;
+                                                       %> <div class="col-sm-2">
+                                                            <figure class="image">
+                                                                <% if (currentNode.hasNode("media") && currentNode.getNode("media").hasNode("images") && currentNode.getNode("media").getNode("images").hasNodes()) {
+
+                                                                        var itr = currentNode.getNode("media").getNode("images").getNodes();
+                                                                        for (k in  itr) {
+                                                                %>			
+                                                                <img id="pdShImg" src="<%=request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath() + itr[k].imgpath%>" />
+
+                                                                <%}
+                                            } else {%>
+                                                                <img id="pdShImg" src="<%=request.getContextPath()%>/apps/user/css/images/photo.gif" /> 
+                                                                <%}%>      </figure>          				
+
+                                                            <input class="form-control" type="file" class="btn btn-info" id="pdUpImg" name="upimg" />
+                                                            <!--<a data-target="#userPic" data-toggle="modal" href="#" class="btn btn-info"> Change Picture</a>
+                                                            <div class="modal fade" id="userPic" tabindex="-1" role="dialog" aria-labelledby="loginModalLabel" aria-hidden="true">
+                                                                <div class="modal-dialog modal-xs">
+                                                                    <div class="modal-content">
+                                                                        <form class="form-horizontal" method="POST" id="save" action="<%=request.getContextPath()%>/content/user/save.up" enctype="multipart/form-data">
+                                                                            <div class="modal-header">
+                                                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                                                                <h4 class="modal-title" id="loginModalLabel">Change Profile picture</h4>
+                                                                            </div>
+                                                                            <div class="modal-body" style="height:50px;">
+                                                                                <input type="hidden" name="userId" id="userId" value="<%=request.getRemoteUser().replace("@", "_")%>" />
+                                                                                <div class="form-group">
+                                                                                    <label class="col-sm-3 control-label">File</label>
+                                                                                    <div class="col-sm-9">
+                                                                                        <input class="form-control" type="file" name="myFile" />
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="modal-footer">
+                                                                                <button type="submit" class="btn btn-primary">Post</button>
+                                                                            </div>
+                                                                        </form>
+                                                                    </div>
+                                                                </div>
+                                                            </div>-->
+
+                                                        </div>
+                                                        <!-- Display user info-->
+
+                                                        <div class="col-sm-10">
+
+                                                            <div class="row">
+                                                                <div class="col-xs-12">
+
+                                                                    <div class="form-group">
+
+                                                                        <div class="col-sm-12">
+                                                                            <div class="category-list">
+                                                                                <!-- content -->
+                                                                                <div class="content mCustomScrollbar" style="height:134px">
+                                                                                    <h2><%=getCurrentNodeValue("name")%></h2>
+                                                                                    <h5><%=getCurrentNodeValue("modelno")%>  </h5>
+                                                                                    <hr />
+
+
+                                                                                    <p>
+                                                                                        <%=getCurrentNodeValue("description")%>
+                                                                                    </p> 
+
+                                                                                </div>
+
+                                                                                <script>
+                                                                                    (function($) {
+                                                                                        $(window).load(function() {
+
+                                                                                            $("a[rel='load-content']").click(function(e) {
+                                                                                                e.preventDefault();
+                                                                                                var url = $(this).attr("href");
+                                                                                                $.get(url, function(data) {
+                                                                                                    $(".content .mCSB_container").append(data); //load new content inside .mCSB_container
+                                                                                                    //scroll-to appended content 
+                                                                                                    $(".content").mCustomScrollbar("scrollTo", "h2:last");
+                                                                                                });
+                                                                                            });
+
+                                                                                            $(".content").delegate("a[href='top']", "click", function(e) {
+                                                                                                e.preventDefault();
+                                                                                                $(".content").mCustomScrollbar("scrollTo", $(this).attr("href"));
+                                                                                            });
+
+                                                                                        });
+                                                                                    })(jQuery);
+                                                                                </script>
+                                                                            </div>
+
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="form-group" style="margin-bottom: 0px;">
+                                                                        <div class="" >
+                                                                        
+                                                                            <script type="text/javascript">
+                                                                           <%if(currentNode.hasNode("template") && currentNode.getNode("template").hasNodes()){%>
+                                                                        var globalcount=1+<%=currentNode.getNode("template").getNode("attr").getNodes().length%>;
+                                                                        <%}else{
+                                                                        %>
+                                                                        var globalcount=1;
+                                                                        <%}%>
+                                                                                $(document).ready(function() {
+
+
+
+                                                                                    var addDiv = $('#attr-product');
+                                                                                    //var i = parseInt($('#attr-product .row').size()) + 1;
+                                                                                    //alert(i);
+                                                                                    $('#addAttribute').on('click', function() {
+                                                                                    var i = globalcount++;
+                                                                                    
+                                                                                        var a = document.getElementById('day').innerHTML;
+                                                                                        //alert(a);
+                                                                                $("<div class='row remove2" + i + "' id='remAttrHead' style='margin-bottom: 15px;'><div class='col-xs-2'><input type='text' class='form-control' name='label' id='label" + i + "' onkeypress='labelDetailsDWR1("+i+");' placeholder='Label'><input type='hidden' class='form-control' name='labelId' id='labelId" + i + "' data-required='false' ><div id='suggestionLabel" + i + "'  style='z-index:1;position:absolute;background:white'><div class='searchterm' id='searchLabel" + i + "'></div></div></div><div class='col-xs-2'><select data-placeholder='Type' class='form-control' name='type'>" + a + "</select></div><div class='col-xs-2'><input type='text' class='form-control' name='uom' id='uom" + i + "' onkeypress='typeDetailsDWR1("+i+");' placeholder='Uom'><input type='hidden' class='form-control' name='uomId' id='uomId" + i + "' data-required='false' ><div id='suggestionType" + i + "'  style='z-index:1;position:absolute;background:white'><div class='searchterm' id='searchType" + i + "'></div></div></div><div class='col-xs-2'><span id='remAttribute' class='glyphicon glyphicon-minus btn btn-default'></span></div></div>").appendTo(addDiv);
+
+
+
+
+
+
+                                                                                    });
+
+                                                                                    $(document).on('click', '#remAttribute', function() {
+                                                                                        $(this).parents('#remAttrHead').remove();
+                                                                                    });
+                                                                                });
+                                                                            </script>
+                                                                            <h3>Technical Attribute</h3>
+                                                                            <div class="row">
+                                                                                    <label class="col-xs-2">Label</label>
+                                                                                    <label class="col-xs-2">Type</label>
+                                                                                    <label class="col-xs-2">UOM</label>
+
+                                                                                </div>
+                                                                            <div id="attr-product">
+                                                                                
+                                                                                <% if (request.getParameter("id") == "new") {%>
+                                                                                <div class="row" style="margin-bottom: 15px;">
+                                                                                    <div class="col-xs-2">
+                                                                                    <input type="text" class="form-control" name="label" id="label" onkeypress="labelDetailsDWR();" placeholder="Label">
+                                                                                    <input type="hidden" class="form-control" name="labelId" id="labelId" data-required="false" >
+                                                                            		<div id="suggestionLabel"  style="z-index:1;position:absolute;background:white">
+                                                                                	<div class="searchterm" id="searchLabel"></div>
+                                                                            		</div>
+                                                                                    </div>
+                                                                                     <div class="col-xs-2" >
+                                                                                        <select name="type" id="type" class="form-control"  placeholder="Type" >
+                                                                                            <%
+                                                                                                if (currentNode.session.getRootNode().getNode("content").hasNode("attribute")) {
+                                                                                                    var uomNode = currentNode.session.getRootNode().getNode("content").getNode("attribute").getNode("type");
+                                                                                                    if (uomNode.hasNodes()) {
+                                                                                                        var uomNodes = uomNode.getNodes();
+                                                                                                        for (var i = 0; i < uomNodes.length; i++) {
+                                                                                            %>
+                                                                                            <option value="<%=uomNodes[i].id%>"><%=uomNodes[i].name%></option>
+                                                                                            <%}
+                                                                                                    }
+                                                                                                }
+                                                                                            %>
+
+                                                                                        </select>
+                                                                                    </div>
+                                                                                    
+                                                                                    <div class="col-xs-2">
+                                                                                    <input type="text" class="form-control" data-placeholder="UOM" placeholder="UOM" onkeypress="typeDetailsDWR();" id="uom" class="form-control" name="uom">
+                                                                                    <input type="hidden" class="form-control" name="uomId" id="uomId" data-required="false" >
+                                                                            		<div id="suggestionType"  style="z-index:1;position:absolute;background:white">
+                                                                                	<div class="searchterm" id="searchType"></div>
+                                                                            		</div>
+                                                                                    </div>
+                                                                                   			
+                                                                                
+                                                                                    <div class="col-xs-2"><span id="addAttribute" class="glyphicon glyphicon-plus btn btn-default"></span></div>
+                                                                                    <!--<div class="col-xs-2"><span id='remAttribute' class='glyphicon glyphicon-minus btn btn-default'></span></div>-->
+
+                                                                                </div>
+                                                                                <%} else {
+                                                                                  if (currentNode.hasNode("template") && currentNode.getNode("template").getNode("attr").hasNodes()) {
+                                                                                        var attrNode = currentNode.getNode("template").getNode("attr");
+                                                                                        //var attProp=attrNode.getProperties();
+                                                                                        if (attrNode.hasNodes()) {
+                                                                                            
+                                                                                                var attrNodes = attrNode.getNodes();
+                                                                                                var s = 0;
+                                                                                                //var counte = 0;
+                                                                                                for (j = 0; j < attrNodes.length; j++) {
+                                                                                                    s++;
+                                                                                %>
+                                                                                <div class='row remove2<%=s%>' id='remAttrHead' style="margin-bottom: 15px;">
+                                                                                    <div class="col-xs-2">
+                                                                                    <%
+                                                                                      var labelname;
+                                                                                      if (currentNode.session.getRootNode().getNode("content").getNode("attribute").getNode("label").hasNode(attrNodes[j].label)){
+                                                                                      	labelname=currentNode.session.getRootNode().getNode("content").getNode("attribute").getNode("label").getNode(attrNodes[j].label);
+                                                                                      	
+                                                                                      	
+                                                                                      
+                                                                                    %>
+                                                                                    <input type="text" value="<%=labelname.name%>" class="form-control" name="label" id="label<%=s%>" onkeypress="labelDetailsDWR1('<%=s%>');" placeholder="Label">
+                                                                                    <input type="hidden" class="form-control" value="<%=labelname.id%>" name="labelId" id="labelId<%=s%>" data-required="false" >
+                                                                                    <div id="suggestionLabel<%=s%>"  style="z-index:1;position:absolute;background:white">
+                                                                                	<div class="searchterm" id="searchLabel<%=s%>"></div>
+                                                                            		</div>
+                                                                                    </div>
+                                                                                   <div class="col-xs-2">
+                                                                                        <select  class="form-control" name="type">
+                                                                                            <%
+                                                                                                if (currentNode.session.getRootNode().getNode("content").getNode("attribute").getNode("type").hasNodes()) {
+                                                                                                    var uomNode = currentNode.session.getRootNode().getNode("content").getNode("attribute").getNode("type");
+                                                                                                    if (uomNode.hasNodes()) {
+                                                                                                        var uomNodes = uomNode.getNodes();
+                                                                                                        for (var k = 0; k < uomNodes.length; k++) {
+                                                                                            %>
+                                                                                            <%if ((attrNodes[j].type).equals(uomNodes[k].id)) {%>
+                                                                                            <option value="<%=uomNodes[k].id%>" selected><%=uomNodes[k].name%></option>
+                                                                                            <%} else {%>
+                                                                                                                                                                                    
+                                                                                           <option value="<%=uomNodes[k].id%>" ><%=uomNodes[k].name%></option>
+                                                                                            
+                                                                                            <%}%>
+                                                                                            <%}
+                                                                                                    }
+                                                                                                }
+                                                                                            %>
+
+                                                                                        </select>
+                                                                                    </div>	 
+                                                                                    <div class="col-xs-2">
+                                                                                    <input type="text" class="form-control" value="<%=currentNode.session.getRootNode().getNode("content").getNode("uom").getNode(attrNodes[j].uom).description%>"  id="uom<%=s%>" onkeypress="typeDetailsDWR1('<%=s%>');" placeholder="Uom" name="uom">
+                                                                                    <input type="hidden" class="form-control" name="uomId" id="uomId<%=s%>" value="<%=currentNode.session.getRootNode().getNode("content").getNode("uom").getNode(attrNodes[j].uom).id%>" data-required="false" >
+                                                                                    <div id="suggestionType<%=s%>"  style="z-index:1;position:absolute;background:white">
+                                                                                	<div class="searchterm" id="searchType<%=s%>"></div>
+                                                                            		</div>
+                                                                                    </div>
+                                                                                    	
+                                                                                  
+                                                                                    <%if (s == 1) {%>
+                                                                                    <div class="col-xs-2"><span id="addAttribute" class="glyphicon glyphicon-plus btn btn-default"></span></div>
+                                                                                        <%} else {%>
+                                                                                    <div class="col-xs-2"><span id='remAttribute' class='glyphicon glyphicon-minus btn btn-default'></span></div>
+                                                                                        <%}%>
+
+                                                                                </div>
+
+                                                                                <%
+                                                                                }
+                                                                                }
+                                                                            }
+                                                                        } else {%>
+                                                                                <div class="row" style="margin-bottom: 15px;">
+                                                                                    <div class="col-xs-2">
+                                                                                    <input type="text" class="form-control" name="label" id="label" placeholder="Label" onkeypress="labelDetailsDWR();">
+                                                                                    <input type="hidden" class="form-control" name="labelId" id="labelId" data-required="false" >
+                                                                            		<div id="suggestionLabel"  style="z-index:1;position:absolute;background:white">
+                                                                                	<div class="searchterm" id="searchLabel"></div>
+                                                                            		</div>
+                                                                                    </div>
+                                                                                                                                                                         <div class="col-xs-2" >
+                                                                                        <select name="type" id="type" class="form-control"  placeholder="Type" >
+                                                                                            <%
+                                                                                                if (currentNode.session.getRootNode().getNode("content").hasNode("attribute")) {
+                                                                                                    var uomNode = currentNode.session.getRootNode().getNode("content").getNode("attribute").getNode("type");
+                                                                                                    if (uomNode.hasNodes()) {
+                                                                                                        var uomNodes = uomNode.getNodes();
+                                                                                                        for (var i = 0; i < uomNodes.length; i++) {
+                                                                                            %>
+                                                                                            <option value="<%=uomNodes[i].id%>"><%=uomNodes[i].name%></option>
+                                                                                            <%}
+                                                                                                    }
+                                                                                                }
+                                                                                            %>
+
+                                                                                        </select>
+                                                                                    </div>
+                                                                                    
+                                                                                    <div class="col-xs-2">
+                                                                                    <input type="text" class="form-control" data-placeholder="UOM" placeholder="UOM" onkeypress="typeDetailsDWR();" id="uom" class="form-control" name="uom">
+                                                                                    <input type="hidden" class="form-control" name="uomId" id="uomId" data-required="false" >
+                                                                            		<div id="suggestionType"  style="z-index:1;position:absolute;background:white">
+                                                                                	<div class="searchterm" id="searchType"></div>
+                                                                            		</div>
+                                                                                    </div>                                                                                  
+
+                                                                                    <div class="col-xs-2"><span id="addAttribute" class="glyphicon glyphicon-plus btn btn-default"></span></div>
+                                                                                    <!--<div class="col-xs-2"><span id='remAttribute' class='glyphicon glyphicon-minus btn btn-default'></span></div>-->
+
+                                                                                </div>
+
+                                                                                <%}
+                                                                                    }
+                                                                                %>
+                                                                            </div>
+
+                                                                        </div>
+                                                                    </div>
+																	
+																	<div class="form-group" style="margin-bottom: 0px;">
+                                                                        <div class="" >
+                                                                        
+                                                                            <script type="text/javascript">
+                                                                          <%if(currentNode.hasNode("template") && currentNode.getNode("template").hasNodes()){%>
+                                                                        var globalcountcom=1+<%=currentNode.getNode("template").getNode("comm").getNodes().length%>;
+                                                                        <%}else{
+                                                                        %>
+                                                                        var globalcountcom=1;
+                                                                        <%}%>
+                                                                                $(document).ready(function() {
+
+
+
+																					
+																					
+																					var addDivcom = $('#attr-productcomm');
+                                                                                    $('#addCommAttribute').on('click', function() {
+                                                                                      var j = globalcountcom++;
+                                                                                        var b = document.getElementById('night').innerHTML;
+                                                                                            var aDay = document.getElementById('day').innerHTML;
+                                                                                         $("<div class='row removee"+j+"' id='remAttrHeadComm' style='margin-bottom: 15px;'><div class='col-xs-2' ><select data-placeholder='commercial' class='form-control' name='commercial'>" + b + "</select></div><div class='col-xs-2'><select data-placeholder='Type' class='form-control' name='typeCom'>" + aDay + "</select></div><div class='col-xs-2'><input type='text' class='form-control' name='uomCom' id='uomCom" + j + "' onkeypress='typeDetailsDWRCom1("+j+");' placeholder='Uom'><input type='hidden' class='form-control' name='uomIdCom' id='uomIdCom" + j + "' data-required='false' ><div id='suggestionTypeCom" + j + "'  style='z-index:1;position:absolute;background:white'><div class='searchterm' id='searchTypeCom" + j + "'></div></div></div><div class='col-xs-2'><span id='remAttributeComm' class='glyphicon glyphicon-minus btn btn-default'></span></div></div>").appendTo(addDivcom); 
+                                                                                        
+                                                                                    });
+                                                                                    
+                                                                                    
+                                                                                    $(document).on('click', '#remAttributeComm', function() {
+                                                                                        $(this).parents('#remAttrHeadComm').remove();
+                                                                                    });
+                                                                                    
+                                                                                });
+                                                                            </script>
+                                                                            <h3>Commercial Attribute</h3>
+                                                                            <div class="row">
+                                                                                    
+                                                                                    <label class="col-xs-2">Label</label>
+                                                                                    <label class="col-xs-2">Type</label>
+                                                                                    <label class="col-xs-2">Uom</label>
+                                                                                </div>
+                                                                            <div id="attr-productcomm">
+                                                                     
+                                                                  
+                                                                         <% if (request.getParameter("id") == "new") {%>
+                                                                        <div class='row' style='margin-bottom: 15px;'>
+																		<div class="col-xs-2" >
+                                                                            <select data-placeholder="commercial" name="commercial" class="form-control">
+                                                                             <%if (currentNode.session.getRootNode().getNode("content").hasNode("attribute")) {
+                                                                                                    var uomNode = currentNode.session.getRootNode().getNode("content").getNode("attribute").getNode("commercial");
+                                                                                                    if (uomNode.hasNodes()) {
+                                                                                                        var uomNodes = uomNode.getNodes();
+                                                                                                        for (var i = 0; i < uomNodes.length; i++) {
+                                                                                            %>
+                                                                                            <option value="<%=uomNodes[i].id%>"><%=uomNodes[i].name%></option>
+                                                                                            <%}
+                                                                                                    }
+                                                                                                }
+                                                                                            %>
+
+                                                                            </select>
+                                                                            
+                                                                        
+                                                                    </div> 
+                                                                    <div class="col-xs-2">
+                                                                                        <select  class="form-control" name="typeCom">
+                                                                                            <%
+                                                                                                if (currentNode.session.getRootNode().getNode("content").getNode("attribute").getNode("type").hasNodes()) {
+                                                                                                    var uomNode = currentNode.session.getRootNode().getNode("content").getNode("attribute").getNode("type");
+                                                                                                    if (uomNode.hasNodes()) {
+                                                                                                        var uomNodes = uomNode.getNodes();
+                                                                                                        for (var k = 0; k < uomNodes.length; k++) {
+                                                                                            %>
+                                                                                            <%if ((attrNodes[j].type).equals(uomNodes[k].id)) {%>
+                                                                                            <option value="<%=uomNodes[k].id%>" selected><%=uomNodes[k].name%></option>
+                                                                                            <%} else {%>
+                                                                                                                                                                                    
+                                                                                           <option value="<%=uomNodes[k].id%>" ><%=uomNodes[k].name%></option>
+                                                                                            
+                                                                                            <%}%>
+                                                                                            <%}
+                                                                                                    }
+                                                                                                }
+                                                                                            %>
+
+                                                                                        </select>
+                                                                                    </div>	 
+                                                                    
+                                                                        <div class="col-xs-2">
+                                                                                    <input type="text" class="form-control" data-placeholder="UOM" placeholder="UOM" onkeypress="typeDetailsDWRCom();" id="uomCom" class="form-control" name="uomCom">
+                                                                                    <input type="hidden" class="form-control" name="uomIdCom" id="uomIdCom" data-required="false" >
+                                                                            		<div id="suggestionTypeCom"  style="z-index:1;position:absolute;background:white">
+                                                                                	<div class="searchterm" id="searchTypeCom"></div>
+                                                                            		</div>
+                                                                                    </div>
+                                                                        
+                                                                         <div class="col-xs-2"><span id="addCommAttribute" class="glyphicon glyphicon-plus btn btn-default"></span></div></div>
+                                                                    <%}else{%>
+                                                                    
+                                                                    <%
+                                                                    if(currentNode.hasNode("template")){
+                                                                     var commcer=currentNode.getNode("template").getNode("comm").getNodes();
+                                                                   var ll=0;
+                                                                   
+                                                                    for(var j=0;j<commcer.length;j++){%>
+                                                                    <div class='row removee<%=j%>'id='remAttrHeadComm' style="margin-bottom: 15px;">
+                                                                    <div class="col-xs-2" >
+                                                                            <select data-placeholder="commercial" name="commercial" class="form-control">
+                                                                             <%if (currentNode.session.getRootNode().getNode("content").getNode("attribute").hasNode("commercial")) {
+                                                                                                    var uomNode = currentNode.session.getRootNode().getNode("content").getNode("attribute").getNode("commercial");
+                                                                                                    if (uomNode.hasNodes()) {
+                                                                                                        var uomNodes = uomNode.getNodes();
+                                                                                                        for (var i = 0; i < uomNodes.length; i++) {
+                                                                                            if((commcer[j].id).equals(uomNodes[i].id)){%>
+                                                                                            <option value="<%=uomNodes[i].id%>" selected><%=uomNodes[i].name%></option>
+                                                                                            <%}else{%>
+                                                                                            <option value="<%=uomNodes[i].id%>"><%=uomNodes[i].name%></option>
+                                                                                            	<%}
+                                                                                            }
+                                                                                                    }
+                                                                                                }
+                                                                                            %>
+
+                                                                            </select>
+                                                                            
+                                                                        
+                                                                    </div> 
+                                                                                                                                                           <div class="col-xs-2">
+                                                                                        <select  class="form-control" name="typeCom">
+                                                                                            <%
+                                                                                                if (currentNode.session.getRootNode().getNode("content").getNode("attribute").getNode("type").hasNodes()) {
+                                                                                                    var uomNode = currentNode.session.getRootNode().getNode("content").getNode("attribute").getNode("type");
+                                                                                                    if (uomNode.hasNodes()) {
+                                                                                                        var uomNodes = uomNode.getNodes();
+                                                                                                        for (var k = 0; k < uomNodes.length; k++) {
+                                                                                            %>
+                                                                                            <%if ((commcer[j].typeCom).equals(uomNodes[k].id)) {%>
+                                                                                            <option value="<%=uomNodes[k].id%>" selected><%=uomNodes[k].name%></option>
+                                                                                            <%} else {%>
+                                                                                                                                                                                    
+                                                                                           <option value="<%=uomNodes[k].id%>" ><%=uomNodes[k].name%></option>
+                                                                                            
+                                                                                            <%}%>
+                                                                                            <%}
+                                                                                                    }
+                                                                                                }
+                                                                                            %>
+
+                                                                                        </select>
+                                                                                    </div>	 
+                                                                                    <div class="col-xs-2">
+                                                                                    <input type="text" class="form-control" value="<%=currentNode.session.getRootNode().getNode("content").getNode("uom").getNode(commcer[j].uomCom).description%>"  id="uomCom<%=s%>" onkeypress="typeDetailsDWRCom1('<%=j%>');" placeholder="Uom" name="uomCom">
+                                                                                    <input type="hidden" class="form-control" name="uomIdCom" id="uomIdCom<%=j%>" value="<%=currentNode.session.getRootNode().getNode("content").getNode("uom").getNode(commcer[j].uomCom).id%>" data-required="false" >
+                                                                                    <div id="suggestionTypeCom<%=j%>"  style="z-index:1;position:absolute;background:white">
+                                                                                	<div class="searchterm" id="searchTypeCom<%=j%>"></div>
+                                                                            		</div>
+                                                                                    </div>
+
+                                                                        <%if(j==0){%>
+                                                                    	  <div class="col-xs-2"><span id="addCommAttribute" class="glyphicon glyphicon-plus btn btn-default"></span>
+                                                                                   </div> 
+                                                                    	<%}else{%>
+                                                                    	<div class="col-xs-2"><span id='remAttributeComm' class='glyphicon glyphicon-minus btn btn-default'></span>
+                                                                    	</div>
+                                                                    	<%}%>
+																		</div>
+																		<%}
+                                                                    	}else{%>
+                                                                    <div class="row" style="margin-bottom: 15px;">
+																	  <div class="col-xs-2" >
+                                                                            <select data-placeholder="commercial" name="commercial" class="form-control">
+                                                                             <%if (currentNode.session.getRootNode().getNode("content").hasNode("attribute")) {
+                                                                                                    var uomNode = currentNode.session.getRootNode().getNode("content").getNode("attribute").getNode("commercial");
+                                                                                                    if (uomNode.hasNodes()) {
+                                                                                                        var uomNodes = uomNode.getNodes();
+                                                                                                        for (var i = 0; i < uomNodes.length; i++) {
+                                                                                            %>
+                                                                                            <option value="<%=uomNodes[i].id%>"><%=uomNodes[i].name%></option>
+                                                                                            <%}
+                                                                                                    }
+                                                                                                }
+                                                                                            %>
+
+                                                                            </select>
+                                                                            
+                                                                        
+                                                                    </div> 
+                                                                        <div class="col-xs-2">
+                                                                                        <select  class="form-control" name="typeCom">
+                                                                                                                                                                                     <%
+                                                                                                if (currentNode.session.getRootNode().getNode("content").hasNode("attribute")) {
+                                                                                                    var uomNode = currentNode.session.getRootNode().getNode("content").getNode("attribute").getNode("type");
+                                                                                                    if (uomNode.hasNodes()) {
+                                                                                                        var uomNodes = uomNode.getNodes();
+                                                                                                        for (var i = 0; i < uomNodes.length; i++) {
+                                                                                            %>
+                                                                                            <option value="<%=uomNodes[i].id%>"><%=uomNodes[i].name%></option>
+                                                                                            <%}
+                                                                                                    }
+                                                                                                }
+                                                                                            %>
+
+                                                                                        </select>
+                                                                                    </div>	 
+                                                                    
+                                                                        <div class="col-xs-2">
+                                                                                    <input type="text" class="form-control" data-placeholder="UOM" placeholder="UOM" onkeypress="typeDetailsDWRCom();" id="uomCom" class="form-control" name="uomCom">
+                                                                                    <input type="hidden" class="form-control" name="uomIdCom" id="uomIdCom" data-required="false" >
+                                                                            		<div id="suggestionTypeCom"  style="z-index:1;position:absolute;background:white">
+                                                                                	<div class="searchterm" id="searchTypeCom"></div>
+                                                                            		</div>
+                                                                                    </div>
+
+                                                                         <div class="col-xs-2"><span id="addCommAttribute" class="glyphicon glyphicon-plus btn btn-default"></span></div></div>
+																	
+                                                                    
+                                                                   <% }
+                                                                    
+                                                                    %>
+                                                                    <%}%>
+                                                                    </div>
+
+                                                                        </div>
+                                                                    </div>
+																	
+																	
+                                                                    <input type="hidden" value="<%=request.getParameter("param")%>" name="param">
+                                                                    <input type="hidden" value="<%=request.getParameter("id")%>" name="id">
+                                                                    <div class="col-xs-12">
+
+                                                                        <input name="save" id="btnSaveCat"   type="submit" class="btn btn-primary" value="Save Catalog" />
+
+
+                                                                        <input name="save" type="submit" class="btn btn-primary" value="Save & Download Template" />
+                                                                        <!--<a href="<%=request.getContextPath()%>/servlet/service/productselection.downloadtemp?pid=<%=request.getParameter("id")%>" onclick="saveNDownload()" class="btn btn-primary" download>Save & Download Template</a>-->
+                                                                        <a data-target="#userPic" data-toggle="modal" href="#" class="btn btn-primary">Upload Template</a>
+                                                                        <%
+
+                                                                            if (request.getAttribute("fileError") != null) {
+                                                                                out.print("<p style='color:red'>" + request.getAttribute('fileError'
+                                                                                                                            
+                                                                            )+"</p>");
+}
+			
+
+                                                                        %>
+
+
+                                                                    </div>         
+                                                                    </form>
+
+<select data-placeholder="Type" id="day" style="display:none">
+                                                                                          <%
+                                                                                                if (currentNode.session.getRootNode().getNode("content").hasNode("attribute")) {
+                                                                                                    var uomNode = currentNode.session.getRootNode().getNode("content").getNode("attribute").getNode("type");
+                                                                                                    if (uomNode.hasNodes()) {
+                                                                                                        var uomNodes = uomNode.getNodes();
+                                                                                                        for (var i = 0; i < uomNodes.length; i++) {
+                                                                                            %>
+                                                                                            <option value="<%=uomNodes[i].id%>"><%=uomNodes[i].name%></option>
+                                                                                            <%}
+                                                                                                    }
+                                                                                                }
+                                                                                            %>
+
+
+                                                                                        </select>
+                                                                                        <select data-placeholder="commercial" name="commercial" class="form-control" id="night" style="display:none" >
+                                                                             <%if (currentNode.session.getRootNode().getNode("content").hasNode("attribute")) {
+                                                                                                    var uomNode = currentNode.session.getRootNode().getNode("content").getNode("attribute").getNode("commercial");
+                                                                                                    if (uomNode.hasNodes()) {
+                                                                                                        var uomNodes = uomNode.getNodes();
+                                                                                                        for (var i = 0; i < uomNodes.length; i++) {
+                                                                                            %>
+                                                                                            <option value="<%=uomNodes[i].id%>"><%=uomNodes[i].name%></option>
+                                                                                            <%}
+                                                                                                    }
+                                                                                                }
+                                                                                            %>
+
+                                                                            </select>
+ 
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+                                <div class="modal fade" id="userPic" tabindex="-1" role="dialog" aria-labelledby="loginModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog modal-xs">
+                                        <div class="modal-content">
+                                            <form method="POST" action="<%=request.getContextPath()%>/servlet/service/productselection.uploadTemplate" enctype="multipart/form-data">
+                                                <div class="modal-header">
+                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                                    <h4 class="modal-title" id="loginModalLabel">Upload File</h4>
+                                                </div>
+                                                <div class="modal-body" style="height:50px;">
+                                                    <input type="hidden" value="<%=request.getParameter('id'
+            )%>" name="pid" >
+                                                    <div class="form-group">
+                                                        <label class="col-sm-3 control-label">File</label>
+                                                        <div class="col-sm-9">
+                                                            <input class="form-control" type="file" name="uploadtemplate" id="uploadtemplate" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="submit" class="btn btn-primary">Upload</button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>	

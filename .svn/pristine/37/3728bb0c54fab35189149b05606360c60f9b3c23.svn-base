@@ -1,0 +1,76 @@
+
+<html>
+    <head>
+        <title>Home</title> 
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="description" content="Demo project with jQuery">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+<%load("../common/links.esp");%>
+    </head>
+<body>
+<div class="pace pace-active" style="display:none;">
+<div class="pace-progress">
+<div class="pace-progress-inner"></div>
+</div>
+<div class="pace-activity"></div>
+</div>
+<script>
+function previewWidget(){
+
+var url=document.getElementById("feedurl").value;
+
+var styleid=document.getElementById("mystyle").value;
+ 					$.ajax({
+						url:"http://35.221.160.146:8082/portal/servlet/service/news.getstyles",
+						type: 'GET',
+						data:{"styleid":styleid},
+						success: function(data1) {
+						alert(data1);
+						
+						$("#frameme").html("<iframe src='http://35.221.160.146:8082/RssFeed/getfeed?feedurl="+url+data1+" frameborder='0' ></iframe>");
+						}
+					});
+
+
+}
+</script>
+<%load("../common/header.esp");%>
+
+
+<section class="new_description_page">
+		
+			<div class="container">
+				<div class="row">
+					<div class="col-sm-9 col-xs-12">
+						<div class="row">
+				<form action="<%=request.getContextPath()%>/servlet/service/news.addsourcemaster" method="POST">
+				<select name="mystyle" id="mystyle" >
+						<% 
+							var news=currentNode.session.getRootNode().getNode("content").getNode("newsfeed").getNode("stylemaster").getNodes();
+						for (var i=0;i<news.length;i++){
+						
+							%>
+						<option value="<%=news[i].id%>"><%=news[i].title%></option>
+						<%}%>
+						</select><hr>
+						<input type="text" placeholder="Name  " name="sourcename"><hr>
+						<input type="text" placeholder="Paste url here " name="feedurl" id="feedurl"><hr>
+						<input type="text" placeholder="Enter meta deta information " name="metadeta"><hr>
+						<input type="text" placeholder="Enter revite time" name="revisitetime">(eg : HH:MM:SS (01:20:22))<hr>
+						
+						<input type="hidden" name="sourceid" value="<%=request.getParameter("id")%>"> 
+						<input type="button" value="Preview Widget" onclick="previewWidget()">
+						<input type="submit" value="Submit">
+					</form>				
+						</div>
+					</div>
+					<div id="frameme">
+					</div>
+				</div>
+		</div>
+</section>
+
+<%load("../common/footer.esp");%>
+    </body>
+</html>

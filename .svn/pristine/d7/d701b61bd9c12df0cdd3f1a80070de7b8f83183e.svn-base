@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>News</title>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="description" content="Demo project with jQuery">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <%load("../common/links.esp");%>
+       <%load("../common/header.esp");%>
+   
+      
+    
+<section class="section">
+    <div class="container">
+        <div class="row">
+         <ol class="breadcrumb">
+     <li><a href="<%=request.getContextPath()%>/servlet/service/index.pageview">Home</a></li>
+     <li>News</a></li>
+     
+     </ol>
+     
+     <% var widgetNode=currentNode.session.getRootNode().getNode("content").getNode("newsfeed").getNode("widget");
+    var newsNode=widgetNode.getNode("0");   
+     %>
+    <!--<iframe src="<%out.print("http://35.221.160.146:8082/portal/");%><%=newsNode.accessurl%>"  frameborder="0" scrollable="no" style="<%=currentNode.session.getRootNode().getNode("content").getNode("newsfeed").getNode("stylemaster").getNode("0").framestyle%>"></iframe>-->
+        
+        <% var da=request.getAttribute("widgets");
+        
+        //out.println(request.getParameter("style"));
+        //out.println(request.getParameter("noOfRes"));
+        var styleId = request.getParameter("style");
+        var noOfRes = request.getParameter("noOfRes");
+        //out.println(da.length);
+        //out.println(parseInt(noOfRes));
+        var noofR = parseInt(noOfRes);
+        if(noofR > da.length){
+        //out.print("inside if");
+        for(var i=0;i<da.length;i++){
+       	//out.println("if=="+da[i]);
+       	
+		if(da[i].trim()!=null && !da[i].trim().equals("")){  
+		var style = widgetNode.getNode(da[i].trim()).style;
+		if(style.equals(styleId)){     
+        %>
+        <iframe src="<%out.print("http://35.221.160.146:8082/portal/");%><%=widgetNode.getNode(da[i].trim()).accessurl%>"  frameborder="0" scrollable="no" style="<%=currentNode.session.getRootNode().getNode("content").getNode("newsfeed").getNode("stylemaster").getNode(widgetNode.getNode(da[i].trim()).style).framestyle%>"></iframe>
+        <%
+        }
+        }}
+        
+        }else{
+		//	out.print("inside else");
+			for(var i=0;i<noofR;i++){
+       	//out.println("else=="+da[i]);
+       	
+		if(da[i].trim()!=null && !da[i].trim().equals("")){  
+		var style = widgetNode.getNode(da[i].trim()).style;
+		if(style.equals(styleId)){     
+        %>
+        <iframe src="<%out.print("http://35.221.160.146:8082/portal/");%><%=widgetNode.getNode(da[i].trim()).accessurl%>"  frameborder="0" scrollable="no" style="<%=currentNode.session.getRootNode().getNode("content").getNode("newsfeed").getNode("stylemaster").getNode(widgetNode.getNode(da[i].trim()).style).framestyle%>"></iframe>
+        <%}
+        }}
+			        
+        
+        }
+        %>
+        </div>
+    </div>
+</section>
+
+<%load("../common/footer.esp");%>
+    </body>
+</html>

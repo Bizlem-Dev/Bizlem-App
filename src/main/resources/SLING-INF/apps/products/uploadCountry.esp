@@ -1,0 +1,25 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<% var currentNodeProvided = ((typeof currentNode != "undefined"));  %>
+<% currentNode=currentNode.session.getNode("/content"); %>
+<html>
+    <head>     
+          </script>
+        <title>Home</title> 
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="description" content="Demo project with jQuery">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+         <%load("../common/links.esp");%>
+
+     <%load("../common/header.esp");%>
+<form method="POST" action="<%=request.getContextPath()%>/servlet/service/productselection.uploadCountryMaster" enctype="multipart/form-data">
+			
+													
+					<input type="file" id="uploadtemplate" name="uploadtemplate"><button id="sf-next2" type="submit" class="btn btn-primary">Upload</button>  
+</form>    
+
+        <%load("../common/footer.esp");%>
+  
+        
+    </body>
+</html>

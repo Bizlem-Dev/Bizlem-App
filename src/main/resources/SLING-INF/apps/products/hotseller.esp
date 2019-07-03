@@ -1,0 +1,104 @@
+
+        <div class="col-sm-12 col-xs-12">
+            <h4>Hot Seller</h4>
+            
+           
+            <div class="flexslider hot-product" id="hot-seller" style="height:160px">
+              
+              
+                <!-- items mirrored twice, total of 12 -->
+             
+            </div>
+            
+            <script type="text/javascript">
+              $(window).load(function() {
+               AjaxFunction2(2,'<%=request.getAttribute("hotsellersearch")%>',0);                
+     
+                });
+                
+                
+function AjaxFunction2(u_id,searchval,srt)
+   {
+    
+ var httpxml;
+ try
+   {
+   // Firefox, Opera 8.0+, Safari
+   httpxml=new XMLHttpRequest();
+   }
+ catch (e)
+   {
+   // Internet Explorer
+     try
+      {
+      httpxml=new ActiveXObject("Msxml2.XMLHTTP");
+      }
+    catch (e)
+      {
+     try
+    {
+    httpxml=new ActiveXObject("Microsoft.XMLHTTP");
+     }
+     catch (e)
+    {
+    alert("Your browser does not support AJAX!");
+    return false;
+    }
+    }
+   }
+ function stateck()
+  {
+  if(httpxml.readyState==3)
+    {
+   //setTimeout(function() {alert("aaaaa")}, 1000);
+    }
+  if(httpxml.readyState==4)
+    {
+  
+   var resultVal = httpxml.responseText;
+   
+   var value = resultVal.split("#####");
+
+   hotseller(value[0]);
+  
+    }    
+  }
+  //var url="solrsearch_action.php";
+  var url="http://34.193.219.25/hotseller/solrsearch_action_javascript.php";
+  if(searchval=='*')
+   {
+    url=url+"?u_id="+u_id+"&total="+searchval;
+   }
+   else
+   {    
+    url=url+"?u_id="+u_id+"&search="+searchval+"&start="+srt+"&limit=20";
+   }
+         httpxml.onreadystatechange=stateck;
+         httpxml.open("GET",url,true);
+         httpxml.send(null);
+
+   } 
+    function hotseller(rsound) 
+ {
+  var divIn = "<ul class='slides'>";
+  var n=rsound.split(",");
+  for(var i = 0;i < n.length;i++)
+  {
+  
+   divIn =divIn+"<li style='width:125px;height:190px'><iframe id='a0a7528c' name='a0a7528c' src='http://34.193.219.25/openx/www/delivery/afr.php?zoneid=19&amp;source="+n[i]+"&amp;cb=3' frameborder='0' scrolling='no' width='95' height='190'><a href='http://34.193.219.25/openx/www/delivery/ck.php?n=aeb4b0d3&amp;cb=3' target='_blank'><img src='http://34.193.219.25/openx/www/delivery/avw.php?zoneid=19&amp;source="+n[i]+"&amp;cb=3&amp;n=aeb4b0d3' border='0' alt='' /></a></iframe></li>";
+  }
+ document.getElementById("hot-seller").innerHTML=divIn+"</ul>";
+  $('#hot-seller').flexslider({
+                    animation: "slide",
+                    animationLoop: false,
+                    itemWidth: 125,
+                    itemMargin: 10
+                  });
+ } 
+ 
+
+     </script>
+        </div>
+    
+    
+    

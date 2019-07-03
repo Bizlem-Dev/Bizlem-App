@@ -1,0 +1,78 @@
+package biz.com.service;
+
+import java.util.ArrayList;
+
+public class TemplateDataBean {
+	String modelNu;
+
+	String productName;
+	String moq;
+	String sbl;
+	String shortDescription;
+	String longDescription;
+	String keyword;
+	String price;
+	ArrayList<String> al;
+	ArrayList<String> fal;
+	public String getModelNu() {
+		return modelNu;
+	}
+	public void setModelNu(String modelNu) {
+		this.modelNu = modelNu;
+	}
+	public ArrayList<String> getAl() {
+		return al;
+	}
+	public void setAl(ArrayList<String> al) {
+		this.al = al;
+	}
+	public ArrayList<String> getFal() {
+		return fal;
+	}
+	public void setFal(ArrayList<String> fal) {
+		this.fal = fal;
+	}
+	public String getProductName() {
+		return productName;
+	}
+	public void setProductName(String productName) {
+		this.productName = productName;
+	}
+	public String getMoq() {
+		return moq;
+	}
+	public void setMoq(String moq) {
+		this.moq = moq;
+	}
+	public String getSbl() {
+		return sbl;
+	}
+	public void setSbl(String sbl) {
+		this.sbl = sbl;
+	}
+	public String getShortDescription() {
+		return shortDescription;
+	}
+	public void setShortDescription(String shortDescription) {
+		this.shortDescription = shortDescription;
+	}
+	public String getLongDescription() {
+		return longDescription;
+	}
+	public void setLongDescription(String longDescription) {
+		this.longDescription = longDescription;
+	}
+	public String getKeyword() {
+		return keyword;
+	}
+	public void setKeyword(String keyword) {
+		this.keyword = keyword;
+	}
+	public String getPrice() {
+		return price;
+	}
+	public void setPrice(String price) {
+		this.price = price;
+	}
+	
+}

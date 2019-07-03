@@ -1,0 +1,80 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<title>Flot Examples: Pie Charts</title>
+	<link href="../examples.css" rel="stylesheet" type="text/css">
+	<style type="text/css">
+    .placeholder{
+    width: 400px;
+    height: 400px;
+}
+  </style>
+	<!--[if lte IE 8]><script language="javascript" type="text/javascript" src="../../excanvas.min.js"></script><![endif]-->
+	<script language="javascript" type="text/javascript" src="../../jquery.js"></script>
+	<script language="javascript" type="text/javascript" src="../../jquery.flot.js"></script>
+	<script language="javascript" type="text/javascript" src="../../jquery.flot.pie.js"></script>
+	<script type="text/javascript">//&lt;![CDATA[ 
+$(window).load(function(){
+var data = [
+    {
+    label: "Serie1",
+    data: 10,
+    url: "http://stackoverflow.com"},
+{
+    label: "Serie2",
+    data: 30,
+    url: "http://serverfault.com"},
+{
+    label: "Serie3",
+    data: 90,
+    url: "http://superuser.com"},
+{
+    label: "Serie4",
+    data: 70,
+    url: "http://www.google.com"},
+{
+    label: "Serie5",
+    data: 80,
+    url: "http://www.oprah.com"},
+{
+    label: "Serie6",
+    data: 110,
+    url: "http://www.realultimatepower.net/"}
+];
+var options = {
+    series: {
+        pie: {
+            show: true
+        }
+    },
+    grid: {
+        hoverable: true
+    }
+
+};
+
+
+var plot = $.plot($(".placeholder"), data, options);
+
+});//]]&gt;  
+
+</script>
+</head>
+<body>
+
+	<div id="header">
+		<h2>Pie Charts</h2>
+	</div>
+
+	<div id="content">
+
+		<h3 id="title"></h3>
+		<div class="demo-container">
+			<div class="placeholder"></div>			
+		</div>
+
+		
+
+</body>
+</html>

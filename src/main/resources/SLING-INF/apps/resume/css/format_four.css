@@ -1,0 +1,56 @@
+
+
+*{font-family: "PT Sans", Arial, Helvetica, sans-serif !important;}
+
+
+#resume .name { border-top:10px solid rgb(28,65,143); background:rgb(248,248,248); padding:50px 0 0px 20px !important; color:rgb(28,65,143) !important;}
+h2.section-header {color:rgb(56,67,84) !important; padding:0 0 0 20px; background: -moz-linear-gradient(left, rgba(30,120,180,0.65) 0%, rgba(30,120,180,0.54) 17%, rgba(30,120,180,0.46) 29%, rgba(30,120,180,0.38) 42%, rgba(0,0,0,0) 100%); /* FF3.6+ */
+background: -webkit-gradient(linear, left top, right top, color-stop(0%,rgba(30,120,180,0.65)), color-stop(17%,rgba(30,120,180,0.54)), color-stop(29%,rgba(30,120,180,0.46)), color-stop(42%,rgba(30,120,180,0.38)), color-stop(100%,rgba(0,0,0,0))); /* Chrome,Safari4+ */
+background: -webkit-linear-gradient(left, rgba(30,120,180,0.65) 0%,rgba(30,120,180,0.54) 17%,rgba(30,120,180,0.46) 29%,rgba(30,120,180,0.38) 42%,rgba(0,0,0,0) 100%); /* Chrome10+,Safari5.1+ */
+background: -o-linear-gradient(left, rgba(30,120,180,0.65) 0%,rgba(30,120,180,0.54) 17%,rgba(30,120,180,0.46) 29%,rgba(30,120,180,0.38) 42%,rgba(0,0,0,0) 100%); /* Opera 11.10+ */
+background: -ms-linear-gradient(left, rgba(30,120,180,0.65) 0%,rgba(30,120,180,0.54) 17%,rgba(30,120,180,0.46) 29%,rgba(30,120,180,0.38) 42%,rgba(0,0,0,0) 100%); /* IE10+ */
+background: linear-gradient(to right, rgba(30,120,180,0.65) 0%,rgba(30,120,180,0.54) 17%,rgba(30,120,180,0.46) 29%,rgba(30,120,180,0.38) 42%,rgba(0,0,0,0) 100%); /* W3C */
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#a61e78b4', endColorstr='#00000000',GradientType=1 ); /* IE6-9 */ }
+#resume .content {color:rgb(85,85,85);}
+
+#resume .name{margin:0 !important; font-weight:bold;}
+
+#resume .contact{margin:0; padding:10px; text-align:left !important; padding:0 0 75px 20px !important; background:rgb(248,248,248);}
+
+h2.section-header{text-align:left !important;  font-weight:bold !important; float:left;}
+
+#resume .content{font-size:13px; /*background:url(../images/linebg.jpg) 0 0 repeat-x;*/ padding-top:0 !important; text-align:left !important; padding-left:0 !important;  width:600px !important;}
+
+.summary, .specialties, .skills, .positions, .educations, .honors, .interests {/*border-bottom:1px solid rgb(56,67,84);*/ padding-bottom:20px;  float:left !important;}
+
+#resume .position .company-name, #resume .education .school-name, #resume .certification .certification-name, #resume .patent .patent-title, #resume .publication .publication-title{font-size:16px; font-weight:bold; color:rgb(30,120,180);}
+/*#resume .contact { border-top:5px solid rgb(30,120,180) ;}*/
+
+#resume { padding:0 !important;}
+#resume .picture {
+width:100px;
+height:120px; float:right; position:relative; top:50px; right:70px; /*background:rgb(255,181,31);*/
+	
+}
+#resume .picture img {
+padding:5px;
+width:90px; height:110px; border:1px solid rgb(56,67,84) !important;
+float:right;position:absolute;top:50px; right: 50px
+
+}
+	
+	.picture { display:block !important;}
+/*#resume img {  background:rgb(255,181,31); border: 1px solid rgb(56,67,84); height: 120px; padding: 5px; position: absolute;right: 150px; top:185px;width: 100px;}*/
+
+@page { 
+
+margin: 0.0in; 
+-fs-flow-top: "header";
+-fs-flow-bottom: "footer";
+-fs-flow-left: "left";
+-fs-flow-right: "right";
+
+padding: 0em;
+}
+
+/*.header { padding:20px 0px; background:rgb(222,222,222);}*/

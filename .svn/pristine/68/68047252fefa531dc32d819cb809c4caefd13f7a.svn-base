@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html><% var currentNodeProvided = ((typeof currentNode != "undefined"));
+
+  %>
+
+    <head>
+        <title>Product Brief Page</title>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="description" content="Demo project with jQuery">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="<%=request.getScheme()+"://"+request.getServerName()+":"+ request.getServerPort()+request.getContextPath()%>/apps/css/bootstrap.css"> 
+        <link rel="stylesheet" href="<%=request.getScheme()+"://"+request.getServerName()+":"+ request.getServerPort()+request.getContextPath()%>/apps/js/FlexSlider/flexslider.css" type="text/css" media="screen" /> 
+        <link rel="stylesheet" href="<%=request.getScheme()+"://"+request.getServerName()+":"+ request.getServerPort()+request.getContextPath()%>/apps/css/color.css">
+
+        <script src="<%=request.getScheme()+"://"+request.getServerName()+":"+ request.getServerPort()+request.getContextPath()%>/apps/js/jquery.min.js"></script>
+        <script src="<%=request.getScheme()+"://"+request.getServerName()+":"+ request.getServerPort()+request.getContextPath()%>/apps/js/bootstrap.min.js"></script>
+        <script src="<%=request.getScheme()+"://"+request.getServerName()+":"+ request.getServerPort()+request.getContextPath()%>/apps/js/FlexSlider/jquery.flexslider.js"></script>
+        <script src="<%=request.getScheme()+"://"+request.getServerName()+":"+ request.getServerPort()+request.getContextPath()%>/apps/js/hover-dropdown/bootstrap-hover-dropdown.min.js"></script>
+        <!-- Include Cloud Zoom JavaScript -->
+        <script type="text/javascript" src="<%=request.getScheme()+"://"+request.getServerName()+":"+ request.getServerPort()+request.getContextPath()%>/apps/js/zoom/js/cloudzoom.js"></script>
+        <!-- Include Thumbelina JavaScript -->
+        <script type="text/javascript" src="<%=request.getScheme()+"://"+request.getServerName()+":"+ request.getServerPort()+request.getContextPath()%>/apps/js/zoom/js/thumbelina.js"></script>
+        <!-- Include Cloud Zoom CSS -->
+        <link href="<%=request.getScheme()+"://"+request.getServerName()+":"+ request.getServerPort()+request.getContextPath()%>/apps/js/zoom/css/cloudzoom.css" type="text/css" rel="stylesheet" />
+        <link href="<%=request.getScheme()+"://"+request.getServerName()+":"+ request.getServerPort()+request.getContextPath()%>/apps/js/zoom/css/thumbelina.css" type="text/css" rel="stylesheet" />
+
+        <!-- Google CDN jQuery with fallback to local -->
+        <script src="<%=request.getScheme()+"://"+request.getServerName()+":"+ request.getServerPort()+request.getContextPath()%>/apps/js/scrollbar/minified/jquery-1.11.0.min.js"></script>
+        <!-- custom scrollbar plugin -->
+        <script src="<%=request.getScheme()+"://"+request.getServerName()+":"+ request.getServerPort()+request.getContextPath()%>/apps/js/scrollbar/jquery.mCustomScrollbar.concat.min.js"></script>
+        <link rel="stylesheet" href="<%=request.getScheme()+"://"+request.getServerName()+":"+ request.getServerPort()+request.getContextPath()%>/apps/js/scrollbar/jquery.mCustomScrollbar.css">
+        <link rel="stylesheet" href="<%=request.getScheme()+"://"+request.getServerName()+":"+ request.getServerPort()+request.getContextPath()%>/apps/js/scrollbar/style.css">
+
+        <link rel="stylesheet" href="<%=request.getScheme()+"://"+request.getServerName()+":"+ request.getServerPort()+request.getContextPath()%>/apps/css/custom.css">
+
+   
+         
+         <style type="text/css">
+    * {margin: 0px; padding: 0px;}
+</style>
+
+<!-- Google CDN jQuery with fallback to local -->
+<script src="<%=request.getScheme()+"://"+request.getServerName()+":"+ request.getServerPort()+request.getContextPath()%>/apps/js/scrollbar/minified/jquery-1.11.0.min.js"></script>
+<!-- custom scrollbar plugin -->
+<script src="<%=request.getScheme()+"://"+request.getServerName()+":"+ request.getServerPort()+request.getContextPath()%>/apps/js/scrollbar/jquery.mCustomScrollbar.concat.min.js"></script>
+<link rel="stylesheet" href="<%=request.getScheme()+"://"+request.getServerName()+":"+ request.getServerPort()+request.getContextPath()%>/apps/js/scrollbar/jquery.mCustomScrollbar.css">
+<link rel="stylesheet" href="<%=request.getScheme()+"://"+request.getServerName()+":"+ request.getServerPort()+request.getContextPath()%>/apps/js/scrollbar/style.css">
+
+<%load("../common/header.esp");%>
+<!-- The JavaScript -->
+    <section class="section">
+        <div class="container">
+            <%
+       
+        var s=request.getParameter("pid");
+        currentNode=currentNode.session.getRootNode().getNode("content").getNode("product").getNode("products").getNode(s);
+         %>
+    <div class="row">
+ <ol class="breadcrumb">
+     <li><a href="<%=request.getContextPath()%>/servlet/service/index.pageview">Home</a></li>
+ <% var spl=currentNode.getNode("cat").getNode("unspsc").getNodes();
+ 	var s=(spl[0].catid).split("");
+ 	var cat=spl[0].catid;
+  		if(cat.equals("2")){
+    cNode=currentNode.session.getRootNode().getNode("content").getNode("unspsc").getNode(cat).getNodes();
+    out.print("<li class='active'>Product List related to -"+currentNode.session.getRootNode().getNode("content").getNode("unspsc").getNode(cat).name+"</li> Category");
+  		}else if(cat.equals("4")){
+  		var s=cat.split("");
+  		 out.print("<li><a href='"+request.getContextPath()+"/servlet/service/index.catlist?catid="+s[1]+""+s[2]+"&search="+currentNode.session.getRootNode().getNode("content").getNode("unspsc").getNode(s[1]+""+s[2]).name+"'>"+currentNode.session.getRootNode().getNode("content").getNode("unspsc").getNode(s[1]+""+s[2]).name+"</a></li>");
+  out.print("<li class='active'>Product List related to"+currentNode.session.getRootNode().getNode("content").getNode("unspsc").getNode(s[1]+""+s[2]).getNode(s[3]+""+s[4]).name+"</li> Category");
+ 			
+ 			}else if(cat.equals("6")){
+  		var s=cat.split("");
+  			out.print("<li><a href='"+request.getContextPath()+"/servlet/service/index.catlist?catid="+s[1]+""+s[2]+"&search="+currentNode.session.getRootNode().getNode("content").getNode("unspsc").getNode(s[1]+""+s[2]).name+"'>"+currentNode.session.getRootNode().getNode("content").getNode("unspsc").getNode(s[1]+""+s[2]).name+"</a></li>");
+	out.print("<li><a href='"+request.getContextPath()+"/servlet/service/index.catlist?catid="+s[1]+""+s[2]+s[3]+""+s[4]+"&search="+currentNode.session.getRootNode().getNode("content").getNode("unspsc").getNode(s[1]+""+s[2]).getNode(s[3]+""+s[4]).name+"'>"+currentNode.session.getRootNode().getNode("content").getNode("unspsc").getNode(s[1]+""+s[2]).getNode(s[3]+""+s[4]).name+"</a></li>");
+  out.print("<li class='active'>Product List related to "+currentNode.session.getRootNode().getNode("content").getNode("unspsc").getNode(s[1]+""+s[2]).getNode(s[3]+""+s[4]).getNode(s[5]+s[6]).name+"</li> Category");
+ 
+ }else if(cat.equals("8")){
+ var s=cat.split("");
+  			out.print("<li><a href='"+request.getContextPath()+"/servlet/service/index.catlist?catid="+s[1]+""+s[2]+"&search="+currentNode.session.getRootNode().getNode("content").getNode("unspsc").getNode(s[1]+""+s[2]).name+"'>"+currentNode.session.getRootNode().getNode("content").getNode("unspsc").getNode(s[1]+""+s[2]).name+"</a></li>");
+			out.print("<li><a href='"+request.getContextPath()+"/servlet/service/index.catlist?catid="+s[1]+""+s[2]+s[3]+""+s[4]+"&search="+currentNode.session.getRootNode().getNode("content").getNode("unspsc").getNode(s[1]+""+s[2]).getNode(s[3]+""+s[4]).name+"'>"+currentNode.session.getRootNode().getNode("content").getNode("unspsc").getNode(s[1]+""+s[2]).getNode(s[3]+""+s[4]).name+"</a></li>");
+ 			out.print("<li><a href='"+request.getContextPath()+"/servlet/service/index.catlist?catid="+s[1]+""+s[2]+s[3]+""+s[4]+s[5]+""+s[6]+"&search="+currentNode.session.getRootNode().getNode("content").getNode("unspsc").getNode(s[1]+""+s[2]).getNode(s[3]+""+s[4]).getNode(s[5]+""+s[6]).name+"'>"+currentNode.session.getRootNode().getNode("content").getNode("unspsc").getNode(s[1]+""+s[2]).getNode(s[3]+""+s[4]).getNode(s[5]+""+s[6]).name+"</a></li>");
+  			out.print("<li class='active'>Product List related to -"+currentNode.session.getRootNode().getNode("content").getNode("unspsc").getNode(s[1]+""+s[2]).getNode(s[3]+""+s[4]).getNode(s[5]+s[6]).getNode(s[7]+s[8]).name+" unspsc</li>");
+ 
+  			}
+ 
+ %>
+  </ol>   
+     
+    <div class="col-sm-9">
+        <div class="row">
+           <div class="col-sm-4">
+<h4 class="text-center product-logo">
+<% var supNode;
+if(currentNode.hasNode("sup") && currentNode.getNode("sup").hasNodes()){
+ var sup=currentNode.getNode("sup").getNodes();
+ supNode=currentNode.session.getRootNode().getNode("content").getNode("supplier").getNode(sup[0].supid);
+ if(supNode.hasNode("media") && supNode.getNode("media").hasNode("images") && supNode.getNode("media").getNode("images").hasNodes()){
+	var imgNode=supNode.getNode("media").getNode("images").getNodes();
+	out.print("<img src='"+request.getContextPath()+"/"+imgNode[0].imgPath+"' alt='' />");	
+	}
+}
+     %>
+
+
+</h4>
+     
+         
+         
+ <div id="content" class="content2">
+    <div class="item">
+        <div class="thumb_wrapper">
+            <div class="thumb">
+                <ul>
+                      <%
+      if(currentNode.hasNode("media") && currentNode.getNode("media").hasNode("images") && currentNode.getNode("media").getNode("images").hasNodes()){
+    
+  var itr  =currentNode.getNode("media").getNode("images").getNodes();
+  for(k in itr){ 
+	  %>
+   <li><a rev="group1" rel="zoomHeight:300, zoomWidth:400, adjustX: 10, adjustY:-4, position:'body'" class='cloud-zoom' href="<%=request.getScheme()+"://"+request.getServerName()+":"+ request.getServerPort()+request.getContextPath()+itr[k].imgpath%>"><img src="<%=request.getScheme()+"://"+request.getServerName()+":"+ request.getServerPort()+request.getContextPath()+itr[k].imgpath%>" alt="Formstack 1"/></a></li>
+  	
+  	<% }
+	  }else{%>
+		    <li><a rev="group1" rel="zoomHeight:300, zoomWidth:400, adjustX: 10, adjustY:-4, position:'body'" class='cloud-zoom' href="<%=request.getContextPath()%>/apps/images/nmg.jpg"><img src="<%=request.getContextPath()%>/app/images.nmg.jpg %>" alt="Formstack 1"/></a></li>
+            
+ <%  }
+  %>
+                    </ul>
+            </div>
+            <a class="prev" href="#"></a>
+            <a class="next" href="#"></a>
+        </div>
+    </div>
+</div>
+         
+    <% var supemail="";
+    if(currentNode.hasNode("sup") && currentNode.getNode("sup").hasNodes()){
+					var sup=currentNode.getNode("sup").getNodes();
+					supemail=currentNode.session.getRootNode().getNode("content").getNode("supplier").getNode(sup[0].supid).email;
+
+}%>
+ <div style="width:100%; float:left; text-align:center; padding:12px 0px;">
+    <a href="#" onclick="globalSupplierForm('<%=supemail%>')" class="btn btn-danger" data-toggle="modal" data-target=".contactsupplier"><i class="glyphicon glyphicon-envelope"></i> Send Enquiry</a>
+    <a data-target=".contactsupplier" data-toggle="modal" class="btn btn-success" href="#" onclick="globalSupplierForm('<%=supemail%>')">Get Quote</a>
+</div>
+           
+       </div>
+       
+        <div class="col-sm-8">
+            <div class="row">
+
+            <div class="category-list">
+            <!-- content -->
+            <div class="content mCustomScrollbar">
+                 <h2><% 
+				if(currentNode.hasNode("sup") && currentNode.getNode("sup").hasNodes()){
+					var sup=currentNode.getNode("sup").getNodes();
+					out.print(currentNode.session.getRootNode().getNode("content").getNode("supplier").getNode(sup[0].supid).name);
+
+}
+     %></h2>
+                <hr /><br>         
+                <h2><%=currentNode.name%> Description</h2>           
+                
+				<% if(currentNode.hasProperties()){
+				var pro=currentNode.getProperties();
+			for(i=0;i< pro.length-1;i++){
+					if(pro[i].isMultiple()){
+				var hv=pro[i].getValues();
+				out.print("<p>"+pro[i].getName()+" : "+hv[0].getString()+"</p>");
+				}else{
+						
+						}
+				out.print("<p>"+pro[i].getName()+" : "+pro[i]+"</p>");
+			
+			}
+								
+}%>
+
+            </div>
+    <script>
+        (function($){
+            $(window).load(function(){
+                
+                $("a[rel='load-content']").click(function(e){
+                    e.preventDefault();
+                    var url=$(this).attr("href");
+                    $.get(url,function(data){
+                        $(".content .mCSB_container").append(data); //load new content inside .mCSB_container
+                        //scroll-to appended content 
+                        $(".content").mCustomScrollbar("scrollTo","h2:last");
+                    });
+                });
+                
+                $(".content").delegate("a[href='top']","click",function(e){
+                    e.preventDefault();
+                    $(".content").mCustomScrollbar("scrollTo",$(this).attr("href"));
+                });
+                
+            });
+        })(jQuery);
+    </script>
+            </div>
+
+
+            </div>
+        </div> 
+
+<div class="col-sm-12">
+    <div data-example-id="togglable-tabs" role="tabpanel" class="bs-example bs-example-tabs">
+    <ul id="myTab" class="nav nav-tabs">
+      <li class="active"><a data-toggle="tab" href="#product-details">Specification</a></li>
+        <li><a data-toggle="tab" href="#company-details">Attachment Tab</a></li>
+      <li><a data-toggle="tab" href="#company-gallery">Gallery</a></li>
+    </ul>
+    <div class="tab-content" id="myTabContent">
+      <div id="product-details" class="tab-pane fade in active">
+     <div class="table-responsive">  <%if(currentNode.hasNode("spec")){
+      if(currentNode.getNode("spec").hasProperties()){
+       var spec=currentNode.getNode("spec").getProperties();%>
+        <h4>Specification</h4> 
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Parameter Name</th>
+                        <th>Value</th>
+                        
+                    </tr>
+                </thead>
+                <tbody>
+			<%for(j=0;j< spec.length-1;j++){%>
+                    <tr class="tr">
+                        <td><%=spec[j].getName()%></td>
+                        <td colspan="4" class="text-center"><% 
+					if(spec[j].isMultiple()){
+				var value = spec[j].getValues();
+				for(k in value){
+					out.print(value[k].getString());
+					}
+			}else{
+				out.print(spec[j]);
+				}							
+					%>
+				</td>
+                    </tr>
+         <%}%>           
+                </tbody>
+            </table>
+        
+        <% }}%>
+     </div>
+ </div>
+      <div id="company-details" class="tab-pane fade">
+      <div class="table-responsive">
+            <table class="table table-bordered">
+                <% var cp=0;
+                 if(currentNode.hasNode("attachment")){
+                	var attach=currentNode.getNodes();
+ 					for(h in attach){ %>
+                <tr>
+                    <td><%=cp%><% cp++; %></td>
+                    <td>
+                    <%
+                    out.prit("<img src='"+attach[h].imgPath+"' alt=''>"); 
+                    %>               
+                    </td>
+                    <td><%=attach[h].name%></td>
+                </tr>
+               <% }} %>
+            </table>
+        </div>  
+    </div>
+   <div id="company-gallery" class="tab-pane fade">
+          <h3>Video</h3>
+          <div class="row">
+             <% if(currentNode.hasNode("media") && currentNode.getNode("media").hasNode("video")){ 
+            	 var videoes=currentNode.getNode("media").getNode("video").getNodes();
+            	 for(f in videoes){
+				%>             
+              <div class="col-sm-4">
+                  <div class="thumbnail">
+                      <div class="image">
+                          <video width="200" controls>
+                              <source src="<%=request.getContextPath()%>/<%=videoes[f].imgpath%>" type="video/mp4">
+                              <source src="<%=request.getContextPath()%>/<%=videoes[f].imgpath%>" type="video/ogg">
+                              Your browser does not support HTML5 video.
+                          </video>
+                      </div>
+                      <div class="caption">
+                        <h4><a href="#"><%=videoes[f].name%></a></h4>
+                      </div>
+                 </div>
+              </div>
+             <%} }%>
+          </div> 
+
+          <h3>Image</h3>
+          <div class="row">
+              <% if(currentNode.hasNode("media") && currentNode.getNode("media").hasNode("images")){ 
+            	 var images=currentNode.getNode("media").getNode("images").getNodes();
+				 for(d in images){%>  
+              <div class="col-sm-4">
+                  <div class="thumbnail">
+                      <div class="image">
+                          <img src="<%=request.getContextPath()%>/<%=images[d].imgpath%>">
+                      </div>
+                      <div class="caption">
+                        <h4><a href="#"></a></h4>
+                      </div>
+                 </div>
+              </div>
+               
+               <% } }%>
+     
+		</div>
+ </div>
+      
+     </div>          
+				
+   	</div>
+    </div>
+  </div>
+</div>
+        
+        <div class="col-sm-3 product-brief-right">
+            <div class="advertise">
+               <!--/* OpenX iFrame Tag v2.8.10 */-->
+
+<iframe id='a74904f2' name='a74904f2' src='http://23.20.72.220/openx/www/delivery/afr.php?zoneid=17&amp;cb=1' frameborder='0' scrolling='no' width='268' height='411'><a href='http://23.20.72.220/openx/www/delivery/ck.php?n=af834ddf&amp;cb=1' target='_blank'><img src='http://23.20.72.220/openx/www/delivery/avw.php?zoneid=17&amp;cb=1&amp;n=af834ddf' border='0' alt='' /></a></iframe>
+
+            </div>
+
+            
+                    <iframe src="http://35.221.160.146:8082/portal/content/products/.topnews?actionType=product&pid=<%=request.getParameter("pid")%>" scrolling="no"  style="height:500px" frameborder='0' scrolling='no' width="268">    
+                </iframe>
+       
+
+
+
+    </div>
+
+    
+
+ <%load("hotseller.esp");%>
+
+    <%load("hotproducts.esp");%>
+    </div>
+
+        
+            </div>
+        </div>
+    </section>
+
+      <%load("../common/footer.esp");%>
+    </body>
+</html>

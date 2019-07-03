@@ -1,0 +1,467 @@
+
+<html>
+    <head>
+        <title>Home</title> 
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="description" content="Demo project with jQuery">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+         <%load("../common/links.esp");%>
+        
+<!-- custom scrollbar plugin -->
+<script src="<%=request.getContextPath()%>/apps/js/scrollbar/jquery.mCustomScrollbar.concat.min.js"></script>
+<link rel="stylesheet" href="<%=request.getContextPath()%>/apps/js/scrollbar/jquery.mCustomScrollbar.css">
+<link rel="stylesheet" href="<%=request.getContextPath()%>/apps/js/scrollbar/style.css">
+
+<%load("../common/header.esp");%>
+<div class="pace pace-active" style="display:none;">
+<div class="pace-progress">
+<div class="pace-progress-inner"></div>
+</div>
+<div class="pace-activity"></div>
+</div>
+
+
+<link rel="stylesheet" href="<%=request.getContextPath()%>/apps/css/compareProducts.css">
+ 
+<section class="compare_product">
+		 
+			<div class="container">
+				<div class="row">
+
+					<div class="col-md-2 col-sm-3 col-xs-12">
+               <div class="panel panel-primary">
+                           <div class="panel-heading">
+                             <h3 class="panel-title" id="panel-title">Category</h3>
+                           </div>
+                           <div class="panel-body panel-body-tree">
+						<ul id="tree1">
+						<%var obj="undefined";
+						 var curCatNode = currentNode.session.getRootNode().getNode("content").getNode("unspsc");
+			var nodes=curCatNode.getNodes();
+			for(i=0;i<nodes.length;i++){ 
+			if(!obj.equals(nodes[i])){
+				if(nodes[i].hasNodes()){
+		%>
+			                <li><a href="<%=request.getContextPath()%>/servlet/service/productselection.productlist?query=<%=nodes[i].getName()%>&search=<%=nodes[i].name%>"><%=nodes[i].name%></a>
+			                    <ul>
+			                    <% var nodes1= nodes[i].getNodes();
+					for(j=0;j<nodes1.length;j++){
+						if(!("undefined".equals(nodes1[j]))){
+							if(nodes1[j].hasNodes()){
+							%>
+			                        <li><a href="<%=request.getContextPath()%>/servlet/service/productselection.productlist?query=<%=nodes[i].getName()%><%=nodes1[j].getName()%>&search=<%=nodes1[j].name%>"><%=nodes1[j].name%></a>
+			                         			
+			                         			<!--<ul>
+			                         			<%
+			                        			var nodes2 = nodes1[j].getNodes();
+			                        			for(k=0;k<nodes2.length;k++){
+			                        			if(!("undefined".equals(nodes2[k]))){
+			                        			if(nodes2[k].hasNodes()){
+			                        			%>
+			                        			<li><a href="#"><%=nodes2[k].name%></a>
+			                        			
+			                        	      			<%}else{out.print("<li><a href='#'>"+nodes2[k].name+"</a></li>");}
+			                        			} 
+			                        			}
+			                        %>
+			                        </ul>-->
+			                        
+			                        </li>
+			                      
+								<%
+								}else{out.print("<li><a href='#'>"+nodes1[j].name+"</a></li>");}
+								}
+							}
+						%>
+			          			</ul>
+			                </li>
+			                <% }else{ out.print("<li><a href='#'>"+nodes[i].name+"</a></li>");}
+				}
+			}
+		%>
+						</ul>
+
+                         </div>
+                        </div>
+            <script type="text/javascript">
+				$.fn.extend({
+			    treed: function (o) {
+			      
+			      var openedClass = 'fa-minus';
+			      var closedClass = 'fa-plus';
+			      
+			      if (typeof o != 'undefined'){
+			        if (typeof o.openedClass != 'undefined'){
+			        openedClass = o.openedClass;
+			        }
+			        if (typeof o.closedClass != 'undefined'){
+			        closedClass = o.closedClass;
+			        }
+			      };
+			      
+			        //initialize each of the top levels
+			        var tree = $(this);
+			        tree.addClass("tree");
+			        tree.find('li').has("ul").each(function () {
+			            var branch = $(this); //li with children ul
+			            branch.prepend("<i class='indicator fa " + closedClass + "'></i>");
+			            branch.addClass('branch');
+			            branch.on('click', function (e) {
+			                if (this == e.target) {
+			                    var icon = $(this).children('i:last');
+			                    icon.toggleClass(openedClass + " " + closedClass);
+			                    $(this).children().children().toggle();
+			                }
+			            })
+			            branch.children().children().toggle();
+			        });
+			        //fire event from the dynamically added icon
+			      tree.find('.branch .indicator').each(function(){
+			        $(this).on('click', function () {
+			            $(this).closest('li').click();
+			        });
+			      });
+			        //fire event to open branch if the li contains an anchor instead of text
+			        tree.find('.branch>a').each(function () {
+			            $(this).on('click', function (e) {
+			                $(this).closest('li').click();
+			                e.preventDefault();
+			            });
+			        });
+			        //fire event to open branch if the li contains a button instead of text
+			        tree.find('.branch>button').each(function () {
+			            $(this).on('click', function (e) {
+			                $(this).closest('li').click();
+			                e.preventDefault();
+			            });
+			        });
+			    }
+			});
+
+			//Initialization of treeviews
+
+			$('#tree1').treed();
+
+			$('#tree2').treed({openedClass:'glyphicon-folder-open', closedClass:'glyphicon-folder-close'});
+
+			$('#tree3').treed({openedClass:'glyphicon-chevron-right', closedClass:'glyphicon-chevron-down'});
+
+				</script>
+					</div>
+					<div class="col-md-8 col-sm-9 col-xs-12">
+						<div class="row">
+							<div class="col-xs-12 ">
+								<div id="content_wrapper">
+         <div class="fnt-tahoma">
+            <div class="compareProducts-head">
+               <h1>Compare Products</h1>
+            </div>
+               <div class="table-responsive">
+            <table width="100%" cellspacing="0" cellpadding="0" border="0" class="compareProducts">
+               <colgroup>
+                  <col>
+                  <col>
+                  <col>
+                  <col>
+                  <col>
+               </colgroup>
+               <%
+               
+               var curNode = currentNode.session.getRootNode().getNode("content").getNode("product");
+            
+if(curNode.hasNode("products")){
+var prodNode = curNode.getNode("products");
+
+var productIdNode1 =  prodNode.getNode(request.getParameter("prod1"));
+var productIdNode2 =  prodNode.getNode(request.getParameter("prod2"));
+var productIdNode3 =  prodNode.getNode(request.getParameter("prod3"));
+
+}
+
+%>
+               <tbody>
+                  <tr class="first-row">
+                     <td valign="top">
+                     <!--   <div class="fnt12">You can add upto <br>4 Mobile Phones to compare</div>-->
+                     </td>
+                     <td valign="top" class="products-title">
+                        <img width="19" id="compareInnerProd-Close-1154038490" class="compareInnerProd-Close rfloat" src="<%=request.getContextPath()%>/apps/images/close.png">
+                        <a href="#" class="text-white"><%=productIdNode1.name%></a>
+                     </td>
+                     <td valign="top" class="products-title">
+                        <img width="19" id="compareInnerProd-Close-1134418253" class="compareInnerProd-Close rfloat" src="<%=request.getContextPath()%>/apps/images/close.png">
+                        <a href="#"><%=productIdNode2.name%></a>
+                     </td>
+                     <td valign="top" class="products-title">
+                        <img width="19" id="compareInnerProd-Close-214936653" class="compareInnerProd-Close rfloat" src="<%=request.getContextPath()%>/apps/images/close.png">
+                        <a class="text-white" href="#"><%=productIdNode3.name%></a>
+                     </td>
+                  </tr>
+                  <tr class="first-row">
+                     <td valign="top">
+                     <!--   <div class="fnt12">Now you can add</div>
+                        <div class="compareNumber">0</div>
+                        <div class="fnt12">more Mobile Phones</div>-->
+                     </td>
+                     <td valign="top" rowspan="2" class="fillCompareBox">
+                                       <% if(productIdNode1.hasNode("media") && 
+            productIdNode1.getNode("media").hasNodes()){
+            if(productIdNode1.getNode("media").hasNode("images") && 
+            productIdNode1.getNode("media").getNode("images").hasNodes()){
+           // if(productIdNode1.getNode("media").getNode("images").hasNode(request.getParameter("prod1"))){
+			//var imgNode1 = productIdNode1.getNode("media").getNode("images").getNode(request.getParameter("prod1"));
+			var imgNode1 = productIdNode1.getNode("media").getNode("images").getNodes();
+			//for(var i=0;imgNode1.length;i++){
+			if(imgNode1[0].hasProperty("imgpath")){%>
+			<div align="center"><img width="148" alt="" src="<%=request.getContextPath()%>/<%=imgNode1[0].imgpath%>"></div>
+			<div class="products-buyBtn buyBlueButton"><a vendorcode="S63a1e" supc="SDL646966903" catidomn="146975754" catalog="146975754" class="btn btn-default" href="" id="compProdBuy-1">Buy Now <span class="semiRightArrow"></span></a></div>
+                        
+			<%
+			}
+			}
+			//}
+			//}
+					}
+			%>                      
+                     </td>
+                     <td valign="top" rowspan="2" class="fillCompareBox">
+                                       <% if(productIdNode2.hasNode("media") && 
+            productIdNode2.getNode("media").hasNodes()){
+            if(productIdNode2.getNode("media").hasNode("images") && 
+            productIdNode2.getNode("media").getNode("images").hasNodes()){
+            //if(productIdNode2.getNode("media").getNode("images").hasNode(request.getParameter("prod2"))){
+			//var imgNode2 = productIdNode2.getNode("media").getNode("images").getNode(request.getParameter("prod2"));
+			var imgNode2 = productIdNode2.getNode("media").getNode("images").getNodes();
+			if(imgNode2[0].hasProperty("imgpath")){%>
+			<div align="center"><img width="148" alt="" src="<%=request.getContextPath()%>/<%=imgNode2[0].imgpath%>"></div>
+			<div class="products-buyBtn buyBlueButton"><a vendorcode="S63a1e" supc="SDL646966903" catidomn="146975754" catalog="146975754" class="btn btn-default" href="" id="compProdBuy-1">Buy Now <span class="semiRightArrow"></span></a></div>
+                        
+			<%
+			}
+			}
+			//}
+					}
+			%>                      
+                     </td>
+                     <td valign="top" rowspan="2" class="fillCompareBox">
+					<% if(productIdNode3.hasNode("media") && 
+            productIdNode3.getNode("media").hasNodes()){
+            if(productIdNode3.getNode("media").hasNode("images") && 
+            productIdNode3.getNode("media").getNode("images").hasNodes()){
+            //if(productIdNode3.getNode("media").getNode("images").hasNode(request.getParameter("prod3"))){
+			//var imgNode3 = productIdNode3.getNode("media").getNode("images").getNode(request.getParameter("prod3"));
+			var imgNode3 = productIdNode3.getNode("media").getNode("images").getNodes();
+			if(imgNode3[0].hasProperty("imgpath")){%>
+			<div align="center"><img width="148" alt="" src="<%=request.getContextPath()%>/<%=imgNode3[0].imgpath%>"></div>
+			<div class="products-buyBtn buyBlueButton"><a vendorcode="S63a1e" supc="SDL646966903" catidomn="146975754" catalog="146975754" class="btn btn-default" href="" id="compProdBuy-1">Buy Now <span class="semiRightArrow"></span></a></div>
+                        
+			<%
+			}
+			}
+			//	}
+					}
+			%>                      
+                  </tr>
+                  <tr class="first-row">
+                     <td class="head">Quick View</td>
+                  </tr>
+                        <%        if(productIdNode1.hasProperties()){
+       var prodProp1 = productIdNode1.getProperties();
+       var prodProp2 = productIdNode2.getProperties();
+       var prodProp3 = productIdNode3.getProperties();
+       
+     var a;
+       if ( (prodProp1.length > prodProp2.length || prodProp1.length == prodProp2.length) && (prodProp1.length > prodProp3.length || prodProp1.length == prodProp3.length)) {
+       
+       a=prodProp1;
+      } else if ( prodProp2.length > prodProp1.length && prodProp2.length > prodProp3.length ) {
+       a=prodProp2;
+       }else if ( prodProp3.length > prodProp1.length && prodProp3.length > prodProp2.length ){
+       a=prodProp3;
+       }
+       prodProp1=a;
+       for(j=0;j< prodProp1.length-1;j++){
+      
+       %>
+	   <tr>
+                     <td><strong><%=prodProp1[j].getName()%></strong></td>
+                     <td class="fillCompareBox compareProdPrice">
+                     <%
+                     var proName=prodProp1[j].getName();
+                     if(productIdNode1.hasProperty(proName)){%>
+                        <strike class="text-white" id="original-price-1"></strike>&nbsp;&nbsp;<span id="selling-price-1"><%=productIdNode1.getProperty(proName)%></span><br>
+                        <%}else{%>
+                        <strike class="text-white" id="original-price-1"></strike>&nbsp;&nbsp;<span id="selling-price-1">NA</span><br>
+                        <%}%>
+                     </td>
+                     <td class="fillCompareBox compareProdPrice">
+                     <%if(productIdNode2.hasProperty(proName)){%>
+                        <strike class="text-white" id="original-price-1"></strike>&nbsp;&nbsp;<span id="selling-price-1"><%=productIdNode2.getProperty(proName)%></span><br>
+                        <%}else{%>
+                        <strike class="text-white" id="original-price-1"></strike>&nbsp;&nbsp;<span id="selling-price-1">NA</span><br>
+                        <%}%>
+                     </td>
+                     <td class="fillCompareBox compareProdPrice">
+                     <%if(productIdNode3.hasProperty(proName)){%>
+                        <strike class="text-white" id="original-price-1"></strike>&nbsp;&nbsp;<span id="selling-price-1"><%=productIdNode3.getProperty(proName)%></span><br>
+                        <%}else{%>
+                        <strike class="text-white" id="original-price-1"></strike>&nbsp;&nbsp;<span id="selling-price-1">NA</span><br>
+                        <%}%>
+                     </td>
+                  </tr>
+	    <%
+                     }}
+      %>              
+            
+               </tbody>
+            </table>
+            </div>
+         </div>
+      </div>
+							</div>
+						</div>
+					</div>
+
+
+
+					<div class="col-md-2 col-sm-6 col-xs-12">
+						<div class="advertise">
+          <img alt="advertise" src="images/advertise2.jpg">
+      </div>
+      <div class="advertise">
+          <img alt="advertise" src="images/advertise2.jpg">
+      </div>
+					</div>
+				</div>
+			</div>
+
+</section>
+
+<%load("../common/footer.esp");%>
+
+<!-- Login Modal Start  -->
+<div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="loginModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+    <form class="form-horizontal">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="loginModalLabel">Login Details</h4>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+            <label class="col-sm-3 control-label">Name</label>
+            <div class="col-sm-9">
+              <input type="text" class="form-control">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-3 control-label">Password</label>
+            <div class="col-sm-9">
+              <input type="password" class="form-control">
+            </div>
+          </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary">Login</button>
+      </div>
+      </form>
+    </div>
+  </div>
+</div>
+<!-- Login Modal End  -->
+
+<!-- register Modal Start  -->
+<div class="modal fade" id="registerModal" tabindex="-1" role="dialog" aria-labelledby="registerModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+    <form class="form-horizontal">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="registerModalLabel">Registration Form</h4>
+      </div>
+      <div class="modal-body">
+          <div class="form-group">
+            <label class="col-sm-3 control-label">Full Name</label>
+            <div class="col-sm-9">
+              <input type="text" class="form-control">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-3 control-label">Full Name</label>
+            <div class="col-sm-9">
+              <input type="text" class="form-control">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-3 control-label">Password</label>
+            <div class="col-sm-9">
+              <input type="password" class="form-control">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-3 control-label">Confirm Password</label>
+            <div class="col-sm-9">
+              <input type="password" class="form-control">
+            </div>
+          </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary">Register</button>
+      </div>
+    </form>
+    </div>
+  </div>
+</div>
+<!-- register Modal End  -->
+
+
+<!-- contactsupplier Modal Start  -->
+<div class="modal fade contactsupplier" tabindex="-1" role="dialog" aria-labelledby="registerModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+    <form class="form-horizontal">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="registerModalLabel">Contact Supplier</h4>
+      </div>
+      <div class="modal-body">
+          <div class="form-group">
+            <label class="col-sm-3 control-label">Full Name</label>
+            <div class="col-sm-9">
+              <input type="text" class="form-control">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-3 control-label">Full Name</label>
+            <div class="col-sm-9">
+              <input type="text" class="form-control">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-3 control-label">Password</label>
+            <div class="col-sm-9">
+              <input type="password" class="form-control">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-3 control-label">Confirm Password</label>
+            <div class="col-sm-9">
+              <input type="password" class="form-control">
+            </div>
+          </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary">Register</button>
+      </div>
+    </form>
+    </div>
+  </div>
+</div>
+<!-- register Modal End  -->
+    
+  
+        
+    </body>
+</html>

@@ -1,0 +1,13 @@
+
+						<%
+						
+						var style=request.getParameter("mystyle");
+						var source=request.getParameter("mysource");
+						var content= currentNode.session.getRootNode().getNode("content").getNode("newsfeed");
+						var sty=content.getNode("stylemaster").getNode(style);
+						var sou=content.getNode("sourcemaster").getNode(source);
+						
+						%>
+					<iframe src="http://35.221.160.146:8082/RssFeed/getfeed?feedurl=http://35.221.160.146:8082/portal<%=sou.bizurl%>&titlestyle=<%=sty.titlestyle%>&descriptionstyle=<%=sty.descriptionstyle %>&headerstyle=<%=sty.headerstyle%>&datestyle=<%=sty.datestyle%>&headerTitle=Sport" frameborder="0" style="<%=sty.framestyle%>">
+					</iframe>
+			

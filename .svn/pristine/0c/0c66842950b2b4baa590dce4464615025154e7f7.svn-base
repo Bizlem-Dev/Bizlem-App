@@ -1,0 +1,56 @@
+body {
+	color: #686767;
+	background-color: #f6f6f6;
+}
+a {
+	color: #6cad3b
+}
+a:hover, a:focus {
+	outline: none;
+	color: #4D8225;
+	text-decoration: none;
+}
+img {
+	max-width: 100%;
+}
+.btn-outline {
+	background-color: transparent;
+	border:1px solid #23527c;
+	color: #23527c;
+}
+.btn-outline:hover, .btn-outline:focus, .btn-outline:active {
+	background-color: #23527c;
+	color: #fff;
+}
+#header {
+	background-color: #eee;
+	border-bottom: 1px solid #ddd;
+}
+.navbar-nav > li > a {
+
+	color: #676666;
+}
+.navbar-nav > li > a:hover, .navbar-nav > li > a:focus, .navbar-nav > li.active > a, .navbar-nav > li > a:focus {
+	background-color: transparent;
+	border-bottom: 2px solid #6cad3b;
+	color: #6cad3b;
+}
+.carousel-control, .carousel-control:hover, .carousel-control:focus {
+	color: #000;
+}
+.flex-direction-nav a::before {
+	color: #000 !important;
+}
+.top-conferences {
+	border-color: #757575;
+	width: 100%;
+	float: left;
+}
+.top-conferences > .panel-heading {
+	background-color: #292929;
+    border-color: #757575;
+    color: #fff;
+}
+#footer a {
+	color: #686767;
+}

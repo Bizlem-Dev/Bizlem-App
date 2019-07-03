@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html><% var currentNodeProvided = ((typeof currentNode != "undefined"));
+%>
+    <head>
+        <title>Product List</title>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="description" content="Demo project with jQuery">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+            <%load("../common/links.esp");%>
+    
+
+       
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.min.js"></script>
+	
+<script type="text/javascript" src="http://www.jquery4u.com/demos/jquery-quick-pagination/js/jquery.quick.pagination.min.js"></script>
+
+
+ <link rel="stylesheet" href="<%=request.getContextPath()%>/apps/css/pagination.css"><script type="text/javascript">
+$(document).ready(function() {
+	$("ul.pagination1").quickPagination();
+
+});
+</script>
+       <div class="pace pace-active" style="display:none;">
+<div class="pace-progress">
+<div class="pace-progress-inner"></div>
+</div>
+<div class="pace-activity"></div>
+</div>
+<%load("../common/header.esp");%>
+    <section class="section">
+        <div class="container">
+     
+    <div class="row">
+    
+  
+        <div class="col-sm-3 col-xs-12">
+            <div class="row">
+                <div class="col-sm-12">
+                    <!--<h4>Categoary</h4>-->
+<div class="panel-group categoary" id="accordion" role="tablist" aria-multiselectable="true">
+ 
+</div>
+                </div>
+               
+                </iframe>
+    
+            </div>
+        </div>
+         <div class="col-sm-6" col-xs-12>
+    <div class="row">
+   <h3>My products</h3>
+        
+  
+    <div class="demo content4">  <ul class="pagination1" style="list-style:none">
+    
+<% 
+ 
+var data=request.getAttribute("product");
+
+for(var k=0; k<data.size(); k++) { 
+          var path=data.get(k);
+                     
+            %><li>
+      <div class="search-list-mobile">
+                            <div class="thumbnail">
+                              <div class="thumb">
+                <% 
+                if(path.hasNode("media")){
+                	if(path.getNode("media").hasNode("images")){
+                		if(path.getNode("media").getNode("images").hasNodes()){
+                			var o=path.getNode("media").getNode("images").getNodes();
+                		
+                			out.print("<img alt="+"64x64"+" class="+"media-object"+" src='"+request.getScheme()+"://"+request.getServerName()+":"+ request.getServerPort()+request.getContextPath()+o[0].imgpath+"'>");
+                		
+ 						
+                		}else{
+                			//String img="<img alt="+"64x64"+" class="+"media-object"+" src="+request.getScheme()+"://"+request.getServerName()+":"+ request.getServerPort()+request.getContextPath()+"/apps/images/nmg.jpg>";
+                			out.print("<img alt="+"64x64"+" class="+"media-object"+" src='"+request.getScheme()+"://"+request.getServerName()+":"+ request.getServerPort()+request.getContextPath()+"/apps/images/nmg.jpg'>");
+                		}
+                	}else{
+                		//String img="<img alt="+"64x64"+" class="+"media-object"+" src="+request.getScheme()+"://"+request.getServerName()+":"+ request.getServerPort()+request.getContextPath()+"/apps/images/nmg.jpg>";
+            			out.print("<img alt="+"64x64"+" class="+"media-object"+" src='"+request.getScheme()+"://"+request.getServerName()+":"+ request.getServerPort()+request.getContextPath()+"/apps/images/nmg.jpg'>");  	
+                	}
+                	
+                }else{
+                	//String img="<img alt="+"64x64"+" class="+"media-object"+" src="+request.getScheme()+"://"+request.getServerName()+":"+ request.getServerPort()+request.getContextPath()+"/apps/images/nmg.jpg>";
+    			out.print("<img alt="+"64x64"+" class="+"media-object"+" src='"+request.getScheme()+"://"+request.getServerName()+":"+ request.getServerPort()+request.getContextPath()+"/apps/images/nmg.jpg'>");  	
+        	} %>
+                  
+              
+              </div>
+            
+            <div class="caption">
+            				<%if(path.hasProperty("redirecturl")){%>
+            				<h3><a href="<%=path.redirecturl%>" ><%=path.name%></a></h3>
+            				<%}else{%>
+            					<h3><a href="<%=request.getContextPath()%>/servlet/service/productselection.brief?pid=<%=path.getName()%>" target="_blank"><%=path.name%></a></h3>
+                              <%}%>
+                              
+                              <%if(path.description!="" && path.description!=null && path.description!="undefind"){%>
+            			<p class="ellipsis" style="white-space: nowrap;overflow: hidden; text-overflow: ellipsis;"><%=path.description%></p>
+            				<%}%>
+                              
+                     
+                   </div>
+                  
+                   <div class="all-btn">
+                             
+                              <div class="list-check"><input type="checkbox" id="<%=path.getName()%>" onclick="handleChClick(this)"></div>
+                              <div class="compare"><a lass="btn btn-danger" onclick="handleCompProduct()" href="#">Compare Now</a></div>
+                              <div class="price">Moq: <%=path.moq?path.moq:"NA"%> &nbsp;&nbsp; Price:  <%=path.price?path.price:"NA"%></div>
+                               <div class="list-check"> <a class="btn btn-default"  href="<%=request.getContextPath()%>/servlet/service/productselection.productEdit?id=<%=path.prodid%>&param=edit">Edit</a></div>
+                              
+                   
+                            </div>      
+                                      
+                </div>
+               
+            </div></li>
+        <%} %>
+       
+        </div>
+        
+            
+
+            </div>
+        </div>
+        <div class="col-sm-3"><div id="adbody1">
+ </div>
+            <div class="advertise">
+               <!--/* OpenX iFrame Tag v2.8.10 */-->
+
+<iframe id='a9407722' name='a9407722' src='http://23.20.72.220/openx/www/delivery/afr.php?zoneid=16&amp;cb=1' frameborder='0' scrolling='no' width='268' height='410'><a href='http://23.20.72.220/openx/www/delivery/ck.php?n=a0456048&amp;cb=1' target='_blank'><img src='http://23.20.72.220/openx/www/delivery/avw.php?zoneid=16&amp;cb=1&amp;n=a0456048' border='0' alt='' /></a></iframe>
+
+            </div>
+
+           
+        </div>
+    </div>
+
+
+
+
+
+        
+            </div>
+        </div>
+    </section>
+
+      <%load("../common/footer.esp");%>
+<!-- register Modal End  -->
+
+    
+    </body>
+</html>

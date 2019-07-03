@@ -1,0 +1,147 @@
+
+<html>
+    <head>
+        <title>Home</title> 
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="description" content="Demo project with jQuery">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+<%load("../common/links.esp");%>
+    </head>
+<body>
+<div class="pace pace-active" style="display:none;">
+<div class="pace-progress">
+<div class="pace-progress-inner"></div>
+</div>
+<div class="pace-activity"></div>
+</div>
+
+<%load("../common/header.esp");%>
+ <script>    
+function previewWidget1(){
+var me=document.getElementById("metadeta").value;
+var styleid=document.getElementById("mystyle").value;
+ 					$.ajax({
+						url:"http://35.221.160.146:8082/portal/servlet/service/news.getstyles",
+						type: 'GET',
+						data:{"styleid":styleid},
+						success: function(data1) {
+											
+						$.ajax({
+						url:"http://35.221.160.146:8082/portal/servlet/service/news.solrurlskeyup",
+						type: 'GET',
+						data:{"metadeta":me},
+						success: function(data2) {
+						alert(data2);						
+						if(data2!=null){
+						var r=data2.split("%%##");
+						if(r[0]=="success"){
+							$("#frameme").html("<iframe src='http://35.221.160.146:8082/RssFeed/getfeed?feedurl="+r[1]+data1+" frameborder='0' ></iframe>");
+						   }
+						   
+						   }
+						}
+					});
+						}
+					});
+
+
+}
+
+
+
+
+function previewWidget(){
+var me=document.getElementById("metadeta").value;
+var styleid=document.getElementById("mystyle").value;
+ 					$.ajax({
+						url:"http://35.221.160.146:8082/portal/servlet/service/news.getstyles",
+						type: 'GET',
+						data:{"styleid":styleid},
+						success: function(data1) {
+											
+						$.ajax({
+						url:"http://35.221.160.146:8082/portal/servlet/service/news.solrurls",
+						type: 'GET',
+						data:{"metadeta":me},
+						success: function(data2) {						
+						
+						$("#frameme").html("<iframe src='http://35.221.160.146:8082/RssFeed/getfeed?feedurl="+data2+data1+" frameborder='0' ></iframe>");
+						}
+					});
+						}
+					});
+
+
+}
+ 
+ function addRowContact() {
+ 
+            var table = document.getElementById("cotactAddTable");
+ 
+            var rowCount = table.rows.length;
+            var row = table.insertRow(rowCount);
+ 
+            var cell1 = row.insertCell(0);
+            var element1 = document.createElement("input");
+            element1.type = "text";
+            element1.name = "feedurl";
+            cell1.appendChild(element1);
+ 
+         
+        }
+ 
+        function deleteRowContact() {
+            try {
+            var table = document.getElementById("cotactAddTable");
+            var rowCount = table.rows.length;
+				if(rowCount>1){
+				table.deleteRow(rowCount-1);
+				}
+           
+            }catch(e) {
+                alert(e);
+            }
+        }
+ 
+ </script>   
+ 
+
+<section class="new_description_page">
+		
+			<div class="container">
+				<div class="row">
+					<div class="col-sm-9 col-xs-12">
+						<div class="row">
+				<form action="<%=request.getContextPath()%>/servlet/service/news.adddynamiccomposite" method="POST">
+				<select name="mystyle" id="mystyle" >
+						<% 
+							var news=currentNode.session.getRootNode().getNode("content").getNode("newsfeed").getNode("stylemaster").getNodes();
+						for (var i=0;i<news.length;i++){
+						
+							%>
+						<option value="<%=news[i].id%>"><%=news[i].title%></option>
+						<%}%>
+						</select><hr>
+						<input type="text" placeholder="Name  " name="sourcename"><hr>
+						
+                                                                        <hr>
+                                                                         
+						<input type="text" placeholder="Enter meta deta information " id="metadeta" name="metadeta" ><hr>
+						<input type="text" placeholder="Enter revite time" name="revisitetime">(eg : HH:MM:SS (01:20:22))<hr>
+						
+						<input type="hidden" name="sourceid" value="<%=request.getParameter("id")%>"> 
+						<input type="button" value="Preview Widget" onclick="previewWidget()">
+						<input type="submit" value="Submit">
+					</form>				
+						</div>
+					</div>
+					<div id="frameme">
+					</div>
+				</div>
+		</div>
+</section>
+
+<%load("../common/footer.esp");%>
+    </body>
+</html>

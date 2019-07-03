@@ -1,0 +1,25 @@
+
+/* CSS Document */
+@import url("style_clean.css");
+
+*{font-family: "PT Sans", Arial, Helvetica, sans-serif !important;}
+
+#resume .name{color:rgb(30,120,180);}
+
+h2.section-header{color:rgb(30,120,180) !important;}
+#resume .content {color:rgb(85,85,85);}
+
+#resume .name{margin:0 !important; font-weight:bold;}
+
+#resume .contact{margin:0; padding:0; text-align:left !important;}
+
+h2.section-header{text-align:left !important;  font-weight:bold !important;}
+
+#resume .content{font-size:13px; /*background:url(../images/linebg.jpg) 0 0 repeat-x;*/ padding-top:0 !important; text-align:left;}
+
+.summary, .specialties, .skills, .positions, .educations, .honors, .interests {border-bottom:1px solid rgb(30,120,180); padding-bottom:20px;}
+
+#resume .position .company-name, #resume .education .school-name, #resume .certification .certification-name, #resume .patent .patent-title, #resume .publication .publication-title{font-size:16px; font-weight:bold; color:rgb(30,120,180);}
+#resume .contact { border-top:5px solid rgb(30,120,180) ;}
+
+/*.header { padding:20px 0px; background:rgb(222,222,222);}*/

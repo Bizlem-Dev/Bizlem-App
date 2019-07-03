@@ -1,0 +1,91 @@
+<html>
+<head>
+
+<style type="text/css">
+#container ul { list-style: none; }
+#container .buttons { margin-bottom: 20px; }
+
+#container .list li { width: 100%; border-bottom: 1px dotted #CCC; margin-bottom: 10px; padding-bottom: 10px; }
+
+#container .grid li { float: left; width: 20%; height: 166px; border-right: 1px dotted #CCC; border-bottom: 1px dotted #CCC; padding: 20px; }
+</style>
+<script type="text/javascript">
+$(document).ready(function () {    
+
+$('button').on('click',function(e) {
+    if ($(this).hasClass('grid')) {
+        $('#container ul').removeClass('list').addClass('grid');
+    }
+    else if($(this).hasClass('list')) {
+        $('#container ul').removeClass('grid').addClass('list');
+    }
+});
+
+});
+</script>
+</head>
+<body>
+<div id="container" style="margin-top:5%">
+    <div style="margin-left:74%">
+        <button type="button" class="grid btn btn-default btn-sm">
+  <span class="glyphicon glyphicon-th"></span>
+        </button>
+        <button type="button" class="list btn btn-default btn-sm">
+  <span class="glyphicon glyphicon-th-list"></span>
+        </button>
+        
+    </div>
+    
+    <ul class="list">
+        <%
+                                                                                        if (currentNode.hasNode("child")){
+                                                                                        var childs=currentNode.getNode("child").getNodes();
+                                                                                        for(var j=0;j<childs.length;j++){
+                                                                                        if(j==0){
+                                                                                        %>
+                                                                                      
+                                                                                       <%
+                                                                                     if (currentNode.hasNode("template") && currentNode.getNode("template").getNode("attr").hasNodes()) {
+                                                                                        var attrNode = currentNode.getNode("template").getNode("attr");
+                                                                                        //var attProp=attrNode.getProperties();
+                                                                                        if (attrNode.hasNodes()) {
+                                                                                            
+                                                                                                var attrNodes = attrNode.getNodes();
+                                                                                                var s = 0;
+                                                                                                //var counte = 0;
+                                                                                            //    out.print(attrNodes.length);
+                                                                                                for (var z = 0; z < attrNodes.length; z++) { 
+                                                                                             
+                                                                                            if (currentNode.session.getRootNode().getNode("content").getNode("attribute").getNode("type").hasNode(attrNodes[z].type)){
+                                                                                    var	labelname=currentNode.session.getRootNode().getNode("content").getNode("attribute").getNode("type").getNode(attrNodes[z].type).getNodes();
+                                                                                      var	labelName=currentNode.session.getRootNode().getNode("content").getNode("attribute").getNode("label").getNode(attrNodes[z].label);
+                                                                                      var	labelName1=currentNode.session.getRootNode().getNode("content").getNode("attribute").getNode("type").getNode(attrNodes[z].type);
+                                                                                      if(attrNodes[z].uom != ""){
+                                                                                      var	labelName2=currentNode.session.getRootNode().getNode("content").getNode("uom").getNode(attrNodes[z].uom);
+                                                                                    }
+                                                                                      %>
+                                                                                      <li>
+                                                                                    <p><span><b>Label</b>:</span> <span><%=labelName.name%></span></p>
+                                                                                    <p><span><b>Type</b>:</span> <span><%=labelName1.name%></span></p>
+                                                                                    <p><span><b>Uom</b>:</span> 
+                                                                                    <%if(attrNodes[z].uom != ""){%>
+                                                                                    <span><%=labelName2.description%></span>
+                                                                                    <%}else{%>
+                                                                                    <span></span>
+                                                                                    <%}%>
+                                                                                    </p>
+                                                                                      <%for(var m=0;m<labelname.length;m++){
+                                                                                       
+                                                                                      	%>
+                                                                                    <p><span><b><%=labelname[m].placeholder%></b>:</span> <span><%=childs[j].getNode("attr").getProperty(labelName.name+"_"+labelname[m].placeholder)%></span></p>
+                                                                               
+                                                                                 <%}%>
+                                                                                 </li>
+                                                                                  <%}}
+                                                                                  }}}}}%>
+                                                                                  
+                                                                                  
+        
+    </ul>
+</div>    
+</html>

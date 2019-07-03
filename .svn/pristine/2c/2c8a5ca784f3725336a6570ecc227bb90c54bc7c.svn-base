@@ -1,0 +1,729 @@
+                      <script language="javascript">
+                      
+                      var adglobalcountfront=1;
+                      var adglobalcountright=1;
+	function logout(uid){
+	
+	// ** window.location="/portal/j_spring_security_logout";
+		$.ajax({
+					  type: 'GET',
+                      url: '<c:out value="http://35.221.160.146:8078/OpenFireClient/Logout.jsp',
+                      data: {
+                              username: uid
+                          }, 
+                      complete: function(){
+							window.location="http://35.221.160.146:8082/portal/logout.jsp";
+					  }
+		});
+	}
+            function AjaxFunction(u_id, srt)
+            {
+                var searchval="<%=request.getParameter("search")%>";
+               var core="<%=request.getParameter("core")%>";
+                var httpxml;
+                try
+                {
+                    // Firefox, Opera 8.0+, Safari
+                    httpxml = new XMLHttpRequest();
+                }
+                catch (e)
+                {
+                    // Internet Explorer
+                    try
+                    {
+                        httpxml = new ActiveXObject("Msxml2.XMLHTTP");
+                    }
+                    catch (e)
+                    {
+                        try
+                        {
+                            httpxml = new ActiveXObject("Microsoft.XMLHTTP");
+                        }
+                        catch (e)
+                        {
+                            alert("Your browser does not support AJAX!");
+                            return false;
+                        }
+                    }
+                }
+                function stateck()
+                {
+                    if (httpxml.readyState == 3)
+                    {
+                        //setTimeout(function() {alert("aaaaa")}, 1000);
+                    }
+                    if (httpxml.readyState == 4)
+                    {
+                        
+                        var resultVal = httpxml.responseText;
+                        
+                        var value = resultVal.split("#####");
+                        if(core=="product"){
+                       call(value[0]);
+                       call1(value[1]);
+                        }else if(core=="person"){
+                        getPerson(value[0]);
+                        }else if(core=="company"){
+                        getCompany(value[0]);
+                        }else if(core=="products"){
+                        if(!value[0].length==0 & value[0].length>0){
+                        call(value[0]);}                        
+                        
+                      
+                        }
+
+                    }
+                }
+                //var url="solrsearch_action.php";
+                if(core=="person"){
+                 var url = "http://50.17.231.172/person/solrsearch_action_javascript.php";
+                }else if(core=="product"){
+                 var url = "http://50.17.231.172/bsearch/solrsearch_action_javascript.php";
+                }else if(core=="company"){
+                 var url = "http://50.17.231.172/company/solrsearch_action_javascript.php";
+                }else{
+                 var url = "http://50.17.231.172/bsearch/solrsearch_action_javascript.php";
+                core="products";
+                }
+               
+                
+                if (searchval == '*')
+                {
+                    url = url + "?u_id=" + u_id + "&total=" + searchval;
+                }
+                else
+                {
+                    url = url + "?u_id=" + u_id + "&search=" + searchval + "&start=" + srt + "&limit=20";
+                }
+                
+                httpxml.onreadystatechange = stateck;
+                httpxml.open("GET", url, true);
+                httpxml.send(null);
+
+            }
+            
+  function call(rsound) { 
+  var divIn = "";
+  var actullength=0;
+  var uptolength=0;
+  var n=rsound.split(",");
+  if((n.length>adglobalcountfront*4)){
+  var actullength=4*(adglobalcountfront-1);
+  uptolength=4*adglobalcountfront;
+  
+  }else{
+    var actullength=4*(adglobalcountfront-1);
+  uptolength=n.length;
+  }
+  if(actullength<uptolength){
+  for(var i = actullength;i <uptolength;i++)
+  {
+   //alert(n[i]);
+   divIn =divIn+"<iframe id='a2960046' name='a2960046' src='http://50.17.231.172/openx/www/delivery/afr.php?zoneid=4&amp;source="+n[i]+"&amp;bannertype=b&amp;block=1&amp;cb=231231232' frameborder='0' scrolling='no' width='600' height='115'><a href='http://50.17.231.172/openx/www/delivery/ck.php?n=a7019e89&amp;cb=231231232' target='_blank'><img src='http://50.17.231.172/openx/www/delivery/avw.php?zoneid=4&amp;source="+n[i]+"&amp;bannertype=b&amp;block=1&amp;cb=231231232&amp;n=a7019e89' border='0' alt='' /></a></iframe>";
+  
+        }
+   }
+  document.getElementById("adbody").innerHTML=divIn;
+ } 
+ 
+ function call1(rsound) 
+ {
+  var divIn = "";
+  var actullength=0;
+  var uptolength=0;
+  var n=rsound.split(",");
+  
+  if((n.length>adglobalcountfront*4)){
+  var actullength=4*(adglobalcountfront-1);
+  uptolength=4*adglobalcountfront;
+  
+  }else{
+    var actullength=4*(adglobalcountfront-1);
+  uptolength=n.length;
+  }
+  if(actullength<uptolength){
+  for(var i = actullength;i <uptolength;i++)
+  {
+   //alert(n[i]);
+   divIn =divIn+"<div class='adcontent'><iframe id='a25d47a3' name='a25d47a3' src='http://50.17.231.172/openx/www/delivery/afr.php?zoneid=4&amp;source="+n[i]+"&amp;cb=00' frameborder='0' scrolling='no' width='280' height='110'><a href='http://50.17.231.172/openx/www/delivery/ck.php?n=aaf72d31&amp;cb=00' target='_blank'><img src='http://50.17.231.172/openx/www/delivery/avw.php?zoneid=36&amp;source="+n[i]+"&amp;cb=00&amp;n=aaf72d31' border='0' alt='' /></a></iframe></div>";
+  }}
+ document.getElementById("adbody1").innerHTML=divIn;
+ } 
+ 
+ function getPerson(person){
+ if(person!=null && person!=""){
+  document.getElementById("adbody").innerHTML=divIn;
+  }}
+ 
+  function getCompany(company){
+  if(company!=null && company!=""){
+  document.getElementById("adbody").innerHTML=divIn;
+  }
+ 
+ }
+ 
+ 
+function validateSearch(){
+var s=document.getElementsByName("search")[0].value;
+if(s.length>0){
+	document.getElementById("searchForm").submit();
+	}else{
+	alert("Please enter some text to search !");
+	}
+}
+     function globalSupplierForm(a){
+ 		var email= document.getElementById("email").value;
+ 		var name= document.getElementById("name").value;
+ 		var company= document.getElementById("phone").value;
+ 		var msg= document.getElementById("msgContent").value; 		
+ 		var supid= document.getElementById("cotactsupplierid").value;
+ 		if(supid.length!=0 && Validation(company) && ValidateEmail(email)){
+ 		supid=a;		
+ 	
+ 		var data='userId='+email+'&supId='+supid+'&company='+company+'&msg='+msg+'&name='+name;
+ 			//alert();
+ 					$.ajax({
+				 	 	 type: 'GET',
+		  				 url:'<%=request.getContextPath()%>/servlet/service/event.sendMail',
+						 data: data,
+						 success: function(dataa){
+						 $('#contactsupplier').modal('toggle');
+						 document.getElementById("contactForm").reset();
+								
+								alert("Your mail have been sent !"+dataa);
+					  	
+						  }
+						});	
+  				}
+  			}
+  				
+function Validation(a)
+{
+
+if(a=="")
+{
+alert("please Enter the Contact Number");
+
+return false;
+}
+if(isNaN(a))
+{
+alert("Enter the valid Mobile Number !");
+return false;
+}
+if((a.length < 10) || (a.length > 10))
+{
+return false;
+}	
+return true;
+}		
+ 
+ 
+ function ValidateEmail(mail)   
+{  
+ if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(mail))  
+  {  
+    return (true);  
+  }  
+    alert("You have entered an invalid email address!")  
+    return (false);  
+}			
+        </script>
+        
+          <script type="text/javascript">
+          $(document).ready(function(){
+          $.ajax
+	({
+        url:'<%=request.getContextPath()%>/servlet/service/event.dashboardview',
+        data:{
+        	
+        },
+        success: function(data) {
+        if(data != "true"){
+        $("#idDashboard").hide();
+        }else{
+        $("#idDashboard").show();
+        }
+       }
+    });
+            $('.nav-pills, .nav-tabs').tabdrop();
+            
+	
+        }); 
+          </script>
+
+<script src="<%=request.getScheme()+"://"+request.getServerName()+":"+ request.getServerPort()+request.getContextPath()%>/apps/js/chosen/chosen.jquery.js"></script>
+<link href="<%=request.getScheme()+"://"+request.getServerName()+":"+ request.getServerPort()+request.getContextPath()%>/apps/js/chosen/chosen.min.css" rel="stylesheet">
+<script>
+    $(function() {
+        $('.chosen-select').chosen();
+        $('.chosen-select-deselect').chosen({ allow_single_deselect: true });
+    });
+    
+
+</script>
+		<script type="text/javascript">
+				
+var eventMethod = window.addEventListener ? "addEventListener" : "attachEvent";
+var eventer = window[eventMethod];
+
+
+var messageEvent = eventMethod == "attachEvent" ? "onmessage" : "message";
+
+
+eventer(messageEvent, function (e) {
+     console.log("origin---"+e.origin);
+     if(e.origin == 'http://35.221.160.146'){
+     if(e.data=="sipml"){
+		var phoneDiv = document.getElementById('phoneDiv');
+		if($(phoneDiv).height()=="122"){
+			
+			$(phoneDiv).css("height","30px");
+		}
+		else{
+			$(phoneDiv).css("height","122px");
+		}	
+		}
+     }else if (e.origin == 'http://50.17.231.172') {		 
+			var supid= document.getElementById("cotactsupplierid").value=e.data;	
+		$('#contactsupplier').modal('toggle');
+	}else if(e.origin == 'http://54.225.114.173'){
+	if(e.data=="checkout"){
+			<%if(request.getRemoteUser()!=null && !request.getRemoteUser().equals("anonymous")){%>
+			 document.getElementById("iamcommerece").contentWindow.postMessage('<%=request.getRemoteUser()%>~~<%=currentNode.session.getRootNode().getNode("content").getNode("user").getNode(request.getRemoteUser().replace("@","_")).name%>~~<%=currentNode.session.getRootNode().getNode("content").getNode("user").getNode(request.getRemoteUser().replace("@","_")).lastname%>', '*');
+			<%}else{%>
+			window.location="http://35.221.160.146/portal/login";
+			<%}%>  
+	}else{
+		 document.getElementById("iamcommerece").height=e.data+"px";
+		 }
+	}else if(e.origin == 'http://35.221.160.146:8078'){	
+	if(e.data=="list"){
+	document.getElementById("chatFrame").height="450px";
+	document.getElementById("testDiv").style.height="450px";
+	
+		}else if(e.data=="listclose"){
+	document.getElementById("chatFrame").height="35px";
+	document.getElementById("testDiv").style.height="35px";	
+		}else if(e.data=="chatWindow"){
+	document.getElementById("chatFrame").height="450px";
+	document.getElementById("testDiv").style.height="450px";
+	document.getElementById("testDiv").style.width="300px";	
+		}else if(e.data=="chatWindowclose"){
+	document.getElementById("chatFrame").height="450px";
+	document.getElementById("testDiv").style.height="450px";
+	document.getElementById("testDiv").style.width="200px";	
+		}
+		 
+	}
+	
+}, false); 
+function globalSupplierSetter(a){
+document.getElementById("cotactsupplierid").value=a;
+$('#contactsupplier').modal('toggle');
+}
+	</script>
+	 <script type="text/javascript">
+var chCnt = 0;
+var a1 = "";
+var a2 = "";
+var a3 = "";
+function handleChClick(cb){
+if(chCnt > 3){
+alert("Only three product is allowed");
+}else if(cb.checked){
+chCnt++;
+if(chCnt == 1){
+a1 = cb.id
+}else if(chCnt == 2){
+a2 = cb.id
+}else if(chCnt == 3){
+a3 = cb.id
+}
+}else{
+if(chCnt == 1){
+a1 = "";
+}else if(chCnt == 2){
+a2 = "";
+}else if(chCnt == 3){
+a3 = "";
+}
+chCnt--;
+}
+}
+
+function handleCompProduct(){
+if(chCnt == 0){
+alert("please choose product for comparison");
+return false;
+}else if(chCnt > 3){
+alert("maximum three product is allowed for comparison");
+return false;
+}else if(chCnt < 3 && chCnt > 0){
+alert("please choose three product for comparison");
+return false;
+}else{
+var url = '<%=request.getContextPath()%>/servlet/service/productselection.compareprod?prod1='+a1+'&prod2='+a2+'&prod3='+a3;
+window.open(url,"_top");
+}
+}
+
+
+function SearchOnEnter(event){
+	 var key = event.keyCode;
+	 if (key == 13) {
+	 			validateSearch()
+			}
+}
+
+function mailmessageheader(a){
+  var c=document.getElementById("messageSubjectFriend").value; 
+  var b=document.getElementById("messagebodyFriend").value;
+  
+  		if(a.length>0 && b.length>0){
+  	var  param=["to","message","subject","from"];
+          var paramValue=[a,b,c,"<%=request.getRemoteUser()%>"];		  
+ 		  UserDWRService.callPostService("http://35.221.160.146:8082/portal/servlet/social/service.sendMailToFriend",param,paramValue,function(data) {
+       console.log(data);
+         
+          $("#connectionMessage").modal('toggle'); 
+              alert("Your message has been sent !");
+          });
+  		}
+    }
+    
+   function changereadState(d){
+      $.ajax
+	({
+	 	type: 'POST',
+		url:'<%=request.getContextPath()%>/servlet/social/service.changestate',
+	    data:{changestate:"change",messageid:d,loginuser:"<%=request.getRemoteUser()%>"           	
+        },
+        success: function(data) {
+      	console.log(data);
+      	window.location="<%=request.getContextPath()%>/content/user/.messages";
+       }
+    });
+    
+  }
+</script>
+<style>
+/* CSS used here will be applied after bootstrap.css */
+
+.dropdown {
+    display:inline-block;
+   
+  }
+
+
+.glyphicon-bell {
+   
+    font-size:1.5rem;
+  }
+
+.notifications {
+   min-width:420px; 
+  }
+  
+  .notifications-wrapper {
+     overflow:auto;
+      max-height:250px;
+    }
+    
+ .menu-title {
+     color:#ff7788;
+     font-size:1.5rem;
+      display:inline-block;
+      }
+ 
+.glyphicon-circle-arrow-right {
+      margin-left:10px;     
+   }
+  
+   
+ .notification-heading, .notification-footer  {
+ 	padding:2px 10px;
+       }
+      
+        
+.dropdown-menu.divider {
+  margin:5px 0;          
+  }
+
+.item-title {
+  
+ font-size:1.3rem;
+ color:#000;
+    
+}
+
+.notifications a.content {
+ text-decoration:none;
+ background:#ccc;
+
+ }
+    
+.notification-item {
+ padding:10px;
+ margin:5px;
+ background:#ccc;
+ border-radius:4px;
+ }
+
+
+</style>
+    </head>
+<body onload="AjaxFunction('2',0)">
+ 
+    <header id="header">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-3 col-xs-12">
+                    <div id="logo">
+                        <a href="http://35.221.160.146">
+                           <img src="/portal/apps/images/logo.png" alt="Logo">
+                        </a>
+                    </div>
+                </div>
+                <div class="col-sm-9">
+                    <div class="row">
+                        <div class="col-sm-12 col-xs-12">
+                            <div class="row">
+                                <div class="col-md-9 col-sm-8 col-xs-12">
+                                   <form action="<%=request.getContextPath()%>/servlet/service/globalsearch.process" type="GET" id="searchForm">
+                           
+                                      <div class="input-group" id="search">
+                                      <span class="input-group-btn">
+                                            <select  data-placeholder="Product" class="chosen-select form-control"  name="core" style="width:120px;">
+                                            <option value="product">Product</option>
+                                            <option value="person">Person</option>
+                                            <option value="company">Company</option>
+                                        </select>
+                                        </span>
+                                        <input type="text" class="form-control" onkeypress="SearchOnEnter(event);" placeholder="I m looking for..."  name="search"  >
+                                        <span class="input-group-btn">
+                                            <button class="btn btn-primary" type="button" onclick="validateSearch()">Search</button>
+                                        </span>
+                                    </div>
+                                    </form>
+                                </div>
+                                <div class="col-md-3 col-sm-4 col-xs-8">
+                                    <ul class="social-icon">
+                                    <li class="animate growIn"><script language="JavaScript" type="text/javascript" src="http://35.221.160.146:9090/webchat/jivelive.jsp"></script>
+<script> showChatButton('bizlemservice@workgroup.socialmail.in');</script></li>
+                                    
+                                        <li class="animate growIn"><a href="#" class="twiter"></a></li>
+                                        <li class="animate growIn"><a href="#" class="facebook"></a></li>
+                                       <!-- <li class="animate growIn"><a href="#" class="video"></a></li>-->
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-12 col-xs-12">
+                            <nav class="navbar navbar-static">
+                                <div class="container-fluid">
+                                    <div class="navbar-header">
+                                        <button data-target=".bs-example-js-navbar-scrollspy" data-toggle="collapse" type="button" class="navbar-toggle collapsed">
+                                            <span class="sr-only">Toggle navigation</span>
+                                            <span class="icon-bar"></span>
+                                            <span class="icon-bar"></span>
+                                            <span class="icon-bar"></span>
+                                        </button>
+                                    </div>
+                                    <div class="collapse navbar-collapse bs-example-js-navbar-scrollspy">
+                                        <ul class="nav navbar-nav navbar-left">
+                                            <li><a href="<%=request.getContextPath()%>/servlet/service/index.pageview">Home</a></li>
+                                            <li><a href="<%=request.getContextPath()%>/servlet/service/page.servicelist">Services</a></li>
+                                           
+                                            <li><a href="<%=request.getContextPath()%>/servlet/service/page.buyers">For Buyers</a></li>
+                                            <li><a href="<%=request.getContextPath()%>/servlet/service/page.manufacturer">For Manufactures</a></li>
+                                            <li><a href="<%=request.getContextPath()%>/servlet/service/page.advertise">Advertise Here</a></li>
+                                            
+                                            <li><a href="<%=request.getContextPath()%>/servlet/service/page.aboutus">About Us</a></li>
+                                            
+                                            <li><a href="<%=request.getContextPath()%>/servlet/service/page.contactus">Contact Us</a></li>
+                                        </ul> 
+                                       <%if(request.getRemoteUser()==null || request.getRemoteUser().equals("anonymous") || request.getRemoteUser().equals("admin")){%>   
+                                        <ul class="nav navbar-nav navbar-right">
+                                         <li><a href="<%=request.getContextPath()%>/servlet/service/index.login">Login</a></li>	
+										<li><a href="<%=request.getContextPath()%>/servlet/service/index.signup">Sign up</a></li>
+                                        </ul>
+                                       <%}%>
+                                </div>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+        
+        
+        <%
+        
+        if(request.getRemoteUser()!=null && !request.getRemoteUser().equals("anonymous") && !request.getRemoteUser().equals("admin")){%>  
+   
+        
+       
+<section class="navbar-after-login">
+  <nav class="navbar navbar-inverse" role="navigation">
+  <div class="container">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+  
+            
+        
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse navbar-ex1-collapse">
+      <ul class="nav navbar-nav navbar-left">
+   
+        <li ><a href="<%=request.getContextPath()%>/servlet/service/event.userevent">My Page</a></li>
+        
+        <li id="idDashboard" style="display:none"><a href="<%=request.getContextPath()%>/servlet/service/event.dashboard">Dashboard</a></li>
+        
+        <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" hrf="#">Social Apps</a>
+         <ul class="dropdown-menu">
+        <li><a href="<%=request.getContextPath()%>/content/user/.social">Social</a></li>
+              <li><a href="<%=request.getContextPath()%>/servlet/social/messages.view?userId=<%=request.getRemoteUser().replace("@","_")%>">Social Message</a></li>
+              <li><a href="<%=request.getContextPath()%>/servlet/social/mesg.wiki">Wiki</a></li>
+   	  </ul>  
+		</li>       
+        <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" hrf="#">Profile</a>
+         <ul class="dropdown-menu">
+            <li><a href="<%=request.getContextPath()%>/content/user/info?id=<%=request.getRemoteUser().replace("@","_")%>">My Profile</a></li>
+            <li><a href="<%=request.getContextPath()%>/servlet/common/search.resume">My Resume</a></li>
+              <li><a href="<%=request.getContextPath()%>/servlet/company/show.mycompany">My Company</a></li>
+              <li><a href="<%=request.getContextPath()%>/servlet/service/productselection.myproduct">My Products</a></li>
+              <li><a href="<%=request.getContextPath()%>/servlet/service/event.calender">My Calender</a></li>
+              <li><a href="<%=request.getContextPath()%>/servlet/security/verify.mailNumb?userId=<%=request.getRemoteUser().replace("@","_")%>">My mails</a></li>
+              
+   	  </ul>  
+		</li> 
+         
+        <li><a href="<%=request.getContextPath()%>/servlet/service/page.servicelist">Services</a></li>
+        <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" hrf="#">Search</a>
+         <ul class="dropdown-menu">
+                <li><a href="<%=request.getContextPath()%>/servlet/common/search.company">Company</a></li>
+                <li><a href="<%=request.getContextPath()%>/servlet/common/search.group">Group</a></li>
+                <li><a href="<%=request.getContextPath()%>/servlet/common/search.person">Person</a></li>
+            </ul>  
+		</li> 
+		<li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" href="#">Create</a>
+			 <ul class="dropdown-menu">
+                <li><a href="<%=request.getContextPath()%>/servlet/company/show.com?id=new">Company</a></li>
+                <li><a href="<%=request.getContextPath()%>/servlet/group/show.view?id=new">Group</a></li>
+                <li><a href="<%=request.getContextPath()%>/servlet/photo/photoshow.addstory">Add Photo Story</a></li>
+                <li><a href="<%=request.getContextPath()%>/servlet/exhibition/flash.demo?id=new">Add Event </a></li>
+  			    <li><a href="<%=request.getContextPath()%>/servlet/gallery/show.createalbum"> Gallery</a></li>
+          		<li><a href="<%=request.getContextPath()%>/servlet/service/productselection.createproduct?id=new&tab=1">Product</a></li>        
+                <!--<li><a href="<%=request.getContextPath()%>/servlet/social/mesg.blog">Blog</a></li>--> 
+                </li>
+              
+            </ul>  
+		</li>
+		<li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Listing</a>
+			 <ul class="dropdown-menu">
+                <li><a href="<%=request.getContextPath()%>/servlet/exhibition/flash.eventList">Event List</a></li>
+                <li><a href="<%=request.getContextPath()%>/servlet/photo/photoshow.photolist">Photo Story</a></li>
+                <li><a href="<%=request.getContextPath()%>/servlet/gallery/show.photogallery">Gallery</a></li>              
+            </ul>  
+		</li>
+		<li><a href="<%=request.getContextPath()%>/servlet/social/mesg.blog">Blog</a></li>
+		<li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" href="#">Setting</a>
+			 <ul class="dropdown-menu">
+                <li><a href="<%=request.getContextPath()%>/servlet/security/verify.privacy?userId=<%=request.getRemoteUser()%>">Privacy</a></li>
+                <li><a href="<%=request.getScheme()+"://"+request.getServerName()+request.getContextPath()%>/secure/changePassword.html">Change Password</a></li>
+                
+            </ul>  
+		</li>
+		
+		
+		
+		<div class="dropdown">
+  <a id="dLabel" role="button" data-toggle="dropdown" data-target="#" href="#" onclick="javascript:void(0)">
+    <i class="glyphicon glyphicon-bell"></i>
+  </a>
+  
+  <ul class="dropdown-menu notifications" role="menu" aria-labelledby="dLabel">
+    
+    <div class="notification-heading"><h4 class="menu-title">Notifications
+    <% var counting=0;
+     var imuser1=currentNode.session.getRootNode().getNode("content").getNode("user").getNode(request.getRemoteUser().replace("@","_")); 
+		if(imuser1.hasNode("messages") && imuser1.getNode("messages").hasNodes()){
+			var messList=imuser1.getNode("messages").getNodes();
+			for(var l=0;l<messList.length;l++){
+			var h=messList[l].getNodes();
+				for(var k=0;k<h.length;k++){
+					if((h[k].isread).equals("No") && !(h[k].from).equals(request.getRemoteUser())){
+					counting++;
+					}
+				}
+			}
+		
+		}%>
+    <%=counting%>
+    </h4><h4 class="menu-title pull-right">View all<i class="glyphicon glyphicon-circle-arrow-right"></i></h4>
+    </div>
+    <li class="divider"></li>
+   <div class="notifications-wrapper">
+     <% var imuser=currentNode.session.getRootNode().getNode("content").getNode("user").getNode(request.getRemoteUser().replace("@","_")); 
+		if(imuser.hasNode("messages") && imuser.getNode("messages").hasNodes()){
+			var messList=imuser.getNode("messages").getNodes();
+			for(var l=0;l<messList.length;l++){
+			var h=messList[l].getNodes();
+				for(var k=0;k<h.length;k++){
+					if((h[k].isread).equals("No") && !(h[k].from).equals(request.getRemoteUser())){
+					%>
+					<a class="content" href="javascript:void(0)" onclick="changereadState(this.id)" id="<%=messList[l].name%>/<%=h[k].name%>">      
+                <div class="notification-item">
+                
+                <h4 class="item-title"><%=currentNode.session.getRootNode().getNode("content").getNode("user").getNode((h[k].from).replace("@","_")).name%></h4>
+               
+                <p class="item-info"><%=h[k].subject%></p>
+                <p class="item-info"><%=h[k].message%></p>
+               </div>
+       
+    </a>
+					<%}
+				}
+			}
+		
+		}else{
+		out.print("No message receieved !");
+		}
+		%>
+
+   </div>
+    <li class="divider"></li>
+    <div class="notification-footer"><h4 class="menu-title">View all<i class="glyphicon glyphicon-circle-arrow-right"></i></h4></div>
+  </ul>
+  
+</div>
+	
+		
+        
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+             <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" href="#">Welcome <%=currentNode.session.getRootNode().getNode("content").getNode("user").getNode(request.getRemoteUser().replace("@","_")).name%></a>
+             <ul class="dropdown-menu">
+                <li><a href="<%=request.getContextPath()%>/servlet/common/search.getquote">Get Quotation Now</a></li>
+            </ul>  
+             </li>
+      <li><a href="javascript:void(0)" onclick="logout('<%=currentNode.session.getRootNode().getNode("content").getNode("user").getNode(request.getRemoteUser().replace("@","_")).secondaryId %>')">Logout </a></li>
+      
+      </ul>
+  
+    </div><!-- /.navbar-collapse -->
+    </div>
+  </nav>
+</section> <%}%>
+        
+      
+      

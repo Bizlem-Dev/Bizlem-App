@@ -1,0 +1,550 @@
+<style>
+table {
+    border-collapse: collapse;
+    width: 100%;
+    
+}
+
+th, td {
+    text-align: left;
+    padding: 8px;
+}
+
+tr:nth-child(even){background-color: #f2f2f2}
+</style>
+
+
+	
+
+
+		<script>
+		function setChildPath(path){
+			document.getElementById('childPath').value = path;
+			
+			document.getElementById('addChildLoad').submit();
+		}
+		</script>
+	
+		
+		<form id="addChildLoad" action="<%=request.getContextPath()%>/servlet/service/productselection.saveChild?id=<%=request.getParameter("id")%>&param=edit" method="post"  enctype="multipart/form-data">	
+				<div class="tab-two" style="width: 100%; float: left; margin-bottom: 20px;">
+                            <ul class="nav nav-tabs" id="myTab1">
+                                <li class="active"><a data-toggle="tab" href="#technical1">Technical Attribute</a></li>
+                                <li id="shortCatLi"><a data-toggle="tab" href="#commercial1">Commercial Attribute</a></li>
+                              
+                            </ul>
+					<input type="hidden" name="pathToAdd" value="<%=request.getParameter("catalogpath")%>">
+					<input type="hidden" id="childPath" name="childPath" value="<%=request.getParameter("catalogpath")%>">
+													<%
+                                                       var currentNode1= currentNode.session.getRootNode().getNode("content").getNode("product").getNode("stdtemplate");
+                                                       if(currentNode1.hasNode(request.getParameter("nodeId"))){
+                                                       currentNode1 = currentNode1.getNode(request.getParameter("nodeId"));
+                                                       }
+                                                       %> 
+                                                                                     
+                                                                                     <% if (currentNode1.hasNode("attr") && currentNode1.getNode("attr").hasNodes()) {
+                                                                                        var attrNode = currentNode1.getNode("attr");
+                                                                                          //var attProp=attrNode.getProperties();
+                                                                                        if (attrNode.hasNodes()) {
+                                                                                            
+                                                                                                var attrNodes = attrNode.getNodes();
+                                                                                                var s = 0;
+                                                                                                //var counte = 0;
+                                                                                                //out.print(attrNodes.length);
+                                                                                                for (var z = 0; z < attrNodes.length; z++) { 
+                                                                                             
+                                                                                            if (currentNode.session.getRootNode().getNode("content").getNode("uom").hasNode(attrNodes[z].uom)){
+                                                                                    var	labelname=currentNode.session.getRootNode().getNode("content").getNode("uom").hasNode(attrNodes[z].uom);
+                                                                                     // var	labelName=currentNode.session.getRootNode().getNode("content").getNode("uom").hasNode(attrNodes[z].id);
+                                                                                    //out.print(labelname.length);
+                                                                                      %>
+                                                                                     
+                                                                                      <div id="attrUom" style="display:none" class="col-xs-6">
+                                                                                      <select  class="form-control" name="uom">
+                                                                                            <%
+                                                                                                
+                                                                                                    var uomNode = currentNode.session.getRootNode().getNode("content").getNode("uom");
+                                                                                                    if (uomNode.hasNodes()) {
+                                                                                                        var uomNodes = uomNode.getNodes();
+                                                                                                        for (var k = 0; k < uomNodes.length; k++) {
+                                                                                            %>
+                                                                                            <option value="<%=uomNodes[k].id%>" ><%=uomNodes[k].description%></option>
+                                                                                            
+                                                                                            <%}
+                                                                                                    }
+                                                                                                
+                                                                                            %>
+
+                                                                                        </select>
+                                                                                      </div>
+                                                                                     
+                                                                                     <%}}}}%>
+                                                                                     
+
+
+                                                       
+                   <div class="tab-content" id="myTab2Content">
+                           <div id="technical1" class="tab-pane fade active in">
+                            
+												<div class="form-group" style="margin-bottom: 0px;">
+                                    				<div class="" >
+                                                                            
+                                   					 <div id="attr-product11">
+                                   					 <%
+                                   					 var lengthNode = "";
+                                   					 if(currentNode1.getNode("attr").hasNodes()){
+                                   					 lengthNode = currentNode1.getNode("attr").getNodes();
+                                   					 lengthNode = lengthNode.length;
+                                   					 }
+                                   					 %>
+                                                                                <div class="row">
+                                                                                <div style="float:right"><a href="javascript:void(0)" onclick="deleteRowTemp('technicalList','commercialList')" <span id="" class="glyphicon glyphicon-minus btn btn-default"></span></a></div>
+                                                                                <!--<div style="float:right"><a href="javascript:void(0)" onclick="loadAddTemplate('technicalList','commercialList')" <span id="" class="glyphicon glyphicon-plus btn btn-default"></span></a></div>-->
+                                                                                <div style="float:right"><a href="javascript:void(0)" onclick="loadAddTemplate('technicalList','commercialList')" <span id="" class="glyphicon glyphicon-plus btn btn-default"></span></a></div>
+                                                                                <div style="float:right"><a href="javascript:void(0)" onclick="loadColTemplate('add','<%=lengthNode%>')">Add Column</a></div>
+                                                                                <div style="overflow-x:auto;">
+                                                                                <table>
+                                                                                <tbody id="technicalList">
+                                                                                <tr id="rowHeader"><td><label class="col-xs-3">Catalog No</label></td>
+                                                                                 <% if (currentNode1.hasNode("attr") && currentNode1.getNode("attr").hasNodes()) {
+                                                                                        var attrNode = currentNode1.getNode("attr");
+                                                                                        //var attProp=attrNode.getProperties();
+                                                                                        if (attrNode.hasNodes()) {
+                                                                                            
+                                                                                                var attrNodes = attrNode.getNodes();
+                                                                                                var s = 0;
+                                                                                                //var counte = 0;
+                                                                                                for (var b = 0; b < attrNodes.length; b++) { 
+                                                                                                
+                                                                                            if (currentNode.session.getRootNode().getNode("content").getNode("attribute").getNode("label").hasNode(attrNodes[b].label)){
+                                                                                      var	labelname=currentNode.session.getRootNode().getNode("content").getNode("attribute").getNode("label").getNode(attrNodes[b].label);
+                                                                                      	%>
+                                                                                                <td><label class="col-xs-2"><%=labelname.name%></label></td>
+                                                                                 <%}}}}%>
+                                                                                 <td><label class="col-xs-2">Attachment</label>
+                                                                                 <input type="hidden" class="form-control" value="<%=labelname.id%>" name="labelId" id="labelId<%=b%>" data-required="false" >
+                                                                                 </td>
+                                                                                 
+                                                                                 <%if (currentNode1.hasNode("child")){%>
+                                                                                 <td><label class="col-xs-2">Add Child</label></td>
+                                                                                 <%}%>
+                                                                                </tr>
+                                                                                
+                                                                                
+                                                                                <tr id="rowType">
+                                                                                 <td>
+                                                                                 <label class="col-xs-2">Type</label>
+                                                                                 </td>   
+                                                                               <% if (currentNode1.hasNode("attr") && currentNode1.getNode("attr").hasNodes()) {
+                                                                                        var attrNode = currentNode1.getNode("attr");
+                                                                                          //var attProp=attrNode.getProperties();
+                                                                                        if (attrNode.hasNodes()) {
+                                                                                            
+                                                                                                var attrNodes = attrNode.getNodes();
+                                                                                                var s = 0;
+                                                                                                //var counte = 0;
+                                                                                                //out.print(attrNodes.length);
+                                                                                                for (var z = 0; z < attrNodes.length; z++) { 
+                                                                                             
+                                                                                            if (currentNode.session.getRootNode().getNode("content").getNode("attribute").getNode("type").hasNode(attrNodes[z].type)){
+                                                                                    var	labelname=currentNode.session.getRootNode().getNode("content").getNode("attribute").getNode("type").getNode(attrNodes[z].type);
+                                                                                     // var	labelName=currentNode.session.getRootNode().getNode("content").getNode("attribute").getNode("label").getNode(attrNodes[z].label);
+                                                                                    //out.print(labelname.length);
+                                                                                      %>
+                                                                                     
+                                                                                      <td>
+                                                                                      <div class="col-xs-6">
+                                                                                      <select  class="form-control" onchange="changeValue(this,this.id)" id="type<%=z%>" data-id="<%=z%>" name="type">
+                                                                                            <%
+                                                                                                
+                                                                                                    var uomNode = currentNode.session.getRootNode().getNode("content").getNode("attribute").getNode("type");
+                                                                                                    if (uomNode.hasNodes()) {
+                                                                                                        var uomNodes = uomNode.getNodes();
+                                                                                                        for (var k = 0; k < uomNodes.length; k++) {
+                                                                                            %>
+                                                                                            <%if ((labelname.id).equals(uomNodes[k].id)) {%>
+                                                                                            <option value="<%=uomNodes[k].id%>" selected><%=uomNodes[k].name%></option>
+                                                                                            <%} else {%>
+                                                                                                                                                                                    
+                                                                                           <option value="<%=uomNodes[k].id%>" ><%=uomNodes[k].name%></option>
+                                                                                            
+                                                                                            <%}%>
+                                                                                            <%}
+                                                                                                    }
+                                                                                                
+                                                                                            %>
+
+                                                                                        </select>
+                                                                                      </div>
+                                                                                      </td>
+                                                                                     <%}}}}%>
+                                                                                 <td>
+                                                                                 
+                                                                                 </td>
+                                                              
+                                                                             </tr>
+                                                                                
+                                                                            <tr id="rowUom">
+                                                                                 <td>
+                                                                                 <label class="col-xs-2">UOM</label>
+                                                                                 </td>   
+                                                                               <% if (currentNode1.hasNode("attr") && currentNode1.getNode("attr").hasNodes()) {
+                                                                                        var attrNode = currentNode1.getNode("attr");
+                                                                                          //var attProp=attrNode.getProperties();
+                                                                                        if (attrNode.hasNodes()) {
+                                                                                            
+                                                                                                var attrNodes = attrNode.getNodes();
+                                                                                                var s = 0;
+                                                                                                //var counte = 0;
+                                                                                                //out.print(attrNodes.length);
+                                                                                                for (var z = 0; z < attrNodes.length; z++) { 
+                                                                                             
+                                                                                            if (currentNode.session.getRootNode().getNode("content").getNode("uom").hasNode(attrNodes[z].uom)){
+                                                                                    var	labelname=currentNode.session.getRootNode().getNode("content").getNode("uom").hasNode(attrNodes[z].uom);
+                                                                                     // var	labelName=currentNode.session.getRootNode().getNode("content").getNode("uom").hasNode(attrNodes[z].id);
+                                                                                    //out.print(labelname.length);
+                                                                                      %>
+                                                                                     
+                                                                                      <td>
+                                                                                      <div class="col-xs-6">
+                                                                                      <select  class="form-control" name="uom">
+                                                                                            <%
+                                                                                                
+                                                                                                    var uomNode = currentNode.session.getRootNode().getNode("content").getNode("uom");
+                                                                                                    if (uomNode.hasNodes()) {
+                                                                                                        var uomNodes = uomNode.getNodes();
+                                                                                                        for (var k = 0; k < uomNodes.length; k++) {
+                                                                                            %>
+                                                                                            <option value="<%=uomNodes[k].id%>" ><%=uomNodes[k].description%></option>
+                                                                                            
+                                                                                            <%}
+                                                                                                    }
+                                                                                                
+                                                                                            %>
+
+                                                                                        </select>
+                                                                                      </div>
+                                                                                      </td>
+                                                                                     <%}}}}%>
+                                                                                 <td>
+                                                                                 
+                                                                                 </td>
+                                                              
+                                                                             </tr>
+                                                                              
+                                                                             <tr id="rowValue">
+                                                                                    <td>
+                                                                                     
+                                                                                     <div class="col-xs-3"><input type="text" required class="form-control" name="childProid" placeholder="catalog number"></div>
+                                                                               		
+                                                                                     </td>
+                                                                                    
+                                                                               <% if (currentNode1.hasNode("attr") && currentNode1.getNode("attr").hasNodes()) {
+                                                                                        var attrNode = currentNode1.getNode("attr");
+                                                                                          //var attProp=attrNode.getProperties();
+                                                                                        if (attrNode.hasNodes()) {
+                                                                                            
+                                                                                                var attrNodes = attrNode.getNodes();
+                                                                                                var s = 0;
+                                                                                                //var counte = 0;
+                                                                                                //out.print(attrNodes.length);
+                                                                                                for (var z = 0; z < attrNodes.length; z++) { 
+                                                                                             
+                                                                                            if (currentNode.session.getRootNode().getNode("content").getNode("attribute").getNode("type").hasNode(attrNodes[z].type)){
+                                                                                    var	labelname=currentNode.session.getRootNode().getNode("content").getNode("attribute").getNode("type").getNode(attrNodes[z].type).getNodes();
+                                                                                      var	labelName=currentNode.session.getRootNode().getNode("content").getNode("attribute").getNode("label").getNode(attrNodes[z].label);
+                                                                                    //out.print(labelname.length);
+                                                                                      %>
+                                                                                     
+                                                                                      <td><%for(var m=0;m<labelname.length;m++){
+                                                                                      	%>
+                                                                                                
+                                                                                    <div class="col-xs-3"><input type="text" required class="form-control" name="<%=labelName.name%>_<%=labelname[m].placeholder%>" placeholder="<%=labelname[m].placeholder%>"></div>
+                                                                                    
+                                                                               
+                                                                                 <%}%> </td><%}%><%}}}%>
+                                                                                 <td>
+                                                                                 <span style="margin-bottom:15px" class="btn btn-success fileinput-button">
+                    															  <span  class="glyphicon glyphicon-picture"></span>
+                    																<input title="Upload Image" type="file" name="image" id="">
+                															   	  </span>
+                															   	  <span style="margin-bottom:15px" class="btn btn-success fileinput-button">
+                    															  <span  class="glyphicon glyphicon-facetime-video"></span>
+                    																<input title="Upload Video" type="file" name="video" id="">
+                															   	  </span>
+                															   	  <span style="margin-bottom:15px" class="btn btn-success fileinput-button">
+                    															  <span  class="glyphicon glyphicon-file"></span>
+                    																<input title="Upload Document" type="file" name="atta" id="">
+                															   	  </span>
+                                                                                 </td>
+                                                              
+                                                                             </tr>
+                                                                             
+                                                                             </tbody>
+																			 </table>
+																			 </div>
+                                                                       </div>
+                                                                       
+                                                                       
+                                                             </div> 
+												 </div>
+                            </div>
+                            </div>
+                            <div id="commercial1" class="tab-pane fade">
+                             <div class="form-group" style="margin-bottom: 0px;">
+                                    				<div class="" >
+                                                                            
+                                   					 <div id="attr-commercial">
+                                                                                <div class="row">
+                                                                                <div style="float:right"><a href="javascript:void(0)" onclick="deleteRowTemp('technicalList','commercialList')" <span id="" class="glyphicon glyphicon-minus btn btn-default"></span></a></div>
+                                                                                <div style="float:right"><a href="javascript:void(0)" onclick="loadAddTemplate('technicalList','commercialList')" <span id="" class="glyphicon glyphicon-plus btn btn-default"></span></a></div>
+                                                                                <table style="border:1px solid black;width:100%">
+                                                                                <tbody id="commercialList">
+                                                                                                                                                 </tbody>
+																			 </table>
+                                                                       </div>
+                                                                       
+                                                                       
+                                                             </div> 
+												 </div>
+                            </div>
+                            </div>
+                            
+                            </div>
+                    </div>
+			<script type="text/javascript">
+          $(document).ready(function(){
+           		$('.btnClass').click(function() {
+    
+    var lenVal = $(this).closest('td').index();
+    alert(lenVal);
+   var row = document.getElementById("rowHeader");
+			    row.deleteCell(lenVal);
+			    var rowType1 = document.getElementById("rowType");
+			    rowType1.deleteCell(lenVal);
+			    var rowUom1 = document.getElementById("rowUom");
+			    rowUom1.deleteCell(lenVal);
+			    var rowValue1 = document.getElementById("rowValue");
+			    rowValue1.deleteCell(lenVal);
+});
+        }); 
+          </script>
+												
+							
+			 <script>
+			 
+			// var templatePart="<tr><td><div class='row' style='margin-bottom: 15px;'><div class='col-xs-2'>  <input type='text' class='form-control' > </td><% if (currentNode.hasNode('template') && currentNode.getNode('template').getNode('attr').hasNodes()) { var attrNode = currentNode.getNode('template').getNode('attr');       if (attrNode.hasNodes()) {  var attrNodes = attrNode.getNodes();     var s = 0;  for (var z = 0; z < attrNodes.length; z++) {  if (currentNode.session.getRootNode().getNode('content').getNode('attribute').getNode('type').hasNode(attrNodes[z].type)){       var	labelname=currentNode.session.getRootNode().getNode('content').getNode('attribute').getNode('type').getNode(attrNodes[z].type).getNodes();  %>	  <%for(var m=0;m<labelname.length;m++){ %>  <td><div class='col-xs-2'><input type='text' class='form-control' name='<%=labelname[m].placeholder%>' placeholder='<%=labelname[m].placeholder%>'></div>   <%}%> </div></td><%}%><%}}}%>   <td><input type='file' name='image' id=''> </br><input type='file' name='video' id=''> </br> <input type='file' name='atta' id=''></td> </tr>";
+			
+		//alert(templatePart);
+	function deleteColTemp(obj) {
+			try {
+			var lenVal= $(obj).closest("td").index();
+  //  alert(lenVal);
+		//	alert(cellIndex);
+			var row = document.getElementById("rowHeader");
+			    row.deleteCell(lenVal);
+			    var rowType1 = document.getElementById("rowType");
+			    rowType1.deleteCell(lenVal);
+			    var rowUom1 = document.getElementById("rowUom");
+			    rowUom1.deleteCell(lenVal);
+			  //  var rowValue1 = document.getElementById("rowValue");
+			   // rowValue1.deleteCell(lenVal);
+			   var xv = document.getElementById("technicalList").rows.length;
+                            for(var m = 0;m<xv;m++){
+                            if(m > 2){
+                            document.getElementById("technicalList").rows[m].deleteCell(lenVal);
+                            }
+                            }
+			} catch (e) {
+			alert(e);
+			}
+	}
+	
+		var iLabelCount = 0;
+		var val = 0;
+		var inc = 20;
+		function loadColTemplate(param,lenVal){
+			var xv = document.getElementById("rowHeader").cells.length;
+			var xdata = document.getElementById("rowHeader").cells[xv - 1].innerHTML;
+					if(lenVal != ""){
+			
+			var catalog = "1";
+			if($(xdata).html() == "Attachment"){
+			var val = xv - 1;
+			//alert("if--"+val);
+			}else if($(xdata).html() == "Add Child"){
+			var val = xv - 2;
+			//alert("if else--"+val);
+			}
+			var rowHead = document.getElementById("rowHeader");
+			var x1 = rowHead.insertCell(val);
+			iLabelCount = iLabelCount + 1;
+			x1.innerHTML = '<div class="col-xs-6"><input class="form-control" onkeypress="labelDetailsDWR1(this.title);" title="'+inc+'"  id="label'+inc+'" placeholder="enter label" type="text" style="border:none" name="label" ><input type="hidden" class="form-control" value="" name="labelId" id="labelId'+inc+'" data-required="false" ><div id="suggestionLabel'+inc+'"  style="z-index:1;position:absolute;background:white"><div class="searchterm" id="searchLabel'+inc+'"></div></div></div><div class="col-xs-2"><a onclick="deleteColTemp(this)"><span class="glyphicon glyphicon-remove"></span></a></div>';
+			var rowType = document.getElementById("rowType");
+			var xType = rowType.insertCell(val);
+			xType.innerHTML = <% if (currentNode1.hasNode("attr") && currentNode1.getNode("attr").hasNodes()) {var attrNode = currentNode1.getNode("attr");if (attrNode.hasNodes()) {var attrNodes = attrNode.getNodes();var s = 0;var s1 = 20;for (var z = 0; z < attrNodes.length; z++) { if (currentNode.session.getRootNode().getNode("content").getNode("attribute").getNode("type").hasNode(attrNodes[z].type)){var	labelname=currentNode.session.getRootNode().getNode("content").getNode("attribute").getNode("type").getNode(attrNodes[z].type);%>'<div id="attrType" class="col-xs-6" style="display:block"><select  class="form-control" onchange="changeValue(this,this.id)" data-id="'+inc+'" id="type'+inc+'" name="type"><option value="-1" >Select Type</option><%s1++;var uomNode = currentNode.session.getRootNode().getNode("content").getNode("attribute").getNode("type");if (uomNode.hasNodes()) {var uomNodes = uomNode.getNodes();for (var k = 0; k < uomNodes.length; k++) {%><option value="<%=uomNodes[k].id%>" ><%=uomNodes[k].name%></option><%}}%></select></div>'<%}}}}%>;
+			var rowUom = document.getElementById("rowUom");
+			var xUom = rowUom.insertCell(val);
+			xUom.innerHTML = '<div class="col-xs-6">'+document.getElementById("attrUom").innerHTML+'</div>';
+			//var rowValue = document.getElementById("rowValue");
+			//var xUom = rowValue.insertCell(val);
+			var xv = document.getElementById("technicalList").rows.length;
+                            for(var m = 0;m<xv;m++){
+                            if(m > 2){
+                            document.getElementById("technicalList").rows[m].insertCell(val);
+                            }
+                            }
+			inc++;
+			}
+			
+						
+			}	
+			
+			
+				function deleteRowTemp(guestList,commList) {
+		try {
+			var table = document.getElementById(guestList);
+			var rowCount = table.rows.length;
+			if (rowCount > 3) {
+				table.deleteRow(rowCount - 1);
+			}
+			var table1 = document.getElementById(commList);
+			var rowCount1 = table1.rows.length;
+			if (rowCount1 > 3) {
+				table1.deleteRow(rowCount1 - 1);
+			}
+		} catch (e) {
+			alert(e);
+		}
+	}
+		
+						
+			
+			function changeValue(obj,id){
+			var res = document.getElementById(id).value;
+			//alert(id);
+			//alert(document.getElementById(id).value);
+			//alert(document.getElementById(obj.id).value);
+			var lenValC = $(obj).closest('td').index();
+    		//alert(lenVal);
+     		var lenValR = $(obj).closest('tr').index();
+    		//alert(lenVal);
+    		//var xData = document.getElementById("rowHeader").rows[lenValR + 1].cells[lenValC].;
+			//var xdata = document.getElementById("rowHeader").cells[xv - 1].innerHTML;
+			var xv = document.getElementById("technicalList").rows.length;
+			//alert(xv);
+			var idM = $(obj).attr('data-id');
+			var labelId = document.getElementById("labelId"+idM).value;
+			alert(labelId);
+			$.ajax({
+                            url: 'http://35.221.160.146:8082/portal/servlet/service/productselection.getTypeInfo',
+                            data: {
+                            typeId:res,
+                            labelId:labelId
+                            },
+                            async:false,
+                            success: function(data) {
+                            var xv = document.getElementById("technicalList").rows.length;
+                            for(var m = 0;m<xv;m++){
+                            if(m > 2){
+                            document.getElementById("technicalList").rows[m].cells[lenValC].innerHTML = data;
+                            }
+                            }
+            					//document.getElementById("technicalList").rows[3].cells[lenValC].innerHTML = data;                    
+                            }
+                        });
+			
+			
+			}
+			
+			function changeValue1(obj,id){
+			//alert(id);
+			//alert(document.getElementById(id).value);
+			//alert(document.getElementById(obj.id).value);
+			var res = document.getElementById(id).value;
+			var lenValC = $(obj).closest('td').index();
+    		//alert(lenVal);
+     		var lenValR = $(obj).closest('tr').index();
+    		//alert(lenVal);
+    		//var xData = document.getElementById("rowHeader").rows[lenValR + 1].cells[lenValC].;
+			//var xdata = document.getElementById("rowHeader").cells[xv - 1].innerHTML;
+			var xv = document.getElementById("technicalList").rows.length;
+			//alert(xv);
+			//alert(document.getElementById("technicalList").rows[3].cells[lenValC].innerHTML);
+			$.ajax({
+                            url: 'http://35.221.160.146:8082/portal/servlet/service/productselection.getTypeInfo',
+                            data: {
+                            typeId:res,
+                            },
+                            async:false,
+                            success: function(data) {
+                            var xv = document.getElementById("technicalList").rows.length;
+                            for(var m = 0;m<xv;m++){
+                            if(m > 2){
+                            document.getElementById("technicalList").rows[m].cells[lenValC].innerHTML = data;
+                            }
+                            }
+            					//document.getElementById("technicalList").rows[3].cells[lenValC].innerHTML = data;                    
+                            }
+                        });
+			
+			}
+			var row = "";
+		function loadAddTemplate(tableID,tableID1){
+			
+				var table = document.getElementById(tableID);
+				var rowCount = table.rows.length;
+				//alert(rowCount);
+				row = table.insertRow(rowCount);
+				var cell2 = row.insertCell(0);
+				cell2.innerHTML = '<div class="col-xs-3"><input type="text" required="" class="form-control" name="childProid" placeholder="catalog number"></div>';
+
+			var x = document.getElementsByName("type").length;
+			//alert(x);
+			
+			for(var i=0;i<x;i++){
+			//alert("for---"+document.getElementsByName("type")[i].value);
+				if(document.getElementsByName("type")[i].value != -1)
+				{
+					
+					var res = document.getElementsByName("type")[i].value;
+				//	alert("if---"+res);
+					$.ajax({
+                            url: 'http://35.221.160.146:8082/portal/servlet/service/productselection.getTypeInfo',
+                            data: {
+                            typeId:res,
+                            },
+                            async:false,
+                            success: function(data) {
+                           // alert("success---"+data);
+                            cellD = row.insertCell(i+1);
+                            cellD.innerHTML = data;
+                            }
+                        });
+					
+				}else{
+				//alert("else---");
+				cellD = row.insertCell(i+1);
+				}
+			}
+				
+				//alert(row.cells.length);
+			//	x = x + 1;
+				cellL = row.insertCell(row.cells.length);
+				cellL.innerHTML = '<span style="margin-bottom:15px" class="btn btn-success fileinput-button"><span class="glyphicon glyphicon-picture"></span><input title="Upload Image" type="file" name="image" id=""></span><span style="margin-bottom:15px" class="btn btn-success fileinput-button"><span class="glyphicon glyphicon-facetime-video"></span><input title="Upload Video" type="file" name="video" id=""></span><span style="margin-bottom:15px" class="btn btn-success fileinput-button"><span class="glyphicon glyphicon-file"></span><input title="Upload Document" type="file" name="atta" id=""></span>';									
+
+			
+			}
+			
+			</script>
+			 <div class="col-xs-12">
+
+
+                                                                <input type="submit" class="btn btn-primary"
+                                                                       value="Save" />
+
+
+                                                            </div>
+			
+			</form>
+			  											

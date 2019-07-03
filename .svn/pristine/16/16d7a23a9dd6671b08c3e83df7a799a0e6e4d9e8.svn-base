@@ -1,0 +1,120 @@
+<div class="col-md-2 col-sm-3 col-xs-12">
+               <div class="panel panel-primary">
+                           <div class="panel-heading">
+                             <h3 class="panel-title" id="panel-title">Category</h3>
+                           </div>
+                           <div class="panel-body panel-body-tree">
+						<ul id="tree1">
+						<%var obj="undefined";
+						 var curCatNode = currentNode.session.getRootNode().getNode("content").getNode("category");
+			var nodes=curCatNode.getNodes();
+			for(i=0;i<nodes.length;i++){ 
+			if(!obj.equals(nodes[i])){
+				if(nodes[i].hasNodes()){
+		%>
+			                <li><a href="#"><%=nodes[i].name%></a>
+			                    <ul>
+			                    <% var nodes1= nodes[i].getNodes();
+					for(j=0;j<nodes1.length;j++){
+						if(!("undefined".equals(nodes1[j]))){
+							if(nodes1[j].hasNodes()){
+							%>
+			                        <li><a href="#"><%=nodes1[j].name%></a>
+			                         			
+			                         			<ul>
+			                         			<%
+			                        			var nodes2 = nodes1[j].getNodes();
+			                        			for(k=0;k<nodes2.length;k++){
+			                        			if(!("undefined".equals(nodes2[k]))){
+			                        			if(nodes2[k].hasNodes()){
+			                        			%>
+			                        			<li><a href="#"><%=nodes2[k].name%></a>
+			                        			
+			                        	      			<%}else{out.print("<li><a href='#'>"+nodes2[k].name+"</a></li>");}
+			                        			} 
+			                        			}
+			                        %>
+			                        </ul>
+			                        
+			                        </li>
+			                      
+								<%
+								}else{out.print("<li><a href='#'>"+nodes1[j].name+"</a></li>");}
+								}
+							}
+						%>
+			          			</ul>
+			                </li>
+			                <% }else{ out.print("<li><a href='#'>"+nodes[i].name+"</a></li>");}
+				}
+			}
+		%>
+						</ul>
+
+                         </div>
+                        </div>
+            <script type="text/javascript">
+				$.fn.extend({
+			    treed: function (o) {
+			      
+			      var openedClass = 'fa-minus';
+			      var closedClass = 'fa-plus';
+			      
+			      if (typeof o != 'undefined'){
+			        if (typeof o.openedClass != 'undefined'){
+			        openedClass = o.openedClass;
+			        }
+			        if (typeof o.closedClass != 'undefined'){
+			        closedClass = o.closedClass;
+			        }
+			      };
+			      
+			        //initialize each of the top levels
+			        var tree = $(this);
+			        tree.addClass("tree");
+			        tree.find('li').has("ul").each(function () {
+			            var branch = $(this); //li with children ul
+			            branch.prepend("<i class='indicator fa " + closedClass + "'></i>");
+			            branch.addClass('branch');
+			            branch.on('click', function (e) {
+			                if (this == e.target) {
+			                    var icon = $(this).children('i:last');
+			                    icon.toggleClass(openedClass + " " + closedClass);
+			                    $(this).children().children().toggle();
+			                }
+			            })
+			            branch.children().children().toggle();
+			        });
+			        //fire event from the dynamically added icon
+			      tree.find('.branch .indicator').each(function(){
+			        $(this).on('click', function () {
+			            $(this).closest('li').click();
+			        });
+			      });
+			        //fire event to open branch if the li contains an anchor instead of text
+			        tree.find('.branch>a').each(function () {
+			            $(this).on('click', function (e) {
+			                $(this).closest('li').click();
+			                e.preventDefault();
+			            });
+			        });
+			        //fire event to open branch if the li contains a button instead of text
+			        tree.find('.branch>button').each(function () {
+			            $(this).on('click', function (e) {
+			                $(this).closest('li').click();
+			                e.preventDefault();
+			            });
+			        });
+			    }
+			});
+
+			//Initialization of treeviews
+
+			$('#tree1').treed();
+
+			$('#tree2').treed({openedClass:'glyphicon-folder-open', closedClass:'glyphicon-folder-close'});
+
+			$('#tree3').treed({openedClass:'glyphicon-chevron-right', closedClass:'glyphicon-chevron-down'});
+
+				</script>
+					</div>

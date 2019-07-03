@@ -1,0 +1,445 @@
+		<script>
+		function setChildPath(path){
+			document.getElementById('childPath').value = path;
+			
+			document.getElementById('addChildLoad').submit();
+		}
+		</script>
+		
+		<form id="addChildLoad" action="<%=request.getContextPath()%>/servlet/service/productselection.saveChild?id=<%=request.getParameter("id")%>&param=edit" method="post"  enctype="multipart/form-data">	
+				<div class="tab-two" style="width: 100%; float: left; margin-bottom: 20px;">
+                            <ul class="nav nav-tabs" id="myTab1">
+                                <li class="active"><a data-toggle="tab" href="#technical">Technical Attribute</a></li>
+                                <li id="shortCatLi"><a data-toggle="tab" href="#commercial">Commercial Attribute</a></li>
+                              
+                            </ul>
+					<input type="hidden" name="pathToAdd" value="<%=request.getParameter("catalogpath")%>">
+					<input type="hidden" id="childPath" name="childPath" value="<%=request.getParameter("catalogpath")%>">
+													<%
+                                                       var newpath1=request.getParameter("catalogpath").split("/");
+                                                       var mainnode1= currentNode.session.getRootNode().getNode("content").getNode("product").getNode("products");
+                                                       for(var p=0;p<newpath1.length;p++){
+                                                       mainnode1=mainnode1.getNode(newpath1[p]);
+                                                       }
+                                                       currentNode=mainnode1;
+                                                      // out.print("currentNode-----"+currentNode);
+                                                       %> 
+                   <div class="tab-content" id="myTab1Content">
+                           <div id="technical" class="tab-pane fade active in">
+                            
+												<div class="form-group" style="margin-bottom: 0px;">
+                                    				<div class="" >
+                                                                            
+                                   					 <div id="attr-product11">
+                                                                                <div class="row">
+                                                                                <div style="float:right"><a href="javascript:void(0)" onclick="deleteRowTemp('technicalList','commercialList')" <span id="" class="glyphicon glyphicon-minus btn btn-default"></span></a></div>
+                                                                                <div style="float:right"><a href="javascript:void(0)" onclick="loadAddTemplate('technicalList','commercialList')" <span id="" class="glyphicon glyphicon-plus btn btn-default"></span></a></div>
+                                                                                <table style="border:1px solid black;width:100%">
+                                                                                <tbody id="technicalList">
+                                                                                <tr><td>Catalog No</td>
+                                                                                 <% if (currentNode.hasNode("template") && currentNode.getNode("template").getNode("attr").hasNodes()) {
+                                                                                        var attrNode = currentNode.getNode("template").getNode("attr");
+                                                                                        //var attProp=attrNode.getProperties();
+                                                                                        if (attrNode.hasNodes()) {
+                                                                                            
+                                                                                                var attrNodes = attrNode.getNodes();
+                                                                                                var s = 0;
+                                                                                                //var counte = 0;
+                                                                                                for (var b = 0; b < attrNodes.length; b++) { 
+                                                                                                
+                                                                                            if (currentNode.session.getRootNode().getNode("content").getNode("attribute").getNode("label").hasNode(attrNodes[b].label)){
+                                                                                      var	labelname=currentNode.session.getRootNode().getNode("content").getNode("attribute").getNode("label").getNode(attrNodes[b].label);
+                                                                                      	%>
+                                                                                                <td><label class="col-xs-2"><%=labelname.name%></label></td>
+                                                                                 <%}}}}%>
+                                                                                 <td>Attachment</td>
+                                                                                 
+                                                                                 <%if (currentNode.hasNode("child")){%>
+                                                                                 <td>Add Child</td>
+                                                                                 <%}%>
+                                                                                </tr>
+                                                                              
+                                                                             
+                                                                                    
+                                                                                    
+                                                                                    <%
+                                                                                        if (currentNode.hasNode("child")){
+                                                                                        var childs=currentNode.getNode("child").getNodes();
+                                                                                        for(var j=0;j<childs.length;j++){%>
+                                                                                         <tr>
+                                                                                  <td>
+                                                                                             <div class="row" style="margin-bottom: 15px;">
+                                                                                    <div class="col-xs-6"> <input type="hidden" value="<%=childs[j].getName()%>" name="childProid"> <input type="text" name="catalog" class="form-control"  value="<%=childs[j].getNode("attr").getProperty("catalog")%>">
+                                                                                    </td>
+                                                                                       <%
+                                                                                     if (currentNode.hasNode("template") && currentNode.getNode("template").getNode("attr").hasNodes()) {
+                                                                                        var attrNode = currentNode.getNode("template").getNode("attr");
+                                                                                        //var attProp=attrNode.getProperties();
+                                                                                        if (attrNode.hasNodes()) {
+                                                                                            
+                                                                                                var attrNodes = attrNode.getNodes();
+                                                                                                var s = 0;
+                                                                                                //var counte = 0;
+                                                                                                //out.print(attrNodes.length);
+                                                                                                for (var z = 0; z < attrNodes.length; z++) { 
+                                                                                             
+                                                                                            if (currentNode.session.getRootNode().getNode("content").getNode("attribute").getNode("type").hasNode(attrNodes[z].type)){
+                                                                                    var	labelname=currentNode.session.getRootNode().getNode("content").getNode("attribute").getNode("type").getNode(attrNodes[z].type).getNodes();
+                                                                                      var	labelName=currentNode.session.getRootNode().getNode("content").getNode("attribute").getNode("label").getNode(attrNodes[z].label);
+                                                                                    
+                                                                                      %>
+                                                                                      <td><div class="row" style="margin-bottom: 15px;"><%for(var m=0;m<labelname.length;m++){
+                                                                                       
+                                                                                      	%>
+                                                                                               
+                                                                                    <div class="col-xs-6"><input type="text" class="form-control" required name="<%=labelName.name%>_<%=labelname[m].placeholder%>" value="<%=childs[j].getNode("attr").getProperty(labelName.name+"_"+labelname[m].placeholder)%>" placeholder="<%=labelname[m].placeholder%>"></div>
+                                                                                    
+                                                                               
+                                                                                 <%}%> </div></td>
+                                                                                  <%}%><%}}}%>
+                                                                                  <td><input type="file" name="image" id=""></br>
+                                                                                 <input type="file" name="video" id=""></br>
+                                                                                  <input type="file" name="atta" id=""></td>
+                                                                                  
+                                                                                  <td><input type="button" value="Add Child"  name="addChild" id="addChild" onclick="setChildPath('<%=request.getParameter("catalogpath")%>/child/<%=childs[j].getNode("attr").getProperty("catalog")%>')" ></td>
+                                                                                  </tr>
+                                                                                  <%}}else{%>
+                                                                                    <tr>
+                                                                                  <td>
+                                                                                             <div class="row" style="margin-bottom: 15px;">
+                                                                                    <div class="col-xs-6">  <input type="hidden" value="0" name="childProid"> <input type="text" name="catalog"  value="0" class="form-control" >
+                                                                                    </td>
+                                                                                 <% if (currentNode.hasNode("template") && currentNode.getNode("template").getNode("attr").hasNodes()) {
+                                                                                        var attrNode = currentNode.getNode("template").getNode("attr");
+                                                                                        //var attProp=attrNode.getProperties();
+                                                                                        if (attrNode.hasNodes()) {
+                                                                                            
+                                                                                                var attrNodes = attrNode.getNodes();
+                                                                                                var s = 0;
+                                                                                                //var counte = 0;
+                                                                                                //out.print(attrNodes.length);
+                                                                                                for (var z = 0; z < attrNodes.length; z++) { 
+                                                                                             
+                                                                                            if (currentNode.session.getRootNode().getNode("content").getNode("attribute").getNode("type").hasNode(attrNodes[z].type)){
+                                                                                    var	labelname=currentNode.session.getRootNode().getNode("content").getNode("attribute").getNode("type").getNode(attrNodes[z].type).getNodes();
+                                                                                      var	labelName=currentNode.session.getRootNode().getNode("content").getNode("attribute").getNode("label").getNode(attrNodes[z].label);
+                                                                                    //out.print(labelname.length);
+                                                                                      %>
+                                                                                      <td><div class="row" style="margin-bottom: 15px;"><%for(var m=0;m<labelname.length;m++){
+                                                                                      	%>
+                                                                                                
+                                                                                    <div class="col-xs-6"><input type="text" required class="form-control" name="<%=labelName.name%>_<%=labelname[m].placeholder%>" placeholder="<%=labelname[m].placeholder%>"></div>
+                                                                                    
+                                                                               
+                                                                                 <%}%> </div></td><%}%><%}}}%>
+                                                                                 <td><input type="file" name="image" id=""></br>
+                                                                                 <input type="file" name="video" id=""></br>
+                                                                                 <input type="file" name="atta" id=""></td>
+                                                              
+                                                                             </tr>
+                                                                             <%}%>
+                                                                             </tbody>
+																			 </table>
+                                                                       </div>
+                                                                       
+                                                                       
+                                                             </div> 
+												 </div>
+                            </div>
+                            </div>
+                            <div id="commercial" class="tab-pane fade">
+                             <div class="form-group" style="margin-bottom: 0px;">
+                                    				<div class="" >
+                                                                            
+                                   					 <div id="attr-commercial">
+                                                                                <div class="row">
+                                                                                <div style="float:right"><a href="javascript:void(0)" onclick="deleteRowTemp('technicalList','commercialList')" <span id="" class="glyphicon glyphicon-minus btn btn-default"></span></a></div>
+                                                                                <div style="float:right"><a href="javascript:void(0)" onclick="loadAddTemplate('technicalList','commercialList')" <span id="" class="glyphicon glyphicon-plus btn btn-default"></span></a></div>
+                                                                                <table style="border:1px solid black;width:100%">
+                                                                                <tbody id="commercialList">
+                                                                                <tr>
+                                                                                 <% if (currentNode.hasNode("template") && currentNode.getNode("template").getNode("comm").hasNodes()) {
+                                                                                        var attrNodeComm = currentNode.getNode("template").getNode("comm");
+                                                                                        //var attProp=attrNode.getProperties();
+                                                                                        if (attrNodeComm.hasNodes()) {
+                                                                                            
+                                                                                                var attrNodesComm = attrNodeComm.getNodes();
+                                                                                                //out.print(attrNodesComm);
+                                                                                                var s = 0;
+                                                                                                //var counte = 0;
+                                                                                                for (var b = 0; b < attrNodesComm.length; b++) { 
+                                                                                                //out.print(attrNodesComm[b].id);
+                                                                                                //out.print(attrNodesComm[b].typeCom);
+                                                                                            if (currentNode.session.getRootNode().getNode("content").getNode("attribute").getNode("commercial").hasNode(attrNodesComm[b].id)){
+                                                                                      var	commId=currentNode.session.getRootNode().getNode("content").getNode("attribute").getNode("commercial").getNode(attrNodesComm[b].id);
+                                                                                      	%>
+                                                                                                <td class="col-xs-2"><label class="col-xs-4"><%=commId.name%></label></td>
+                                                                                 <%}}}}%>
+                                                                                 
+                                                                                </tr>
+                                                                               <%
+                                                                                        if (currentNode.hasNode("child")){
+                                                                                        var childs=currentNode.getNode("child").getNodes();
+                                                                                        for(var j=0;j<childs.length;j++){%>
+                                                                                <tr>
+                                                                                 
+                                                                                 <% if (currentNode.hasNode("template") && currentNode.getNode("template").getNode("comm").hasNodes()) {
+                                                                                        var attrNodeCom = currentNode.getNode("template").getNode("comm");
+                                                                                        //var attProp=attrNode.getProperties();
+                                                                                        if (attrNodeCom.hasNodes()) {
+                                                                                            
+                                                                                                var attrNodesCom = attrNodeCom.getNodes();
+                                                                                                var s = 0;
+                                                                                                //var counte = 0;
+                                                                                                //out.print(attrNodes.length);
+                                                                                                for (var z = 0; z < attrNodesCom.length; z++) { 
+                                                                                             
+                                                                                            if (currentNode.session.getRootNode().getNode("content").getNode("attribute").getNode("type").hasNode(attrNodesCom[z].typeCom)){
+                                                                                    var	labelname=currentNode.session.getRootNode().getNode("content").getNode("attribute").getNode("type").getNode(attrNodesCom[z].typeCom).getNodes();
+                                                                                    var	commId=currentNode.session.getRootNode().getNode("content").getNode("attribute").getNode("commercial").getNode(attrNodesComm[z].id);
+                                                                                    //out.print(labelname.length);
+                                                                                      %>
+                                                                                      <td class="col-xs-2"><div class="row" style="margin-bottom: 15px;"><%for(var m=0;m<labelname.length;m++){
+                                                                                      	%>
+                                                                                                
+                                                                                    <div class="col-xs-4"><input type="text" class="form-control" required name="<%=commId.name%>_<%=labelname[m].placeholder%>" value="<%=childs[j].getNode("comm").getProperty(commId.name+"_"+labelname[m].placeholder)%>" placeholder="<%=labelname[m].placeholder%>"></div>
+                                                                                    
+                                                                               
+                                                                                 <%}%> </div></td><%}%><%}}}%>
+                                                                             </tr>
+                                                                             <%}}else{%>
+                                                                              <tr>
+                                                                                 
+                                                                                 <% if (currentNode.hasNode("template") && currentNode.getNode("template").getNode("comm").hasNodes()) {
+                                                                                        var attrNodeCom = currentNode.getNode("template").getNode("comm");
+                                                                                        //var attProp=attrNode.getProperties();
+                                                                                        if (attrNodeCom.hasNodes()) {
+                                                                                            
+                                                                                                var attrNodesCom = attrNodeCom.getNodes();
+                                                                                                var s = 0;
+                                                                                                //var counte = 0;
+                                                                                                //out.print(attrNodes.length);
+                                                                                                for (var z = 0; z < attrNodesCom.length; z++) { 
+                                                                                             
+                                                                                            if (currentNode.session.getRootNode().getNode("content").getNode("attribute").getNode("type").hasNode(attrNodesCom[z].typeCom)){
+                                                                                    var	labelname=currentNode.session.getRootNode().getNode("content").getNode("attribute").getNode("type").getNode(attrNodesCom[z].typeCom).getNodes();
+                                                                                    var	commId=currentNode.session.getRootNode().getNode("content").getNode("attribute").getNode("commercial").getNode(attrNodesComm[z].id);
+                                                                                    //out.print(labelname.length);
+                                                                                      %>
+                                                                                      <td class="col-xs-2"><div class="row" style="margin-bottom: 15px;"><%for(var m=0;m<labelname.length;m++){
+                                                                                      	%>
+                                                                                                
+                                                                                    <div class="col-xs-4"><input type="text" class="form-control" required name="<%=commId.name%>_<%=labelname[m].placeholder%>" placeholder="<%=labelname[m].placeholder%>"></div>
+                                                                                    
+                                                                               
+                                                                                 <%}%> </div></td><%}%><%}}}%>
+                                                                             </tr>
+                                                                             <%}%>
+                                                                             </tbody>
+																			 </table>
+                                                                       </div>
+                                                                       
+                                                                       
+                                                             </div> 
+												 </div>
+                            </div>
+                            </div>
+                            
+                            </div>
+                    </div>
+												
+							
+			 <script>
+			 
+			// var templatePart="<tr><td><div class='row' style='margin-bottom: 15px;'><div class='col-xs-2'>  <input type='text' class='form-control' > </td><% if (currentNode.hasNode('template') && currentNode.getNode('template').getNode('attr').hasNodes()) { var attrNode = currentNode.getNode('template').getNode('attr');       if (attrNode.hasNodes()) {  var attrNodes = attrNode.getNodes();     var s = 0;  for (var z = 0; z < attrNodes.length; z++) {  if (currentNode.session.getRootNode().getNode('content').getNode('attribute').getNode('type').hasNode(attrNodes[z].type)){       var	labelname=currentNode.session.getRootNode().getNode('content').getNode('attribute').getNode('type').getNode(attrNodes[z].type).getNodes();  %>	  <%for(var m=0;m<labelname.length;m++){ %>  <td><div class='col-xs-2'><input type='text' class='form-control' name='<%=labelname[m].placeholder%>' placeholder='<%=labelname[m].placeholder%>'></div>   <%}%> </div></td><%}%><%}}}%>   <td><input type='file' name='image' id=''> </br><input type='file' name='video' id=''> </br> <input type='file' name='atta' id=''></td> </tr>";
+			
+		//alert(templatePart);
+		
+			function deleteRowTemp(guestList,commList) {
+		try {
+			var table = document.getElementById(guestList);
+			var rowCount = table.rows.length;
+			if (rowCount > 1) {
+				table.deleteRow(rowCount - 1);
+			}
+			var table1 = document.getElementById(commList);
+			var rowCount1 = table1.rows.length;
+			if (rowCount1 > 1) {
+				table1.deleteRow(rowCount1 - 1);
+			}
+		} catch (e) {
+			alert(e);
+		}
+	}
+		
+		var chiRes = 0;
+		//alert(chiRes);
+		<%if(currentNode.hasNode("child")){
+		var childNode =  currentNode.getNode("child");
+		var childCount = childNode.ccount;%> 
+		chiRes = parseInt(chiRes) + parseInt(<%=childCount%>);
+		<%}else{%>
+		chiRes = 1;
+		<%}%>
+			function loadAddTemplate(tableID,tableID1){
+			
+			var table = document.getElementById(tableID);
+			//alert(table);
+		var rowCount = table.rows.length;
+		var row = table.insertRow(rowCount);
+		counts = rowCount - 1;
+		
+		var sRes;
+
+		//alert(chiRes);		
+		var cell2 = row.insertCell(0);
+		var divCat = 	document.createElement("div");
+		divCat.setAttribute("class", "col-xs-6");
+		var rate = document.createElement("input");
+		var chill=document.createElement("input");
+		chill.type="hidden";
+		chill.name="childProid";
+		chill.value=chiRes;
+		rate.type = "text";
+		rate.name = "catalog";
+		rate.setAttribute("class", "form-control");
+		rate.setAttribute("value", chiRes);
+		
+		chiRes++;
+		rate.id = "catalog" + counts;
+		divCat.appendChild(rate);
+  		divCat.appendChild(chill);
+		cell2.appendChild(divCat);
+		
+		
+		<% if (currentNode.hasNode("template") && currentNode.getNode("template").getNode("attr").hasNodes()) {
+var attrNode = currentNode.getNode("template").getNode("attr");
+if (attrNode.hasNodes()) {
+var attrNodes = attrNode.getNodes();
+var s = 1;
+for (var z = 0; z < attrNodes.length; z++) { 
+                                                                                             
+if (currentNode.session.getRootNode().getNode("content").getNode("attribute").getNode("type").hasNode(attrNodes[z].type)){
+                                                                                    var  labelname=currentNode.session.getRootNode().getNode("content").getNode("attribute").getNode("type").getNode(attrNodes[z].type).getNodes();
+                                                                                    var	labelName=currentNode.session.getRootNode().getNode("content").getNode("attribute").getNode("label").getNode(attrNodes[z].label);
+                                                                                    %>
+                                                                                    
+																				var cell3 = row.insertCell(<%=s%>);
+																				
+																				<%
+																				s++;
+																					for(var m=0;m<labelname.length;m++){
+                                                                                      	%>
+                                                                                                
+        																		var divDy = 	document.createElement("div");
+																				divDy.setAttribute("class", "col-xs-6");
+																				var rate = document.createElement("input");
+																				rate.type = "text";
+																				rate.name = "<%=labelName.name%>_<%=labelname[m].placeholder%>";
+																				rate.placeholder = "<%=labelname[m].placeholder%>";
+																				rate.setAttribute("class", "form-control");
+																				rate.id = '<%=labelname[m].placeholder%>' + counts;
+																				divDy.appendChild(rate)
+																				cell3.appendChild(divDy);
+                                                                                 
+																				 
+																				 <%}}}%>
+																				 sRes = <%=s%>;
+																				 <%}}%>
+		
+		var cell4 = row.insertCell(sRes);
+		var rate = document.createElement("input");
+		rate.type = "file";
+		rate.name = "image";
+		rate.setAttribute("class", "");
+		rate.id = "imageId" + counts;
+		//cell4.appendChild(rate);
+		//sRes = sRes + 1;
+		//var cell1 = row.insertCell(sRes);
+		var skill = document.createElement("input");
+		skill.type = "file";
+		skill.name = "video";
+		skill.setAttribute("class", "");
+		skill.id = "videoId" + counts;
+		//cell1.appendChild(skill);
+		//sRes = sRes + 1;
+		//var cell5 = row.insertCell(sRes);
+		
+		var skill5 = document.createElement("input");
+		
+		skill5.type = "file";
+		skill5.name = "atta";
+		skill5.setAttribute("class", "");
+		skill5.id = "attaId" + counts;
+		//cell5.appendChild(skill5);
+		  var br = document.createElement("br");
+		cell4.appendChild(rate);
+		cell4.appendChild(br);		
+		cell4.appendChild(skill);
+		cell4.appendChild(br);
+		cell4.appendChild(skill5);	
+		
+			var table1 = document.getElementById(tableID1);
+			//alert(table1);
+		var rowCount1 = table1.rows.length;
+		var row1 = table1.insertRow(rowCount1);
+	//	alert(row1);
+		counts1 = rowCount1 - 1;
+		
+		var sRes1;
+<% if (currentNode.hasNode("template") && currentNode.getNode("template").getNode("comm").hasNodes()) {
+var attrNodeCom = currentNode.getNode("template").getNode("comm");
+if (attrNodeCom.hasNodes()) {
+var attrNodesCom = attrNodeCom.getNodes();
+var s = 0;
+for (var z = 0; z < attrNodesCom.length; z++) { 
+                                                                                             
+if (currentNode.session.getRootNode().getNode("content").getNode("attribute").getNode("type").hasNode(attrNodesCom[z].typeCom)){
+                                                                                    var  labelname=currentNode.session.getRootNode().getNode("content").getNode("attribute").getNode("type").getNode(attrNodesCom[z].typeCom).getNodes();
+                                                                                    var	commId=currentNode.session.getRootNode().getNode("content").getNode("attribute").getNode("commercial").getNode(attrNodesComm[z].id);
+                                                                                    %>
+                                                                                    
+																				var cell31 = row1.insertCell(<%=s%>);
+																				
+																				<%
+																				s++;
+																					for(var m=0;m<labelname.length;m++){
+                                                                                      	%>
+                                                                                                
+        																		var divDy1 = 	document.createElement("div");
+																				divDy1.setAttribute("class", "col-xs-4");
+																				var rate1 = document.createElement("input");
+																				rate1.type = "text";
+																				rate1.name = "<%=commId.name%>_<%=labelname[m].placeholder%>";
+																				rate1.placeholder = "<%=labelname[m].placeholder%>";
+																				rate1.setAttribute("class", "form-control");
+																				rate1.id = '<%=labelname[m].placeholder%>' + counts1;
+																				divDy1.appendChild(rate1)
+																				cell31.appendChild(divDy1);
+                                                                                 
+																				 
+																				 <%}}}%>
+																				 sRes1 = <%=s%>;
+																				 <%}}%>
+		
+		
+					
+			
+			
+			//var ab=document.getElementById("tableTemplateHolder").innerHTML;
+			//var templateid = $('#tableTemplateHolder tbody');
+			//$(templatePart).append(templateid);
+			
+			}
+			</script>
+			 <div class="col-xs-12">
+
+
+                                                                <input type="submit" class="btn btn-primary"
+                                                                       value="Save" />
+
+
+                                                            </div>
+			
+			</form>
+			  											

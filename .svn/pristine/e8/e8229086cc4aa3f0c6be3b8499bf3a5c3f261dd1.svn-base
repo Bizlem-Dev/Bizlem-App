@@ -1,0 +1,102 @@
+package biz.com.service.impl;
+
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.ResourceBundle;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.felix.scr.annotations.Component;
+import org.apache.felix.scr.annotations.Properties;
+import org.apache.felix.scr.annotations.Property;
+import org.apache.felix.scr.annotations.Service;
+
+import biz.com.service.ReportService;
+
+/**
+ * 
+ * @author atul
+ */
+@Component(configurationFactory = true)
+@Service(ReportService.class)
+@Properties({ @Property(name = "com", value = "com") })
+public class ReportServiceImpl implements ReportService {
+
+	private ResourceBundle bundle;
+	public void paidAddReport(HttpServletRequest request,
+			HttpServletResponse response,HashMap<String, String> mp) {
+		request.setAttribute("url", mp.get("url"));
+		Date date = new Date();
+
+		SimpleDateFormat format = new SimpleDateFormat(
+				"yyyy-MM-dd");
+		String DateToStr = format.format(date);
+		request.setAttribute("todate", DateToStr);
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(date);
+		cal.add(Calendar.MONTH, -1);
+		String frodate = format.format(cal.getTime());
+		request.setAttribute("fromdate", frodate);
+		String []paramName={"serviceId"};
+		String []paramValue={request.getParameter("name")};
+		request.setAttribute("segment", this.callGetService(ResourceBundle.getBundle("serverConfig").getString("reportwebservice"), paramName, paramValue));
+	}
+
+	
+
+	public String fetchReport(HttpServletRequest request,
+			HttpServletResponse response, HashMap<String, String> mp) {
+		mp.get("productcode");
+		this.paidAddReport(request, response, mp);
+		return "";
+	}
+	
+	public String getContentName(){
+	
+	return null;
+	}
+	
+	public String callGetService(String urlStr, String[] paramName,
+			String[] paramValue) {
+		URL url;
+		StringBuilder requestString = new StringBuilder(urlStr);
+		if (paramName != null && paramName.length > 0) {
+			requestString.append("?");
+			for (int i = 0; i < paramName.length; i++) {
+				requestString.append(paramName[i]);
+				requestString.append("=");
+				requestString.append(paramValue[i]);
+				requestString.append("&");
+			}
+		}
+		StringBuilder sb = new StringBuilder();
+		try {
+			url = new URL(requestString.toString());
+			HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+			conn.setRequestMethod("GET");
+			conn.setRequestProperty("Accept", "application/json");
+			BufferedReader br = new BufferedReader(new InputStreamReader(
+					(conn.getInputStream())));
+
+			String line;
+			while ((line = br.readLine()) != null) {
+				sb.append(line);
+				System.out.println(line);
+			}
+			br.close();
+			conn.disconnect();
+		} catch (Exception e) {
+			e.printStackTrace();
+
+		}
+		return sb.toString();
+	}
+	
+}

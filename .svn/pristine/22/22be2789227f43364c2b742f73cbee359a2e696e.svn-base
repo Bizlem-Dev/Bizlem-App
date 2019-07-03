@@ -1,0 +1,100 @@
+<script type="text/javascript">
+              $(window).load(function() {
+               getAdvertiseProductSolrProducts(2,0);
+                 
+                });
+          </script><script>
+function getAdvertiseProductSolrProducts(u_id,srt)
+            {
+                var searchval="<%=request.getAttribute("products")%>";
+               
+                var httpxml;
+                try
+                {
+                    // Firefox, Opera 8.0+, Safari
+                    httpxml = new XMLHttpRequest();
+                }
+                catch (e)
+                {
+                    // Internet Explorer
+                    try
+                    {
+                        httpxml = new ActiveXObject("Msxml2.XMLHTTP");
+                    }
+                    catch (e)
+                    {
+                        try
+                        {
+                            httpxml = new ActiveXObject("Microsoft.XMLHTTP");
+                        }
+                        catch (e)
+                        {
+                            alert("Your browser does not support AJAX!");
+                            return false;
+                        }
+                    }
+                }
+                function stateck()
+                {
+                    if (httpxml.readyState == 3)
+                    {
+                        //setTimeout(function() {alert("aaaaa")}, 1000);
+                    }
+                    if (httpxml.readyState == 4)
+                    {
+                        
+                        var resultVal = httpxml.responseText;
+                       
+                        var value = resultVal.split("#####");
+                         
+               getNewsSolrProduct(value[0]);
+                    }
+                }
+			var url = "http://23.20.72.220/bsearch/solrsearch_action_javascript.php";
+               
+                
+                if (searchval == '*')
+                {
+                    url = url + "?u_id=" + u_id + "&total=" + searchval;
+                }
+                else
+                {
+                    url = url + "?u_id=" + u_id + "&search=" + searchval + "&start=" + srt + "&limit=20";
+                }
+                
+                httpxml.onreadystatechange = stateck;
+                httpxml.open("GET", url, true);
+                httpxml.send(null);
+
+            }
+      function getNewsSolrProduct(products){
+       
+  var divIn = "";
+  var n=products.split(",");
+   divIn="<ul class='slides'>"
+  for(var i = 0;i < n.length;i++)
+  {
+ 
+   divIn =divIn+"<li><iframe id='a266c3b6' name='a266c3b6' src='http://23.20.72.220/openx/www/delivery/afr.php?zoneid=23&amp;source="+n[i]+"&amp;cb=4' frameborder='0' scrolling='no' width='300' height='350'><a href='http://23.20.72.220/openx/www/delivery/ck.php?n=a456d809&amp;cb=4' target='_blank'><img src='http://23.20.72.220/openx/www/delivery/avw.php?zoneid=23&amp;source="+n[i]+"&amp;cb=4&amp;n=a456d809' border='0' alt='' /></a></iframe></li>";
+  
+        }
+      
+  document.getElementById("hot-product3").innerHTML=divIn+"</ul>";
+  $('#hot-product3').flexslider({
+                    animation: "slide",
+                    animationLoop: false,
+                  });
+      
+      }      
+            
+            </script>
+
+
+                                <div class="news-slide-flex">
+                                    <div class="flexslider" id="hot-product3">
+                                     
+                                      
+                                    </div>
+            
+
+    </div>

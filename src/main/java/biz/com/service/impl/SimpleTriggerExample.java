@@ -1,0 +1,93 @@
+package biz.com.service.impl;
+
+import java.util.Date;
+
+import org.quartz.JobBuilder;
+import org.quartz.JobDataMap;
+import org.quartz.JobDetail;
+import org.quartz.Scheduler;
+import org.quartz.SchedulerException;
+import org.quartz.SimpleScheduleBuilder;
+import org.quartz.Trigger;
+import org.quartz.TriggerBuilder;
+import org.quartz.impl.StdSchedulerFactory;
+
+
+public class SimpleTriggerExample {
+	
+//	public static void main(String[] args) throws Exception {
+//		
+//		SimpleTriggerExample b=new SimpleTriggerExample();
+//		/b.fireJob("10");
+//	}
+	public void fireJob(String id,long time) throws SchedulerException{
+		// JobDetail job = new JobDetail();
+				// job.setName("dummyJobName");
+				// job.setJobClass(HelloJob.class);
+		JobDataMap data = new JobDataMap();
+		data.put("latch", this);
+				JobDetail job = JobBuilder.newJob(HelloJob.class).usingJobData("example", id).
+						usingJobData(data)
+						.withIdentity(id, "group4").build();
+
+				
+				// SimpleTrigger trigger = new SimpleTrigger();
+				// trigger.setStartTime(new Date(System.currentTimeMillis() + 1000));
+				// trigger.setRepeatCount(SimpleTrigger.REPEAT_INDEFINITELY);
+				// trigger.setRepeatInterval(30000);
+
+				// Trigger the job to run on the next round minute
+				Trigger trigger = TriggerBuilder
+						.newTrigger()
+						.withIdentity(id, "group4")
+						.withSchedule(
+								SimpleScheduleBuilder.simpleSchedule()
+										.withIntervalInMilliseconds(time*1000).repeatForever())
+						.build();
+
+				// schedule it
+				Scheduler scheduler = new StdSchedulerFactory().getScheduler();
+				scheduler.start();
+				scheduler.scheduleJob(job, trigger);
+				System.out.print("=============");
+	}
+	public void fireJobWidget(String id,long time) throws SchedulerException{
+		// JobDetail job = new JobDetail();
+				// job.setName("dummyJobName");
+				// job.setJobClass(HelloJob.class);
+		JobDataMap data = new JobDataMap();
+		data.put("latch", this);
+				JobDetail job = JobBuilder.newJob(HelloJobWidget.class).usingJobData("example", id).
+						usingJobData(data)
+						.withIdentity(id, "group3").build();
+
+				
+				// SimpleTrigger trigger = new SimpleTrigger();
+				// trigger.setStartTime(new Date(System.currentTimeMillis() + 1000));
+				// trigger.setRepeatCount(SimpleTrigger.REPEAT_INDEFINITELY);
+				// trigger.setRepeatInterval(30000);
+
+				// Trigger the job to run on the next round minute
+				Trigger trigger = TriggerBuilder
+						.newTrigger()
+						.withIdentity(id, "group3")
+						.withSchedule(
+								SimpleScheduleBuilder.simpleSchedule()
+										.withIntervalInMilliseconds(time*1000).repeatForever())
+						.build();
+
+				// schedule it
+				Scheduler scheduler = new StdSchedulerFactory().getScheduler();
+				scheduler.start();
+				scheduler.scheduleJob(job, trigger);
+				System.out.print("=============");
+	}
+	public Long calculateTimeInSec(String time){
+		String[] value=time.split(":");
+		long hour=Long.parseLong(value[0])*3600;
+		long minute=Long.parseLong(value[1])*60;
+		long sec=Long.parseLong(value[2]);
+		long total=hour+minute+sec;
+		return total;
+	}
+}

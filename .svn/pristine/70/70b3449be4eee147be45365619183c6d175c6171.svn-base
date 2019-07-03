@@ -1,0 +1,41 @@
+<% 
+ 
+var data=request.getAttribute("company");
+
+for(var k=0; k<data.size(); k++) { 
+          var path=data.get(k);
+          var cmpNode=path;
+                     path = path.getNode("BasicInfo");
+            %>
+ <div class="search-list-company">
+                            <div class="thumbnail">
+                                <div class="thumb">
+               
+                <% if(path.hasProperty("companyLogo")){
+                		out.print("<img height='64' width='64' alt="+"64x64"+" class="+"media-object"+" src='"+request.getContextPath()+path.companyLogo+"'>");
+                		
+                		}else{
+                		
+                			out.print("<img height='64' width='64' alt="+"64x64"+" class="+"media-object"+" src='"+request.getScheme()+"://"+request.getServerName()+":"+ request.getServerPort()+request.getContextPath()+"/apps/images/nmg.jpg'>");
+                		
+                	} %>
+                  
+                </a>
+              </div>
+              <div class="caption">
+                                    <h3><a href="<%=request.getScheme()+"://"+request.getServerName()+":"+ request.getServerPort()+request.getContextPath()%>/servlet/company/show.view?compN=<%=cmpNode.companyNumber?cmpNode.companyNumber:""%>"><%=path.companyName %></a></h3>
+                <div class="desc foo1">
+                 <%=path.industries%>
+                 </div>
+                 
+                   <div class="follow">
+                                        <div class="pull-left"><a href="<%=path.website  %>"><%=path.website  %></a></div>
+                                        <div class="pull-right">
+                                           <a href="<%=path.fburl%>"><i class="fa fa-facebook-square"></i></a>
+                                            <a href="<%=path.twiturl%>"><i class="fa fa-twitter-square"></i></a>
+                                        </div>
+                                    </div>
+               
+              </div>
+            </div>
+        </div><%}%>

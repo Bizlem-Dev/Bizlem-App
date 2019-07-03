@@ -1,0 +1,94 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<% var currentNodeProvided = ((typeof currentNode != "undefined"));  %>
+<% currentNode=currentNode.session.getNode("/content"); %>
+<html>
+    <head>     
+          </script>
+        <title>Home</title> 
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="description" content="Demo project with jQuery">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+         <%load("../common/links.esp");%>
+         
+         
+<script type="text/javascript">
+                      $('#slider-home').flexslider({
+                        animation: "slide",
+                        //controlNav: "thumbnails",
+                        start: function(slider){
+                          $('body').removeClass('loading');
+                        }
+                      });
+                      
+                     
+                  </script>
+
+
+            <script language="javascript">
+ function contactSupplier(){
+                      alert("paretss");
+                     
+                      }
+  $(document).ready(function() {
+ 		 $("#dateto").datepicker({
+            format: "yyyy-mm-dd",
+            
+        })
+        .on('changeDate', function(ev){
+        var birthDay = document.getElementById('dateto').value;
+           
+            if(new Date(birthDay).getTime() > new Date().getTime())
+{
+//alert("onside if"); 
+document.getElementById('dateto').value = "";
+ $(this).datepicker('hide');
+alert("Date should not be after or before  current date");
+}else{
+$(this).datepicker('hide');
+document.getElementById("widgetIframee").src="http://54.225.114.173/piwik/index.php?module=Widgetize&action=iframe&widget=1&moduleToWidgetize=UserCountryMap&actionToWidgetize=visitorMap&idSite=28&period=range&disableLink=1&widget=1&token_auth=d8b320f7e521ff55857ea98e94821e0c&segment=contentName=@<%=request.getAttribute('segment')%>&date="+document.getElementById('datefrom').value+","+document.getElementById('dateto').value;
+}
+
+        });	
+         $("#datefrom").datepicker({
+            format: "yyyy-mm-dd",
+            
+        })
+        .on('changeDate', function(ev){
+        var birthDay = document.getElementById('datefrom').value;
+           
+            if(new Date(birthDay).getTime() > new Date().getTime())
+{
+//alert("onside if"); 
+document.getElementById('datefrom').value = "";
+ $(this).datepicker('hide');
+alert("Date should not be after or before  current date");
+}else{
+$(this).datepicker('hide');
+
+
+}
+
+        });	
+  });	
+ 
+ 
+        </script>
+   <%load("../common/header.esp");%>
+  
+<section class="email_service">
+
+   <div class="container">
+        <div class="row">
+        From : <input type="text" id='datefrom' class="form-control" >
+         To  : <input type="text" id='dateto' class="form-control" >
+        <div id="widgetIframe"><iframe width="100%" height="350" id="widgetIframee" src="http://54.225.114.173/piwik/index.php?module=Widgetize&action=iframe&widget=1&moduleToWidgetize=UserCountryMap&actionToWidgetize=visitorMap&idSite=28&period=range&date=<%=request.getAttribute('fromdate')%>,<%=request.getAttribute('todate')%>&disableLink=1&widget=1&token_auth=d8b320f7e521ff55857ea98e94821e0c&segment=contentName=@<%=request.getAttribute('segment')%>" scrolling="no" frameborder="0" marginheight="0" marginwidth="0"></iframe></div>
+        <div id="widgetIframe1"><iframe width="100%" height="350" id="widgetIframe11" src="http://54.225.114.173/piwik/index.php?module=Widgetize&action=iframe&widget=1&moduleToWidgetize=Contents&actionToWidgetize=getContentNames&idSite=28&period=range&date=<%=request.getAttribute('fromdate')%>,<%=request.getAttribute('todate')%>&disableLink=1&widget=1&segment=contentName=@<%=request.getAttribute('segment')%>" scrolling="no" frameborder="0" marginheight="0" marginwidth="0"></iframe></div>
+        </div>
+   </div>
+</section>
+        <%load("../common/footer.esp");%>
+  
+        
+    </body>
+</html>

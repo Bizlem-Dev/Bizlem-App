@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<%
+	var currentNodeProvided = ((typeof currentNode != "undefined"));
+var action=request.getParameter("actionType");
+  var node;
+  var node1;
+  var node2;
+  
+node1=request.getAttribute("news");
+  
+  
+%>
+
+		<div class="colsm-12 col-xs-12">
+                        <div class="row">
+                            <div class="col-md-4 col-xs-12">
+                                <div class="news-slide">
+                                   	
+							<%
+							for(i=0;i<node1.size();i++) {
+						
+						                 node2=node1.get(i);
+						                %>
+                                    <div class="media">
+                                      <div class="media-left">
+                                        <a href="<%=node2.link%>">
+                                       	<%
+								if(node2.hasNode("images")){
+							                    	if(node2.getNode("images").hasNodes()){
+							                    		var imgNode=node2.getNode("images").getNodes();
+							                    			if(imgNode[0].hasProperty("imgpath")){
+							%> <img
+							src="<%=request.getContextPath()+"/"+imgNode[0].imgpath%>" style="height:50px;width:60px" /> <%
+ 									}
+                     			}
+                     	}
+ %>
+                                        </a>
+                                      </div>
+                                      <div class="media-body">
+                                       <p><small><a href="#"><%=node2.Title%></a></p></small>
+                                      </div>
+                                    </div>
+							<%}%>
+
+
+                                    
+
+                              
+							
+	</div>
+
+	<script type="text/javascript">
+		$(window).load(function() {
+			$('#top-conferences').flexslider({
+				animation : "slide",
+				direction : "vertical",
+				minItems : 5,
+				maxItems : 20,
+				slideshowSpeed : 4000,
+				animationLoop : true
+			});
+		});
+	</script>
+</div>

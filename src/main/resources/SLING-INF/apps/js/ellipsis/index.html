@@ -1,0 +1,42 @@
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+</head>
+<style type="text/css">
+  .ellip {
+  display: block;
+  height: 100%;
+}
+
+.ellip-line {
+  display: inline-block;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  word-wrap: normal;
+  max-width: 100%;
+}
+
+.ellip,
+.ellip-line {
+  position: relative;
+  overflow: hidden;
+}
+</style>
+<body>
+  <div class="foo">
+    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Expedita ullam, cumque saepe reprehenderit omnis minus, nihil quos vero dicta perspiciatis ipsam pariatur, libero quo deleniti, placeat cum. Eos, odio, nesciunt.Sunt ad laboriosam quis, quibusdam illo rerum minima magnam accusantium. Minima unde, nobis minus assumenda nostrum natus accusantium reprehenderit commodi magni nihil dicta veniam obcaecati. Consectetur sed, libero ullam aliquam?</p>
+  </div>
+
+
+  <script src="jquery.min.js"></script>
+  <script src="jquery.ellipsis.js"></script>
+  <script type="text/javascript">
+$('.foo').ellipsis({
+  lines: 2,             // force ellipsis after a certain number of lines. Default is 'auto'
+  ellipClass: 'ellip',  // class used for ellipsis wrapper and to namespace ellip line
+  responsive: true      // set to true if you want ellipsis to update on window resize. Default is false
+});
+  </script>
+</body>
+</html>

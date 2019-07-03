@@ -1,0 +1,187 @@
+package biz.com.service.impl;
+
+import java.io.InputStream;
+import java.io.PrintWriter;
+import java.net.URL;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.jcr.LoginException;
+import javax.jcr.Node;
+import javax.jcr.NodeIterator;
+import javax.jcr.RepositoryException;
+import javax.jcr.Session;
+import javax.jcr.SimpleCredentials;
+import javax.jcr.Workspace;
+import javax.jcr.query.Query;
+import javax.jcr.query.QueryResult;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+
+import org.apache.felix.scr.annotations.Component;
+
+import org.apache.felix.scr.annotations.Property;
+import org.apache.felix.scr.annotations.Reference;
+import org.apache.felix.scr.annotations.Service;
+import org.apache.felix.scr.annotations.Properties;
+import org.apache.sling.api.SlingHttpServletRequest;
+import org.apache.sling.jcr.api.SlingRepository;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
+
+import biz.com.service.EventService;
+
+
+
+@Component(configurationFactory = true)
+@Service(EventService.class)
+@Properties({ @Property(name = "com", value = "com") })
+public class EventServiceImpl implements EventService{
+	@Reference
+	private SlingRepository repo;
+
+	Session session = null;
+
+
+	public ArrayList<Node> getEventList(String searchText, String condition) {
+		ArrayList<Node> pb = null;
+		
+		Node tempPrdNode, childNode;
+		
+		if (!searchText.trim().equals("")) {
+			try {
+
+				pb = new ArrayList<Node>();
+				session = repo.login(new SimpleCredentials("admin", "admin"
+						.toCharArray()));
+
+				String querryStr = "select * from [nt:unstructured] where  ISDESCENDANTNODE('/content/exhibition/') and "+condition+"  like '"
+						+ searchText+ "%'";
+				Workspace workspace = session.getWorkspace();
+				Query query = workspace.getQueryManager().createQuery(
+						querryStr, Query.JCR_SQL2);
+				QueryResult result = query.execute();
+				NodeIterator iterator = result.getNodes();
+				
+				while (iterator.hasNext()) {
+					
+					tempPrdNode = iterator.nextNode();						
+							pb.add(tempPrdNode);
+							pb.add(tempPrdNode);
+							
+				}
+
+			} catch (LoginException e) {
+
+			} catch (RepositoryException e) {
+				// TODO Auto-generated catch block
+
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+
+			}
+		}
+		return pb;
+	}
+	public List getCustomerDetails(SlingHttpServletRequest request,String customerId, PrintWriter out) {
+		InputStream inputXml = null;
+		String content = "";
+		String serviceUrl="";
+		String url="";
+		HashMap<String, String> map=null;
+		List <HashMap<String,String>>customerDeatilList=null;
+		 String currentDate = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
+		 String bannerService = "Home_Left,Home_Right,Home_Top,Home_bottom";
+		    String[] bannerListArray = bannerService.split(",");
+		    ArrayList<String> bannerList = new ArrayList<String>(
+		            Arrays.asList(bannerListArray));
+		    Date endDate = new Date();
+			endDate.setDate(endDate.getDate()-1);
+			Date startDate = new Date(); 
+			String url1="";
+			
+		try {
+			session=repo.login(new SimpleCredentials("admin", "admin".toCharArray()));
+			if(session.getNode("/content/ip").hasProperty("auctionService")){
+				serviceUrl=session.getNode("/content/ip").getProperty("auctionService").getString();
+			 }
+		   url=serviceUrl+"/services/Auctions_WSDL/getCustomerServiceStatus?customerId="+customerId;
+			customerDeatilList=new ArrayList<HashMap<String,String>>();
+			inputXml = new URL(url).openConnection().getInputStream();
+
+			DocumentBuilderFactory dbFactory = DocumentBuilderFactory
+					.newInstance();
+			DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+			Document doc = dBuilder.parse(inputXml);
+			doc.getDocumentElement().normalize();
+			NodeList nList = doc.getElementsByTagName("ns:return");
+			for (int temp = 0; temp < nList.getLength(); temp++) {
+				
+				org.w3c.dom.Node nNode = nList.item(temp);
+				if (nNode.getNodeType() == org.w3c.dom.Node.ELEMENT_NODE) {
+					map=new HashMap<String, String>();
+					Element eElement = (Element) nNode;
+					map.put("orderId", eElement.getElementsByTagName("ax21:orderId").item(0).getTextContent());
+					map.put("productCode", eElement.getElementsByTagName("ax21:productCode").item(0).getTextContent());
+					map.put("configId", eElement.getElementsByTagName("ax21:configId").item(0).getTextContent());
+					map.put("consumptionQuantity", eElement.getElementsByTagName("ax21:consumptionQuantity").item(0).getTextContent());
+					map.put("customerId", eElement.getElementsByTagName("ax21:customerId").item(0).getTextContent());
+					map.put("customerName", eElement.getElementsByTagName("ax21:customerName").item(0).getTextContent());
+					map.put("lastConsumptionDate", eElement.getElementsByTagName("ax21:lastConsumptionDate").item(0).getTextContent());
+					map.put("productDescription", eElement.getElementsByTagName("ax21:productDescription").item(0).getTextContent());
+					map.put("quantity", eElement.getElementsByTagName("ax21:quantity").item(0).getTextContent());
+					map.put("rfq", eElement.getElementsByTagName("ax21:rfq").item(0).getTextContent());
+					map.put("serviceEndDate", eElement.getElementsByTagName("ax21:serviceEndDate").item(0).getTextContent());
+					map.put("serviceStartDate", eElement.getElementsByTagName("ax21:serviceStartDate").item(0).getTextContent());
+					map.put("status", eElement.getElementsByTagName("ax21:status").item(0).getTextContent());
+						String productCode=eElement.getElementsByTagName("ax21:productCode").item(0).getTextContent();
+						String sdate=eElement.getElementsByTagName("ax21:serviceStartDate").item(0).getTextContent();
+						String edate=eElement.getElementsByTagName("ax21:serviceEndDate").item(0).getTextContent();
+					
+					//if(startDate.toString().compareTo(sdate) > 0 &&  (endDate.toString().compareTo(edate) < 0)){  
+					   //   String endServiceDate = new SimpleDateFormat("yyyy-MM-dd").format(edate);
+					     
+					      if (productCode.equals("chat") || productCode.equals("VChat")) {
+				          url1="http://35.221.160.146:8078/ServiceLogging/userPanel?type=callAuto&val="+eElement.getElementsByTagName("ax21:quantity").item(0).getTextContent().toString()+"&productCode="+productCode;     
+					     
+					     }else if(productCode.equals("PaidAdd")){
+					    	 
+					      url1="http://50.17.231.172/bsearch/ProductRegistrationPaid.php?startdate="+currentDate+"&enddate="+eElement.getElementsByTagName("ax21:serviceStartDate").item(0).getTextContent()+"&username="+customerId;
+					    
+					     }else if(productCode.equals("SponsoredAdd")){
+					    	   url1="http://50.17.231.172/bsearch/ProductRegistrationSponsored.php?startdate="+currentDate+"&enddate="+eElement.getElementsByTagName("ax21:serviceStartDate").item(0).getTextContent()+"&username="+customerId;
+					    	                    
+					     }else if(bannerList.contains(productCode)){
+					    	 url1="http://50.17.231.172/bsearch/BannerCreation.php?startdate="+currentDate+"&enddate="+eElement.getElementsByTagName("ax21:serviceStartDate").item(0).getTextContent()+"&username="+customerId+"&zonename="+productCode;
+					    		    	         
+					     } else if(productCode.equals("webMail")){
+					    	 
+				         url1="http://35.221.160.146:8078/ServiceLogging/userPanel?type=createAccount&val="+eElement.getElementsByTagName("ax21:quantity").item(0).getTextContent().toString()+"&productCode=" + productCode;
+						        
+					  } else if(productCode.equalsIgnoreCase("SMS") || productCode.equalsIgnoreCase("email") || productCode.equalsIgnoreCase("call"))
+					               {
+						  url1="http://35.221.160.146:8078/ServiceLogging/userPanel?type=assignSmsEmail&productCode=" + productCode;
+						  	}
+					   ///}
+					map.put("url", url1);
+					customerDeatilList.add(map);
+				}
+
+			}
+			
+		} catch (Exception e) {
+			out.println(e);
+			
+		}finally{
+			session.logout();
+			
+		}
+		return customerDeatilList;
+	     
+}}

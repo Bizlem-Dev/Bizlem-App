@@ -1,0 +1,32 @@
+package biz.com.service;
+
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import jxl.*;
+import jxl.write.*;
+import jxl.write.biff.RowsExceededException;
+
+import javax.jcr.Node;
+import javax.servlet.ServletException;
+
+import org.apache.sling.api.SlingHttpServletRequest;
+import org.apache.sling.api.SlingHttpServletResponse;
+
+//import biz.com.service.impl.WriteException;
+
+//import biz.com.service.impl.WritableSheet;
+
+public interface ProductService{
+
+	 public ArrayList<Node> getProductList(String data); 
+	 public ArrayList<Node> getProductListByCatId(String data); 
+	    public Long saveProductInfo(SlingHttpServletRequest request, SlingHttpServletResponse response)
+	            throws ServletException, IOException;
+	    public HashMap getCategoryByNode(String dNodeStr,
+	    		   String qsrchparam, SlingHttpServletRequest request,SlingHttpServletResponse response);
+//	    public void createTemplate(SlingHttpServletRequest request, SlingHttpServletResponse response,Long data)throws WriteException, RowsExceededException;
+//	    public void addLabel(WritableSheet sheet, int column, int row, String s)throws WriteException, RowsExceededException;
+}

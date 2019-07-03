@@ -1,0 +1,108 @@
+package biz.com.app.servlet;
+
+import java.io.IOException;
+import java.io.PrintWriter;
+
+import javax.jcr.Node;
+import javax.jcr.Session;
+import javax.jcr.SimpleCredentials;
+import javax.servlet.ServletException;
+
+import org.apache.felix.scr.annotations.Component;
+import org.apache.felix.scr.annotations.Properties;
+import org.apache.felix.scr.annotations.Property;
+import org.apache.felix.scr.annotations.Reference;
+import org.apache.felix.scr.annotations.Service;
+import org.apache.sling.api.SlingHttpServletRequest;
+import org.apache.sling.api.SlingHttpServletResponse;
+import org.apache.sling.api.servlets.SlingAllMethodsServlet;
+import org.apache.sling.jcr.api.SlingRepository;
+
+import biz.com.service.EventService;
+import biz.com.service.PersonService;
+
+@Component(immediate = true, metatype = false)
+@Service(value = javax.servlet.Servlet.class)
+@Properties({
+		@Property(name = "service.description", value = "Save product Servlet"),
+		@Property(name = "service.vendor", value = "VISL Company"),
+	@Property(name = "sling.servlet.paths", value = { "/servlet/service/index" }),
+		@Property(name = "sling.servlet.resourceTypes", value = "sling/servlet/default"),
+		@Property(name = "sling.servlet.extensions", value = {"catlist", "pageview" }) })
+@SuppressWarnings("serial")
+public class CategoryListServlet extends SlingAllMethodsServlet {
+
+	@Reference
+	private SlingRepository repos;	
+	
+	@Reference
+	private EventService eventService;
+	
+	@Override
+	protected void doGet(SlingHttpServletRequest request,
+			SlingHttpServletResponse response) throws ServletException,
+			IOException {
+		
+		@SuppressWarnings("unused")
+		Node rootNode,rootNode1=null;	
+		if (request.getRequestPathInfo().getExtension().equals("pageview")) {
+			Session session;
+			PrintWriter o=response.getWriter();
+			try{
+				//String k=request.getParameter("idp");
+			session = repos.login(new SimpleCredentials("admin", "admin"
+		            .toCharArray()));
+			
+			
+			request.setAttribute("event",eventService.getEventList(request,"Pump","selected_category"));
+			
+			request.setAttribute("hotproductsearch",eventService.getHotProductSearchText(request));	
+			
+			rootNode = session.getRootNode().getNode("content");
+		    			
+                      
+			request.getRequestDispatcher("/content/products/.index").forward(
+					request, response);
+					} catch (Exception e) {
+	           o.print(e.getMessage());
+	           }		
+
+				// response.getOutputStream().println(request.getParameter("companyName"));
+
+		}else if (request.getRequestPathInfo().getExtension().equals("catlist")) {
+			Session session;
+			PrintWriter o=response.getWriter();
+			try{
+				
+			session = repos.login(new SimpleCredentials("admin", "admin"
+		            .toCharArray()));
+		    
+			String catId = request.getParameter("catid");
+		    	rootNode = session.getRootNode().getNode("content").getNode("category");
+		    
+		    request.setAttribute("hotproductsearch",eventService.getHotProductSearchText(request));
+		    request.setAttribute("hotsellersearch",eventService.getHotSellerSearchText(request));
+		    request.setAttribute("photostory",eventService.getPhotoStorySearchText(request));	
+		    request.setAttribute("products",eventService.getProductSearchText(request));
+		     
+			request.getRequestDispatcher("/content/category/.subcategary").forward(
+					request, response);
+			} catch (Exception e) {
+	           o.print(e.getMessage());
+	           }		
+
+				// response.getOutputStream().println(request.getParameter("companyName"));
+
+		}else if (request.getRequestPathInfo().getExtension().equals("login")) {
+			//java.util.Properties p=eventService.propertie();
+			response.sendRedirect("http://35.221.160.146/portal/login");
+					
+	}else if (request.getRequestPathInfo().getExtension().equals("signup")) {
+		//java.util.Properties p=eventService.propertie();
+		response.sendRedirect("http://35.221.160.146/portal/app/newaccount.jsp");
+		} 
+
+	}
+}
+
+	

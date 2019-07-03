@@ -1,0 +1,11 @@
+package biz.com.service;
+
+import java.util.ArrayList;
+
+import javax.jcr.Node;
+
+public interface NewsService{
+	public ArrayList<Node> getNewsList(String search);
+
+	
+}

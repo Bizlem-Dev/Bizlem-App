@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Bootstrap Table Examples</title>
+            <!link rel="stylesheet" href="<%=request.getContextPath()%>/apps/css/bootstrap.min.css">
+    <link rel="stylesheet" href="<%=request.getContextPath()%>/apps/css/bootstrap-table.css">
+    <link rel="stylesheet" href="//rawgit.com/vitalets/x-editable/master/dist/bootstrap3-editable/css/bootstrap-editable.css">
+    <!script src="<%=request.getContextPath()%>/apps/js/jquery.min.js"></script>
+    <!script src="<%=request.getContextPath()%>/apps/js/bootstrap.min.js"></script>
+    </head>
+    <body>
+        <div class="container">
+            <!--<h1>Bootstrap Table Examples <a href="https://github.com/wenzhixin/bootstrap-table-examples" class="btn btn-primary" role="button" target="_blank">Learn more &raquo;</a></h1>-->
+            <div id="toolbar">
+                <button id="remove" class="btn btn-danger" disabled>
+                    <i class="glyphicon glyphicon-remove"></i> Delete
+                </button>
+                <button id="addRow" class="btn btn-info">
+                    <i class="glyphicon glyphicon-plus-sign"></i> Add Row
+                </button>
+            </div>
+            <table id="table"
+                   data-toolbar="#toolbar"
+                   data-search="true"
+                   data-show-refresh="true"
+                   data-show-toggle="true"
+                   data-show-columns="true"
+                   data-show-export="true"
+                   data-detail-view="true"
+                   data-detail-formatter="detailFormatter"
+                   data-minimum-count-columns="2"
+                   data-show-pagination-switch="true"
+                   data-pagination="true"
+                   data-id-field="id"
+                   data-page-list="[10, 25, 50, 100, ALL]"
+                   data-show-footer="false"
+                   data-side-pagination="server"
+                   data-query-params='queryParams'
+                   data-url="/portal/servlet/exhibition/flash.eventNameSuggetion?paravalue=&paraname=attrname,max,min,uom,value,catalognumber,id&path=/content/product/products/<%=request.getParameter("id")%>/spec/attr/&isparent=0,0,0,0,0,0,0&tableBoot=1"
+                   data-response-handler="responseHandler">
+            </table>
+        </div>
+
+        <script>
+            var $table = $('#table'),
+                    $remove = $('#remove'),
+                    $button = $('#addRow'),
+                    selections = [];
+
+            function initTable() {
+                $table.bootstrapTable({
+                    height: getHeight(),
+                    columns: [
+                        {
+                            field: 'state',
+                            checkbox: true,
+                            //                        rowspan: 2,
+                            align: 'center',
+                            valign: 'middle'
+                        },{
+                            title: 'Id',
+                            field: 'id',
+                            //                        rowspan: 2,
+                            align: 'center',
+//                            visibility:true,
+                            valign: 'middle',
+                            sortable: true,
+                            footerFormatter: totalTextFormatter
+                        }, {
+                            title: 'Catalogue<br>Number',
+                            field: 'catalognumber',
+                            //                        rowspan: 2,
+                            align: 'center',
+                            valign: 'middle',
+                            sortable: true,
+                            footerFormatter: totalTextFormatter
+                        }, {
+                            field: 'attrname',
+                            title: 'Label',
+                            sortable: true,
+                            editable: true,
+                            footerFormatter: totalNameFormatter,
+                            align: 'center'
+                        },{
+                            field: 'value',
+                            title: 'Value',
+                            sortable: true,
+                            editable: true,
+                            footerFormatter: totalNameFormatter,
+                            align: 'center'
+                        },{
+                            field: 'uom',
+                            title: 'UOM',
+                            sortable: true,
+                            editable: true,
+                            footerFormatter: totalNameFormatter,
+                            align: 'center'
+                        },{
+                            field: 'min',
+                            title: 'Min',
+                            sortable: true,
+                            editable: true,
+                            footerFormatter: totalNameFormatter,
+                            align: 'center'
+                        },{
+                            field: 'max',
+                            title: 'Max',
+                            sortable: true,
+                            editable: true,
+                            footerFormatter: totalNameFormatter,
+                            align: 'center'
+                        }, {
+                            field: 'uploadI',
+                            title: 'Upload<br>Image',
+                            align: 'center',
+                            events: operateEvents,
+                            formatter: uploadFormatter
+                        }, {
+                            field: 'uploadD',
+                            title: 'Upload<br>Document',
+                            align: 'center',
+                            events: operateEvents,
+                            formatter: documentFormatter
+                        }, {
+                            field: 'addChildPro',
+                            title: 'Child<br>Product',
+                            align: 'center',
+                            events: operateEvents,
+                            formatter: addChildProductFormatter
+                        }, {
+                            field: 'operate',
+                            title: 'Remove',
+                            align: 'center',
+                            events: operateEvents,
+                            formatter: operateFormatter
+                        }
+                    ]
+                });
+                // sometimes footer render error.
+                 $table.bootstrapTable('hideColumn', 'id');
+                setTimeout(function() {
+                    $table.bootstrapTable('resetView');
+                }, 200);
+                $table.on('check.bs.table uncheck.bs.table ' +
+                        'check-all.bs.table uncheck-all.bs.table', function() {
+                            $remove.prop('disabled', !$table.bootstrapTable('getSelections').length);
+
+                            // save your data, here just save the current page
+                            selections = getIdSelections();
+                            // push or splice the selections if you want to save all data selections
+                        });
+                $table.on('expand-row.bs.table', function(e, index, row, $detail) {
+                    if (index % 2 == 1) {
+                        $detail.html('Loading from ajax request...');
+                        $.get('LICENSE', function(res) {
+                            $detail.html(res.replace(/\n/g, '<br>'));
+                        });
+                    }
+                });
+                $table.on('all.bs.table', function(e, name, args) {
+                    console.log(name, args);
+                });
+                $remove.click(function() {
+                    var ids = getIdSelections();
+                    $table.bootstrapTable('remove', {
+                        field: 'id',
+                        values: ids
+                    });
+                    $remove.prop('disabled', true);
+                });
+                $button.click(function() {
+                    var rowCount = $('#table tr').length;
+//                    alert(rowCount);
+                    var randomId = 100 + ~~(Math.random() * 100);
+                    $table.bootstrapTable('insertRow', {
+                        index: rowCount,
+                        row: {
+                            id: randomId,
+                            catalognumber:rowCount-1,
+                            attrname:"",
+                            value:"",
+                            uom:"",
+                            min:"",
+                            max:""
+                        }
+                    });
+                });
+                $(window).resize(function() {
+                    $table.bootstrapTable('resetView', {
+                        height: getHeight()
+                    });
+                });
+            }
+
+            function getIdSelections() {
+                return $.map($table.bootstrapTable('getSelections'), function(row) {
+                    return row.id
+                });
+            }
+
+            function responseHandler(res) {
+                $.each(res.rows, function(i, row) {
+                    row.state = $.inArray(row.id, selections) !== -1;
+                });
+                return res;
+            }
+
+            function detailFormatter(index, row) {
+                var html = [];
+                $.each(row, function(key, value) {
+                    html.push('<p><b>' + key + ':</b> ' + value + '</p>');
+                });
+                return html.join('');
+            }
+
+            function operateFormatter(value, row, index) {
+                return [
+                    '<a class="remove" href="javascript:void(0)" title="Remove">',
+                    '<i class="glyphicon glyphicon-remove"></i>',
+                    '</a>'
+                ].join('');
+            }
+            //    function operateFormatter(value, row, index) {
+            //        return [
+            //            '<a class="like" href="javascript:void(0)" title="Like">',
+            //            '<i class="glyphicon glyphicon-heart"></i>',
+            //            '</a>  ',
+            //            '<a class="remove" href="javascript:void(0)" title="Remove">',
+            //            '<i class="glyphicon glyphicon-remove"></i>',
+            //            '</a>'
+            //        ].join('');
+            //    }
+            function uploadFormatter(value, row, index) {
+
+                return [
+                    '<a class="" href="javascript:void(0)" title="Upload Image">',
+                    'Upload Image</a>'
+                ].join('');
+            }
+            function documentFormatter(value, row, index) {
+
+                return [
+                    '<a class="" href="javascript:void(0)" title="Upload Document">',
+                    'Upload Document</a>'
+                ].join('');
+            }
+            function addChildProductFormatter(value, row, index) {
+
+                return [
+                    '<a class="" href="javascript:void(0)" title="Add Child Product">',
+                    'Add Child Product</a>'
+                ].join('');
+            }
+
+            window.operateEvents = {
+                'click .like': function(e, value, row, index) {
+                    alert('You click like action, row: ' + JSON.stringify(row));
+                },
+                'click .remove': function(e, value, row, index) {
+                    $table.bootstrapTable('remove', {
+                        field: 'id',
+                        values: [row.id]
+                    });
+                }
+            };
+
+            function totalTextFormatter(data) {
+                return 'Total';
+            }
+
+            function totalNameFormatter(data) {
+
+                return data.length;
+            }
+
+            function totalPriceFormatter(data) {
+                var total = 0;
+                $.each(data, function(i, row) {
+                    total += +(row.price.substring(1));
+                });
+                return '$' + total;
+            }
+
+            function getHeight() {
+                return $(window).height() - $('h1').outerHeight(true);
+            }
+
+            $(function() {
+            //alert(location.search.substring(1));
+                var scripts = [
+                    '<%=request.getContextPath()%>/apps/js/bootstrap-table.js',
+                    '<%=request.getContextPath()%>/apps/js//bootstrap-table-export.js',
+                    'http://rawgit.com/hhurz/tableExport.jquery.plugin/master/tableExport.js',
+                    '<%=request.getContextPath()%>/apps/js//bootstrap-table-editable.js',
+                    'http://rawgit.com/vitalets/x-editable/master/dist/bootstrap3-editable/js/bootstrap-editable.js'
+                ],
+                        eachSeries = function(arr, iterator, callback) {
+                            callback = callback || function() {
+                            };
+                            if (!arr.length) {
+                                return callback();
+                            }
+                            var completed = 0;
+                            var iterate = function() {
+                                iterator(arr[completed], function(err) {
+                                    if (err) {
+                                        callback(err);
+                                        callback = function() {
+                                        };
+                                    }
+                                    else {
+                                        completed += 1;
+                                        if (completed >= arr.length) {
+                                            callback(null);
+                                        }
+                                        else {
+                                            iterate();
+                                        }
+                                    }
+                                });
+                            };
+                            iterate();
+                        };
+
+                eachSeries(scripts, getScript, initTable);
+            });
+
+            function getScript(url, callback) {
+      //      alert(url);
+                var head = document.getElementsByTagName('head')[0];
+                var script = document.createElement('script');
+                script.src = url;
+
+                var done = false;
+                // Attach handlers for all browsers
+                script.onload = script.onreadystatechange = function() {
+                    if (!done && (!this.readyState ||
+                            this.readyState == 'loaded' || this.readyState == 'complete')) {
+                        done = true;
+                        if (callback)
+                            callback();
+
+                        // Handle memory leak in IE
+                        script.onload = script.onreadystatechange = null;
+                    }
+                };
+
+                head.appendChild(script);
+
+                // We handle everything using the script element injection
+                return undefined;
+            }
+        </script>
+    </body>
+</html>

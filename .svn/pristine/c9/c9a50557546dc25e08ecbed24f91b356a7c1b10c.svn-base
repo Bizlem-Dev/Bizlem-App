@@ -1,0 +1,355 @@
+#content_wrapper {
+    margin-bottom: 20px;
+}
+
+.compareProducts-head h1 {
+    font-size: 15px;
+    font-weight: bold;
+    color: #555;
+    margin: 0px;
+    padding: 10px 0 15px 10px
+}
+
+.compareProducts-left {
+    width: 170px
+}
+
+.compareProducts-right {
+    width: 828px
+}
+
+table.compareProducts {
+    background: #ddd;
+    border-left: 1px solid #ddd;
+    border-bottom: 1px solid #ddd;
+    border-top: 1px solid #ddd;
+}
+
+table.compareProducts td {
+    width: 186px;
+    margin: 0 1px 0 0;
+    padding: 10px;
+    font-size: 13px;
+    color: #565656;
+    border-top: 1px solid #d0d0d0;
+    border-right: 1px solid #ddd;
+    line-height: 13pt
+}
+
+table.compareProducts th, td.head {
+    background: #fff !important;
+    font-size: 14px !important;
+    color: #c8890f !important;
+    text-align: left;
+    padding: 20px 0 10px 0
+}
+
+tr.first-row td, .td-nobor {
+    border-top: 0px solid #d0d0d0 !important
+}
+
+tr.techSub td {
+    padding: 6px 15px 6px 20px !important;
+    border-top: 1px dotted #d0d0d0 !important;
+    text-transform: capitalize
+}
+
+td.head {
+    padding: 5px 10px !important;
+    font-weight: bold
+}
+
+
+table.compareProducts col {
+    background: #fff;
+}
+
+.discount {
+    color: #bc0800;
+    padding-left: 10px
+}
+
+.products-title {
+    font-weight: bold;
+    padding-bottom: 0px !important;
+    padding-top: 15px !important
+}
+
+.products-title a {
+    color: #000 !important;  overflow: hidden; white-space: nowrap; text-overflow: ellipsis; padding-right: 0px; width: 180px; float: left;
+}
+
+.products-soldOut {
+    width: 120px;
+    margin: 10px auto;
+    font-size: 14px;
+    color: #BF2104;
+    text-align: center;
+    padding-top: 3px;
+    background: #ededed;
+    border-top: 1px solid #e3e3e3;
+    border-bottom: 1px solid #e3e3e3;
+    font-weight: bold;
+    text-align: center
+}
+
+.products-buyBtn a {
+    margin: 9px 0px;
+    display: block;
+}
+
+.compareNumber {
+    background: #ececec ;
+    height: 107px;
+    border-radius: 0px 0 0 0px;
+    -moz-border-radius: 0px 0 0 0px;
+    -webkit-border-radius: 0px 0 0 0px;
+    margin: 5px 0;
+    color: #c6c6c6;
+    font-weight: bold;
+    text-align: center;
+    font-size: 70px;
+    padding: 46px 6px 0 0
+}
+
+.prodBrand-drop {
+    border: 1px solid #e1e1e1;
+    padding: 5px;
+    margin: 5px 0 0px 0;
+    width: 165px;
+    background: #fff ;
+    font-size: 12px;
+    color: #000
+}
+
+.model-drop-box {
+    width: 175px;
+    background: #fff;
+    border: 1px solid #e1e1e1;
+    border-top: 0px solid #e1e1e1;
+    height: 250px;
+    overflow-y: auto;
+    position: absolute;
+    display: none
+}
+
+.model-prod {
+    padding: 5px 7px;
+    border-bottom: 1px dotted #bebebe;
+    cursor: pointer;
+    background: #fff;
+    height: 80px
+}
+
+.model-prod-name {
+    width: 105px;
+    font-size: 11px;
+    color: #585858;
+    display: block;
+    height: 39px;
+    overflow: hidden;
+    font-weight: bold;
+    line-height: 11pt
+}
+
+.model-prod:hover .model-prod-name {
+    color: #1e1e1e
+}
+
+.model-prod:hover {
+    background: #f3f3f3
+}
+
+.model-prod .discount {
+    color: #BC0800;
+    padding-left: 0px;
+    padding-top: 3px
+}
+
+.inStock {
+    color: #3b8202
+}
+
+select.prodBrand-drop {
+    background: #fff;
+    width: 175px;
+    margin-bottom: 15px
+}
+
+.product-attr-outer {
+    overflow: hidden;
+    margin: 0 0 15px 0
+}
+
+.attribute-error-message {
+    background: #8b0b0b;
+    color: #fff !important;
+    display: block;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
+    padding: 3px 3px 3px 20px;
+    font-size: 11px;
+    white-space: nowrap;
+    margin-bottom: 3px
+}
+
+ul.product-attr {
+    list-style: none;
+    padding: 0px;
+    margin: 0px;
+    font-size: 11px;
+    color: #4e4e4e
+}
+
+ul.product-attr li {
+    margin: 0 0 6px 0
+}
+
+.product-attr-first {
+    padding-left: 0px !important;
+    border-left: 0px !important
+}
+
+select.product-attr {
+    padding: 2px;
+    margin: 3px 0;
+    font-size: 11px
+}
+
+#compareProductsTopFreeze {
+    position: fixed;
+    top: 57px;
+    left: 0;
+    background: #fffbf5;
+    width: 100%;
+    box-shadow: 0px 5px 5px #ddd;
+    z-index: 1000;
+    display: none
+}
+
+.compareProductsTopFreezeCont {
+    width: 814px;
+    margin: 0 auto;
+    font-size: 13px;
+    color: #353535;
+    padding-left: 188px
+}
+
+.compareProductsTopFreeze {
+    width: 192px;
+    border-right: 1px solid #d0d0d0;
+    padding: 5px
+}
+
+.compareProductsTopFreeze .prodText {
+    width: 120px;
+    padding-left: 5px
+}
+
+.prodText-tittle {
+    display: block;
+    height: 42px;
+    overflow: hidden;
+    font-weight: bold;
+    line-height: 11pt;
+    padding-bottom: 5px
+}
+
+.compareProductsTopFreeze .prodText strike, .compareProdPrice strike, .model-prod strike {
+    color: #686868
+}
+
+.compareInnerProd-Close {
+    margin: -10px -5px 0 0;
+    opacity: 0.4;
+    filter: alpha(opacity=40);
+    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=40)";
+    cursor: pointer;
+    float: right;
+}
+
+.compareInnerProd-Close:hover {
+    opacity: 1.0;
+    filter: alpha(opacity=100);
+    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=100)"
+}
+
+select.selmenu {
+    border: 1px solid #bbb;
+    background: #f0f0f0;
+    font-size: 11px
+}
+
+.buyBlueButton {
+    margin: 0 auto
+}
+
+
+
+.tree, .tree ul {
+    margin:0;
+    padding:0;
+    list-style:none
+}
+.tree ul {
+    margin-left:1em;
+    position:relative
+}
+.tree ul ul {
+    margin-left:.5em
+}
+.tree ul:before {
+    content:"";
+    display:block;
+    width:0;
+    position:absolute;
+    top:0;
+    bottom:0;
+    left:0;
+    border-left:1px solid
+}
+.tree li {
+    color: #369;
+    font-size: 13px;
+    font-weight: 500;
+    line-height: 2em;
+    margin: 0;
+    padding: 0 0 0 9px;
+    position: relative;
+}
+.tree ul li:before {
+    content:"";
+    display:block;
+    width:10px;
+    height:0;
+    border-top:1px solid;
+    margin-top:-1px;
+    position:absolute;
+    top:1em;
+    left:0
+}
+.tree ul li:last-child:before {
+    background:#fff;
+    height:auto;
+    top:1em;
+    bottom:0
+}
+.indicator {
+    float: right;
+    margin-left: 5px;
+    margin-top: 8px;
+}
+.tree li a {
+    text-decoration: none;
+    color:#369;
+}
+.tree li button, .tree li button:active, .tree li button:focus {
+    text-decoration: none;
+    color:#369;
+    border:none;
+    background:transparent;
+    margin:0px 0px 0px 0px;
+    padding:0px 0px 0px 0px;
+    outline: 0;
+}
